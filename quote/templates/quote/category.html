@@ -1,0 +1,51 @@
+
+
+
+{% extends "quote/layout/base.html" %}
+{% load static %}
+
+{% block title %}
+Danh mục sản phẩm gia công ! ahihi
+{% endblock title %}
+
+{% block breadcrumb %}
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li class="active">Gia công</li>
+        </ol>
+    </div>
+{% endblock breadcrumb %}
+              
+{% block content %}
+    <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading clearfix">
+                    <h1 class="panel-title">Danh mục sản phẩm gia công</h1>
+                    <div class="panel-control">
+                        <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-collapse" data-original-title="Expand/Collapse"><i class="icon-arrow-down"></i></a>
+                        <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-reload" data-original-title="Reload"><i class="icon-reload"></i></a>
+                    </div>
+                </div>
+                <div class="row row-custom">
+                    {% if data %}
+                    {% for item in data %}
+                        <div class="col-sm-3">
+                            <div class="panel-body statement-card product-custom">
+                                <h5 class="card-title">{{ item.name }}</h5>
+                                <p class="card-text">Ngày tạo: {{ item.create_at }}</p>
+                                <a href="{% url 'detail_category' slug=item.slug %}" class="btn btn-primary">Tạo báo giá</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    {% endif %}
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block script %}
+<!-- <script src="{% static '/vouchers/js/vouchers.js' %}"></script> -->
+{% endblock script %}

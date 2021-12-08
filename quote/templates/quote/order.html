@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        
+        <!-- Title -->
+        <title>Etruck GSL | Đơn đặt chuyến</title>
+        
+        <meta content="width=device-width, initial-scale=1" name="viewport"/>
+        <meta charset="UTF-8">
+        <meta name="description" content="Admin Dashboard Template" />
+        <meta name="keywords" content="admin,dashboard" />
+        <meta name="author" content="stacks" />
+        
+        <!-- Styles -->
+        <link href="assets/plugins/pace-master/themes/blue/pace-theme-flash.css" rel="stylesheet"/>
+        <link href="assets/plugins/uniform/css/default.css" rel="stylesheet"/>
+        <link href="assets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="assets/plugins/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+        <link href="assets/plugins/line-icons/simple-line-icons.css" rel="stylesheet" type="text/css"/>	
+        <link href="assets/plugins/offcanvasmenueffects/css/menu_cornerbox.css" rel="stylesheet" type="text/css"/>	
+        <link href="assets/plugins/waves/waves.min.css" rel="stylesheet" type="text/css"/>	
+        <link href="assets/plugins/switchery/switchery.min.css" rel="stylesheet" type="text/css"/>
+        <link href="assets/plugins/3d-bold-navigation/css/style.css" rel="stylesheet" type="text/css"/>
+        <link href="assets/plugins/slidepushmenus/css/component.css" rel="stylesheet" type="text/css"/>	
+        <link href="assets/plugins/weather-icons-master/css/weather-icons.min.css" rel="stylesheet" type="text/css"/>	
+        <link href="assets/plugins/toastr/toastr.min.css" rel="stylesheet" type="text/css"/>
+		<link href="assets/plugins/datatables/css/jquery.datatables.min.css" rel="stylesheet" type="text/css">
+		<link href="assets/plugins/datatables/css/jquery.datatables_themeroller.css" rel="stylesheet" type="text/css">		
+        	
+        <!-- Theme Styles -->
+        <link href="assets/css/meteor.min.css" rel="stylesheet" type="text/css"/>
+        <link href="assets/css/layers/dark-layer.css" class="theme-color" rel="stylesheet" type="text/css"/>
+        <link href="assets/css/custom.css" rel="stylesheet" type="text/css"/>
+        
+        <script src="assets/plugins/3d-bold-navigation/js/modernizr.js"></script>
+        
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        
+    </head>
+    <body class="compact-menu">
+        <div class="overlay"></div>
+        <main class="page-content content-wrap">
+            <div class="navbar">
+                <div class="navbar-inner">
+                    <div class="sidebar-pusher">
+                        <a href="javascript:void(0);" class="waves-effect waves-button push-sidebar">
+                            <i class="icon-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="logo-box">
+                        <a href="index.html" class="logo-text"><span>ETRUCK GSL</span></a>
+                    </div>
+                    <div class="topmenu-outer">
+                        <div class="top-menu">
+                            <ul class="nav navbar-nav navbar-left">
+                                <li>		
+                                    <a href="javascript:void(0);" class="sidebar-toggle"><i class="icon-arrow-left"></i></a>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <i class="icon-settings"></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-md dropdown-list theme-settings" role="menu">
+                                        <li class="li-group">
+                                            <ul class="list-unstyled">
+                                                <li class="no-link" role="presentation">
+                                                    Fixed Header 
+                                                    <div class="ios-switch pull-right switch-md">
+                                                        <input type="checkbox" class="js-switch pull-right fixed-header-check">
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="li-group">
+                                            <ul class="list-unstyled">
+                                                <li class="no-link" role="presentation">
+                                                    Fixed Sidebar 
+                                                    <div class="ios-switch pull-right switch-md">
+                                                        <input type="checkbox" class="js-switch pull-right fixed-sidebar-check">
+                                                    </div>
+                                                </li>
+                                                <li class="no-link" role="presentation">
+                                                    Horizontal bar 
+                                                    <div class="ios-switch pull-right switch-md">
+                                                        <input type="checkbox" class="js-switch pull-right horizontal-bar-check">
+                                                    </div>
+                                                </li>
+                                                <li class="no-link" role="presentation">
+                                                    Toggle Sidebar 
+                                                    <div class="ios-switch pull-right switch-md">
+                                                        <input type="checkbox" class="js-switch pull-right toggle-sidebar-check">
+                                                    </div>
+                                                </li>
+                                                <li class="no-link" role="presentation">
+                                                    Compact Menu 
+                                                    <div class="ios-switch pull-right switch-md">
+                                                        <input type="checkbox" class="js-switch pull-right compact-menu-check" checked>
+                                                    </div>
+                                                </li>
+                                                <li class="no-link" role="presentation">
+                                                    Hover Menu 
+                                                    <div class="ios-switch pull-right switch-md">
+                                                        <input type="checkbox" class="js-switch pull-right hover-menu-check">
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="li-group">
+                                            <ul class="list-unstyled">
+                                                <li class="no-link" role="presentation">
+                                                    Boxed Layout 
+                                                    <div class="ios-switch pull-right switch-md">
+                                                        <input type="checkbox" class="js-switch pull-right boxed-layout-check">
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="no-link"><button class="btn btn-default reset-options">Reset Options</button></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-bell"></i><span class="badge badge-danger pull-right">3</span></a>
+                                    <ul class="dropdown-menu title-caret dropdown-lg" role="menu">
+                                        <li><p class="drop-title">Bạn có 3 nhiệm vụ đang chờ xử lý!</p></li>
+                                        <li class="dropdown-menu-list slimscroll tasks">
+                                            <ul class="list-unstyled">
+                                                <li>
+                                                    <a href="#">
+                                                        <div class="task-icon badge badge-success"><i class="fa fa-user"></i></div>
+                                                        <span class="badge badge-roundless badge-default pull-right">1m</span>
+                                                        <p class="task-details">5 tài khoản mới</p>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <div class="task-icon badge badge-primary"><i class="fa fa-refresh"></i></div>
+                                                        <span class="badge badge-roundless badge-default pull-right">24m</span>
+                                                        <p class="task-details">3 đơn đặt chuyến</p>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">
+                                                        <div class="task-icon badge badge-danger"><i class="fa fa-phone"></i></div>
+                                                        <span class="badge badge-roundless badge-default pull-right">24m</span>
+                                                        <p class="task-details">2 đơn hủy chuyến</p>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="drop-all"><a href="#" class="text-center">Xem tất cả</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        <span class="user-name">Trần Anh Tuấn<i class="fa fa-angle-down"></i></span>
+                                        <img class="img-circle avatar" src="assets/images/avatar1.png" width="40" height="40" alt="">
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-list" role="menu">
+                                        <li role="presentation"><a href="profile.html"><i class="icon-user"></i>Thông tin cá nhân</a></li>
+                                        <li role="presentation"><a href="forgot_pass.html"><i class="icon-lock"></i>Thay đổi mật khẩu</a></li>
+                                        <li role="presentation" class="divider"></li>
+                                        <li role="presentation"><a href="login.html"><i class="icon-key m-r-xs"></i>Đăng xuất</a></li>
+                                    </ul>
+                                </li>
+                            </ul><!-- Nav -->
+                        </div><!-- Top Menu -->
+                    </div>
+                </div>
+            </div><!-- Navbar -->
+            <div class="page-sidebar sidebar">
+                <div class="page-sidebar-inner slimscroll">
+                    <ul class="menu accordion-menu">
+                        <li><a href="index.html" class="waves-effect waves-button"><span class="menu-icon icon-home"></span><p>Dashboard</p><span class="active-page"></span></a></li>
+						<li><a href="customer.html" class="waves-effect waves-button"><span class="menu-icon icon-users"></span><p>Khách hàng</p><span class="active-page"></span></a></li>
+						<li><a href="plan.html" class="waves-effect waves-button"><span class="menu-icon icon-grid"></span><p>Kế hoạch XMAN</p><span class="active-page"></span></a></li>
+						<li class="active"><a href="order.html" class="waves-effect waves-button"><span class="menu-icon icon-layers"></span><p>Đơn đặt chuyến</p><span class="active-page"></span></a></li>
+                    </ul>
+                </div><!-- Page Sidebar Inner -->
+            </div><!-- Page Sidebar -->
+            <div class="page-inner">
+                <div class="page-title">
+                    <div class="page-breadcrumb">
+                        <ol class="breadcrumb">
+                            <li><a href="index.html">Home</a></li>
+                            <li class="active">Đơn đặt chuyến</li>
+                        </ol>
+                    </div>
+                </div>
+                <div id="main-wrapper">
+                    <div class="row">
+					<div class="col-md-12">
+                            <div class="panel panel-white">
+                                <div class="panel-heading clearfix">
+                                    <h3 class="panel-title">Đơn đặt chuyến</h3>
+                                    <div class="panel-control">
+                                        <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-collapse" data-original-title="Expand/Collapse"><i class="icon-arrow-down"></i></a>
+                                        <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-reload" data-original-title="Reload"><i class="icon-reload"></i></a>
+                                    </div>
+                                </div>
+                                <div class="panel-body statement-card">
+									<div class="dataTables_wrapper table-responsive">
+										<table class="table table-striped" style="border-top: 1px solid #E2E2E2;">
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>Kiểu vận chuyển</th>
+													<th>Người đặt</th>
+													<th>Thời gian đóng</th>
+													<th>Địa điểm đóng</th>
+													<th>Số loại Cont</th>
+													<th>Số lượng</th>
+													<th>Ngày đặt</th>
+													<th>Trạng thái</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<th><a href="#"><a href="detail.html">#01</a></a></th>
+													<th>Vận chuyển không</th>
+													<th>Trần Anh Tuấn</th>
+													<th>07:00 25/06/2019</th>
+													<th>KHO LOGITEM - KCN TÂN QUANG, NHƯ QUỲNH, HƯNG YÊN</th>
+													<th>20</th>
+													<th>5</th>
+													<th>24/06/2019</th>
+													<td><span class="btn btn-danger btn-xs">Chờ xác nhận</span></td>
+												</tr>
+												<tr>
+													<th><a href="#"><a href="detail.html">#02</a></a></th>
+													<th>Vận chuyển kèm dịch vụ</th>
+													<th>Nguyễn Viết Thành</th>
+													<th>07:00 25/06/2019</th>
+													<th>KHO LOGITEM - KCN TÂN QUANG, NHƯ QUỲNH, HƯNG YÊN</th>
+													<th>20</th>
+													<th>5</th>
+													<th>24/06/2019</th>
+													<td><span class="btn btn-success btn-xs">Đã xác nhận</span></td>
+												</tr>
+												<tr>
+													<th><a href="#"><a href="detail.html">#03</a></a></th>
+													<th>Vận chuyển không</th>
+													<th>Trần Anh Tuấn</th>
+													<th>07:00 25/06/2019</th>
+													<th>KHO LOGITEM - KCN TÂN QUANG, NHƯ QUỲNH, HƯNG YÊN</th>
+													<th>20</th>
+													<th>5</th>
+													<th>24/06/2019</th>
+													<td><span class="btn btn-danger btn-xs">Chưa ký hợp đồng</span></td>
+												</tr>
+												<tr>
+													<th><a href="#"><a href="detail.html">#04</a></a></th>
+													<th>Vận chuyển kèm dịch vụ</th>
+													<th>Nguyễn Viết Thành</th>
+													<th>07:00 25/06/2019</th>
+													<th>KHO LOGITEM - KCN TÂN QUANG, NHƯ QUỲNH, HƯNG YÊN</th>
+													<th>20</th>
+													<th>5</th>
+													<th>24/06/2019</th>
+													<td><span class="btn btn-success btn-xs">Đã ký hợp đồng</span></td>
+												</tr>
+												<tr>
+													<th><a href="#"><a href="detail.html">#05</a></a></th>
+													<th>Vận chuyển không</th>
+													<th>Trần Anh Tuấn</th>
+													<th>07:00 25/06/2019</th>
+													<th>KHO LOGITEM - KCN TÂN QUANG, NHƯ QUỲNH, HƯNG YÊN</th>
+													<th>20</th>
+													<th>5</th>
+													<th>24/06/2019</th>
+													<td><span class="btn btn-danger btn-xs">Chưa nhận được hàng</span></td>
+												</tr>
+												<tr>
+													<th><a href="#"><a href="detail.html">#06</a></a></th>
+													<th>Vận chuyển kèm dịch vụ</th>
+													<th>Nguyễn Viết Thành</th>
+													<th>07:00 25/06/2019</th>
+													<th>KHO LOGITEM - KCN TÂN QUANG, NHƯ QUỲNH, HƯNG YÊN</th>
+													<th>20</th>
+													<th>5</th>
+													<th>24/06/2019</th>
+													<td><span class="btn btn-success btn-xs">Đã nhận được hàng</span></td>
+												</tr>
+												<tr>
+													<th><a href="#"><a href="detail.html">#07</a></a></th>
+													<th>Vận chuyển không</th>
+													<th>Nguyễn Viết Thành</th>
+													<th>07:00 25/06/2019</th>
+													<th>KHO LOGITEM - KCN TÂN QUANG, NHƯ QUỲNH, HƯNG YÊN</th>
+													<th>20</th>
+													<th>5</th>
+													<th>24/06/2019</th>
+													<td><span class="btn btn-success btn-xs">Đang vận chuyển</span></td>
+												</tr>
+												<tr>
+													<th><a href="#"><a href="detail.html">#08</a></a></th>
+													<th>Vận chuyển kèm dịch vụ</th>
+													<th>Trần Anh Tuấn</th>
+													<th>07:00 25/06/2019</th>
+													<th>KHO LOGITEM - KCN TÂN QUANG, NHƯ QUỲNH, HƯNG YÊN</th>
+													<th>20</th>
+													<th>5</th>
+													<th>24/06/2019</th>
+													<td><span class="btn btn-danger btn-xs">Giao hàng thất bại</span></td>
+												</tr>
+												<tr>
+													<th><a href="#"><a href="detail.html">#09</a></a></th>
+													<th>Vận chuyển không</th>
+													<th>Nguyễn Viết Thành</th>
+													<th>07:00 25/06/2019</th>
+													<th>KHO LOGITEM - KCN TÂN QUANG, NHƯ QUỲNH, HƯNG YÊN</th>
+													<th>20</th>
+													<th>5</th>
+													<th>24/06/2019</th>
+													<td><span class="btn btn-success btn-xs">Giao hàng thành công</span></td>
+												</tr>
+												<tr>
+													<th><a href="#"><a href="detail.html">#10</a></a></th>
+													<th>Vận chuyển kèm dịch vụ</th>
+													<th>Trần Anh Tuấn</th>
+													<th>07:00 25/06/2019</th>
+													<th>KHO LOGITEM - KCN TÂN QUANG, NHƯ QUỲNH, HƯNG YÊN</th>
+													<th>20</th>
+													<th>5</th>
+													<th>24/06/2019</th>
+													<td><span class="btn btn-danger btn-xs">Chưa thanh toán</span></td>
+												</tr>
+												<tr>
+													<th><a href="#"><a href="detail.html">#11</a></a></th>
+													<th>Vận chuyển không</th>
+													<th>Nguyễn Viết Thành</th>
+													<th>07:00 25/06/2019</th>
+													<th>KHO LOGITEM - KCN TÂN QUANG, NHƯ QUỲNH, HƯNG YÊN</th>
+													<th>20</th>
+													<th>5</th>
+													<th>24/06/2019</th>
+													<td><span class="btn btn-success btn-xs">Đã thanh toán</span></td>
+												</tr>
+												<tr>
+													<th><a href="#"><a href="detail.html">#12</a></a></th>
+													<th>Vận chuyển kèm dịch vụ</th>
+													<th>Trần Anh Tuấn</th>
+													<th>07:00 25/06/2019</th>
+													<th>KHO LOGITEM - KCN TÂN QUANG, NHƯ QUỲNH, HƯNG YÊN</th>
+													<th>20</th>
+													<th>5</th>
+													<th>24/06/2019</th>
+													<td><span class="btn btn-danger btn-xs">Chưa xuất hóa đơn</span></td>
+												</tr>
+												<tr>
+													<th><a href="#"><a href="detail.html">#13</a></a></th>
+													<th>Vận chuyển không</th>
+													<th>Nguyễn Viết Thành</th>
+													<th>07:00 25/06/2019</th>
+													<th>KHO LOGITEM - KCN TÂN QUANG, NHƯ QUỲNH, HƯNG YÊN</th>
+													<th>20</th>
+													<th>5</th>
+													<th>24/06/2019</th>
+													<td><span class="btn btn-success btn-xs">Đã xuất hóa đơn</span></td>
+												</tr>
+												<tr>
+													<th><a href="#"><a href="detail.html">#14</a></a></th>
+													<th>Vận chuyển kèm dịch vụ</th>
+													<th>Trần Anh Tuấn</th>
+													<th>07:00 25/06/2019</th>
+													<th>KHO LOGITEM - KCN TÂN QUANG, NHƯ QUỲNH, HƯNG YÊN</th>
+													<th>20</th>
+													<th>5</th>
+													<th>24/06/2019</th>
+													<td><span class="btn btn-danger btn-xs">Đã hủy</span></td>
+												</tr>
+											</tbody>
+											<thead>
+												<tr>
+													<th>#</th>
+													<th>Kiểu vận chuyển</th>
+													<th>Người đặt</th>
+													<th>Thời gian đóng</th>
+													<th>Địa điểm đóng</th>
+													<th>Số loại Cont</th>
+													<th>Số lượng</th>
+													<th>Ngày đặt</th>
+													<th>Trạng thái</th>
+												</tr>
+											</thead>
+										</table>
+										<div class="dataTables_info" id="example2_info" role="status" aria-live="polite">Showing 1 to 25 of 57 entries</div>
+										<div class="dataTables_paginate paging_simple_numbers" id="exmple2_paginate"><a class="paginate_button previous disabled" aria-controls="example2" data-dt-idx="0" tabindex="0" id="example2_previous">Previous</a><span><a class="paginate_button current" aria-controls="example2" data-dt-idx="1" tabindex="0">1</a><a class="paginate_button " aria-controls="example2" data-dt-idx="2" tabindex="0">2</a><a class="paginate_button " aria-controls="example2" data-dt-idx="3" tabindex="0">3</a></span><a class="paginate_button next" aria-controls="example2" data-dt-idx="4" tabindex="0" id="example2_next">Next</a></div>
+									</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- Main Wrapper -->
+                <div class="page-footer">
+                    <p class="no-s">2019 &copy; Vtechcom Company</p>
+                </div>
+            </div><!-- Page Inner -->
+        </main><!-- Page Content -->
+	
+
+        <!-- Javascripts -->
+        <script src="assets/plugins/jquery/jquery-3.1.0.min.js"></script>
+        <script src="assets/plugins/jquery-ui/jquery-ui.min.js"></script>
+        <script src="assets/plugins/pace-master/pace.min.js"></script>
+        <script src="assets/plugins/jquery-blockui/jquery.blockui.js"></script>
+        <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+        <script src="assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+        <script src="assets/plugins/switchery/switchery.min.js"></script>
+        <script src="assets/plugins/uniform/js/jquery.uniform.standalone.js"></script>
+        <script src="assets/plugins/offcanvasmenueffects/js/classie.js"></script>
+        <script src="assets/plugins/waves/waves.min.js"></script>
+        <script src="assets/plugins/3d-bold-navigation/js/main.js"></script>
+        <script src="assets/plugins/waypoints/jquery.waypoints.min.js"></script>
+        <script src="assets/plugins/toastr/toastr.min.js"></script>
+        <script src="assets/plugins/flot/jquery.flot.min.js"></script>
+        <script src="assets/plugins/flot/jquery.flot.time.min.js"></script>
+        <script src="assets/plugins/flot/jquery.flot.symbol.min.js"></script>
+        <script src="assets/plugins/flot/jquery.flot.resize.min.js"></script>
+        <script src="assets/plugins/flot/jquery.flot.tooltip.min.js"></script>
+        <script src="assets/plugins/curvedlines/curvedLines.js"></script>
+        <script src="assets/plugins/chartjs/Chart.bundle.min.js"></script>
+        <script src="assets/js/meteor.min.js"></script>
+        
+    </body>
+</html>

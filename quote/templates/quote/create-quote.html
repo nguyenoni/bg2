@@ -1,0 +1,187 @@
+{% extends "quote/layout/base.html" %}
+{% load static %}
+
+{% block title %}
+Tạo báo giá tự động |Thaihuonggroup
+{% endblock title %}
+
+
+{% block breadcrumb %}
+    <div class="page-breadcrumb">
+        <ol class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li class="active">Tạo báo giá</li>
+        </ol>
+    </div>
+{% endblock breadcrumb %}
+              
+{% block content %}
+    <div class="col-md-12">
+            <div class="panel panel-white">
+                <div class="panel-heading clearfix">
+                    <h1 class="panel-title">Tạo báo giá tự động</h1>
+                    <div class="panel-control">
+                        <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-collapse" data-original-title="Expand/Collapse"><i class="icon-arrow-down"></i></a>
+                        <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-reload" data-original-title="Reload"><i class="icon-reload"></i></a>
+                    </div>
+                </div>
+                <div class="row row-custom">
+                    <form class="col-md-6">
+                        <!-- Chọn sản phẩm gia công -->
+                        <div class="form-group">
+                            <label>Chọn sản phẩm gia công</label>
+                            <select class="form-control select2 product">
+                                <option value="">--Chọn sản phẩm --</option>
+                            {% if data %}
+                            {% for item in data %}
+                                <option value="{{ item.unique_product }}">{{ item.name }}</option>
+                            {% endfor %}
+                            {% endif %}
+                                
+                            </select>
+                            
+                        </div>
+                        <!-- End chọn sản phẩm gia công -->
+                        <!-- Chọn dung tích -->
+                        <div class="form-group">
+                            <label>Chọn dung tích</label>
+                            <select class="form-control select volume">
+                                <option value="">--Chọn dung tích--</option>
+                            </select>
+                            
+                        </div>
+                        <div class="form-group ">
+                            <div class="dataTables_wrapper table-responsive">
+                                <table class="table ">
+                                    <tbody>
+                    
+                                        <tr>
+                                            <td class="material-type hide"><strong>Nguyên liệu:</strong></td>
+                                            <td class="material-title hide">Tên nguyên liệu</td>
+                                            <td class="material-price hide text-success"></td>
+                                            <td class=""><span class="btn btn-success btn-xs material material-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data">Chọn nguyên liệu</span></td>
+                                            <td class="material-action hide" scope="row"> <span title="Sửa" style="color:#38434e; cursor: pointer;" class="icon-pencil material" data-toggle="modal" data-target="#show-data"></span> <span title="Xóa" style="color:red; cursor: pointer;" class="icon-trash delete-item" type-del="material"></span> </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="packaging-level1-type hide"><strong>Bao bì cấp 1:</strong></td>
+                                            <td class="packaging-level1-title hide">Tên bao bì cấp 1</td>
+                                            <td class="packaging-level1-price hide text-success"></td>
+                                            <td class=""><span class="btn btn-success btn-xs packaging-level1 packaging-level1-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data">Chọn bao bì cấp 1</span></td>
+                                            <td class="packaging-level1-action hide" scope="row"> <span title="Sửa" style="color:#38434e; cursor: pointer;" class="icon-pencil packaging-level1" data-toggle="modal" data-target="#show-data"></span> <span title="Xóa" style="color:red; cursor: pointer;" class="icon-trash delete-item"class="icon-trash delete-item" type-del="packaging-level1"></span> </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="packaging-level2-type hide"><strong>Bao bì cấp 2:</strong></td>
+                                            <td class="packaging-level2-title hide">Tên bao bì cấp 2</td>
+                                            <td class="packaging-level2-price hide text-success"></td>
+                                            <td class=""><span class="btn btn-success btn-xs packaging-level2 packaging-level2-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data">Chọn bao bì cấp 2</span></td>
+                                            <td class="packaging-level2-action hide" scope="row"> <span title="Sửa" style="color:#38434e; cursor: pointer;" class="icon-pencil packaging-level2"data-toggle="modal" data-target="#show-data"></span> <span title="Xóa" style="color:red; cursor: pointer;" class="icon-trash delete-item" type-del="packaging-level2"></span> </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="stamp-type hide"><strong>Tem nhãn:</strong></td>
+                                            <td class="stamp-title hide">Tên tem nhãn</td>
+                                            <td class="stamp-price hide text-success"></td>
+                                            <td class=""><span class="btn btn-success btn-xs stamp stamp-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data">Chọn tem nhãn</span></td>
+                                            <td class="stamp-action hide" scope="row"> <span title="Sửa" style="color:#38434e; cursor: pointer;" class="icon-pencil stamp" data-toggle="modal" data-target="#show-data"></span> <span title="Xóa" style="color:red; cursor: pointer;" class="icon-trash delete-item" type-del="stamp"></span> </td>
+                                        </tr>
+                                
+                                        <tr>
+                                            <td class="packing-worker-type hide"><strong>Gói nhân công đóng gói:</strong></td>
+                                            <td class="packing-worker-title hide">Tên gói nhân công đóng gói</td>
+                                            <td class="packing-worker-price hide text-success"></td>
+                                            <td class=""><span class="btn btn-success btn-xs packing-worker packing-worker-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data">Chọn gói nhân công đóng gói</span></td>
+                                            <td class="packing-worker-action hide" scope="row"> <span title="Sửa" style="color:#38434e; cursor: pointer;" class="icon-pencil packing-worker" data-toggle="modal" data-target="#show-data"></span> <span title="Xóa" style="color:red; cursor: pointer;" class="icon-trash delete-item" type-del="packing-worker"></span> </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="announced-type hide"><strong>Gói công bố kiểm nghiệm:</strong></td>
+                                            <td class="announced-title hide">Tên gói công bố kiểm nghiệm</td>
+                                            <td class="announced-price hide text-success"></td>
+                                            <td class=""><span class="btn btn-success btn-xs announced announced-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data">Chọn gói công bố kiểm nghiệm</span></td>
+                                            <td class="announced-action hide" scope="row"> <span title="Sửa" style="color:#38434e; cursor: pointer;" class="icon-pencil announced" data-toggle="modal" data-target="#show-data"></span> <span title="Xóa" style="color:red; cursor: pointer;" class="icon-trash delete-item" type-del="announced"></span> </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feeship-type hide"><strong>Gói vận chuyển:</strong></td>
+                                            <td class="feeship-title hide">Tên gói phí vận chuyển</td>
+                                            <td class="feeship-price hide text-success"></td>
+                                            <td class=""><span class="btn btn-success btn-xs feeship feeship-button fee change-val" valp="" valv="" data-toggle="modal" data-target="#show-data">Chọn gói vận chuyển</span></td>
+                                            <td class="feeship-action hide" scope="row"> <span title="Sửa" style="color:#38434e; cursor: pointer;" class="icon-pencil feeship" data-toggle="modal" data-target="#show-data"></span></span> <span title="Xóa" style="color:red; cursor: pointer;" class="icon-trash delete-item" type-del="feeship"></span> </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="total-tt hide"></td>
+                                            <td class="total-title hide" scope="row"><strong>Tổng tiền: </strong></td>
+                                            <td class="total-price text-danger hide"><b>0</b> <sup>vnđ</sup></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <span class="btn btn-danger create-quote-pdf">Tạo báo giá</span>
+                        </div>
+                        
+                    </form>
+
+                    <!-- Modal -->
+ 
+
+                    <div class="modal fade bd-example-modal-lg" id="show-data" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Tiêu đề hiển theo danh mục</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                
+                                <div class="dataTables_wrapper table-responsive">
+                                    <table class="table table-striped" style="border-top: 1px solid #E2E2E2;">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Tên</th>
+                                                <th>Giá tiền</th>
+                                                <th>Ghi chú</th>
+                                                <th>Hành động</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="data-show">
+                                            
+                                            
+                                        </tbody>
+                                    </table>
+                                    <!-- <div class="dataTables_info" id="example2_info" role="status" aria-live="polite">Showing 1 to 25 of 57 entries</div>
+                                    <div class="dataTables_paginate paging_simple_numbers" id="exmple2_paginate"><a class="paginate_button previous disabled" aria-controls="example2" data-dt-idx="0" tabindex="0" id="example2_previous">Previous</a><span><a class="paginate_button current" aria-controls="example2" data-dt-idx="1" tabindex="0">1</a><a class="paginate_button " aria-controls="example2" data-dt-idx="2" tabindex="0">2</a><a class="paginate_button " aria-controls="example2" data-dt-idx="3" tabindex="0">3</a></span><a class="paginate_button next" aria-controls="example2" data-dt-idx="4" tabindex="0" id="example2_next">Next</a></div> -->
+                                </div>
+                                  
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary btn-secondary" data-dismiss="modal">Đóng</button>
+                                <!-- <button type="button" class="btn btn-primary copy-voucher" val="" data-url="">Copy mã giảm giá</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal -->
+                    
+                </div>
+                
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block script %}
+<script>
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+
+
+<script src="{% static '/quote/js/create-quote.js' %}"></script>
+<script>
+    $('.select2').select2();
+    $('.select').select2();
+</script>
+<script src="{% static '/quote/js/export_pdf.js' %}"></script>
+{% endblock script %}
