@@ -1,6 +1,16 @@
 import uuid 
 from datetime import date
 
+
+HOME = "HOME"
+QUOTE = "QUOTE"
+PRODUCT = "PRODUCT"
+MATERIAL = "MATERIAL"
+PACKAGING_LEVEL1 = "PACKAGING_LEVEL1"
+PACKAGING_LEVEL2 = "PACKAGING_LEVEL2"
+LIST_PRODUCT_PROCESSING = "LIST_PRODUCT_PROCESSING"
+LIMIT_PAGE = 2
+
 # Generate unique uid
 def generate_uid(tp):
     if(tp=="Volume"):

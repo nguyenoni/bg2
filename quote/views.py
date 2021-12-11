@@ -1,4 +1,5 @@
 from datetime import datetime
+from json.encoder import JSONEncoder
 from django.http import response
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -7,12 +8,13 @@ from django.views import View
 from .models import Announced, Category, FeeShipping, Material, PackagingLevel1, PackingWorker, Product, Stamp, Volume, PackagingLevel2
 from django.views.generic.detail import DetailView
 from . import libs
-import unicodecsv as csv
+# import unicodecsv as csv 
+from django.template.loader import get_template, render_to_string
+# from xhtml2pdf import pisa
 
-from django.template.loader import get_template
-from xhtml2pdf import pisa
-
-
+# import pdfkit
+# from pdfkit.api import configuration
+# wkhtml_path = pdfkit.configuration(wkhtmltopdf = "C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")  #by using configuration you can add path value.
 # from weasyprint import HTML
 # Create your views here.
 
@@ -22,7 +24,7 @@ class list_category(View):
         tmp = "quote/category.html"
         obj_category = Category.objects.all()
         if(obj_category):
-            return render(request, tmp, {"data": obj_category})
+            return render(request, tmp, {"data": obj_category, "active_menu":libs.LIST_PRODUCT_PROCESSING})
 
 
 def detail_category(request, slug):
@@ -31,7 +33,7 @@ def detail_category(request, slug):
         obj_category = Category.objects.filter(slug=slug)[0]
         obj_product = Product.objects.filter(category = obj_category)
 
-    return render(request, tmp, {"data": obj_product})
+    return render(request, tmp, {"data": obj_product, "active_menu": libs.LIST_PRODUCT_PROCESSING})
 
 # Export to pdf
 def export_to_pdf(request, product, volume, material, packaging_level1, packaging_level2, stamp, packing_worker, announced, feeship):
@@ -39,51 +41,8 @@ def export_to_pdf(request, product, volume, material, packaging_level1, packagin
     
     if(product and volume and material and packaging_level1 and packaging_level2 and stamp and packing_worker and announced and feeship):
     
-        # obj_product = Product.objects.filter(unique_product = product)[0]
-        # obj_volume = Volume.objects.filter(unique_volume = volume)[0]
-        # obj_material = Material.objects.get(id=material)
-        # obj_packaging_level1 = PackagingLevel1.objects.get(id=packaging_level1)
-        # obj_packaging_level2 = PackagingLevel2.objects.get(id=packaging_level2)
-        # obj_stamp = Stamp.objects.get(id=stamp)
-        # obj_packing_worker = PackingWorker.objects.get(id=packing_worker)
-        # obj_announced = Announced.objects.get(id=announced)
-        # obj_feeship = FeeShipping.objects.get(id=feeship)
-
-            template_path = 'quote/export_pdf.html'
-            context = {'myvar': 'this is your template context'}
-            # Create a Django response object, and specify content_type as pdf
-            response = HttpResponse(content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename=bao-gia-'+ str(datetime.now())+'.pdf'
-            # find the template and render it.
-            template = get_template(template_path)
-            html = template.render(context)
-
-            # create a pdf
-            pisa_status = pisa.CreatePDF(html.encode('utf-8'), dest=response, encoding = 'utf-8')
-            # if error then show some funy view
-            if pisa_status.err:
-                return HttpResponse('We had some errors <pre>' + html + '</pre>')
-            return response
-            # where is_export is being used?
-       
-        
-
-        # return response
-
-    return render(request, tmp, {})
-# export to excell
-def export_to_csv(request, product, volume, material, packaging_level1, packaging_level2, stamp, packing_worker, announced, feeship):
-  
-    
-    if(product and volume and material and packaging_level1 and packaging_level2 and stamp and packing_worker and announced and feeship):
-        res = HttpResponse(content_type = 'text/csv')
-        res['Content-Disposition'] = 'attachment; filename=bao-gia-'+str(datetime.now())+'.csv'
-        res.write(u'\ufeff'.encode('utf8'))
-        writer = csv.writer(res)
-        writer.writerow(["STT", " ","Tên", "Số lượng", "Đơn giá", "Thành tiền"])
-
         obj_product = Product.objects.filter(unique_product = product)[0]
-        obj_volume = Volume.objects.filter(unique_volume = volume)[0]
+        # obj_volume = Volume.objects.filter(unique_volume = volume)[0]
         obj_material = Material.objects.get(id=material)
         obj_packaging_level1 = PackagingLevel1.objects.get(id=packaging_level1)
         obj_packaging_level2 = PackagingLevel2.objects.get(id=packaging_level2)
@@ -91,18 +50,43 @@ def export_to_csv(request, product, volume, material, packaging_level1, packagin
         obj_packing_worker = PackingWorker.objects.get(id=packing_worker)
         obj_announced = Announced.objects.get(id=announced)
         obj_feeship = FeeShipping.objects.get(id=feeship)
+        tmp = "quote/export_pdf.html"
 
-        writer.writerow([1, obj_product.name, "Sản phẩm", 1, obj_product.price, obj_product.price])
-        writer.writerow([2, obj_volume.name, "Dung tích", 1, obj_volume.name, ""])
-        writer.writerow([3, obj_material.name, "Nguyên liệu", 1, obj_material.price, obj_material.price])
-        writer.writerow([4, obj_packaging_level1.name, "Bao bì cấp 1", 1, obj_packaging_level1.price, obj_packaging_level1.price])
-        writer.writerow([5, obj_packaging_level2.name, "Bao bì cấp 2", 1, obj_packaging_level2.price, obj_packaging_level2.price])
-        writer.writerow([6, obj_stamp.name, "Tem nhãn", 1, obj_stamp.price, obj_stamp.price])
-        writer.writerow([7, obj_packing_worker.name, "Nhân công đóng gói", 1, obj_packing_worker.price, obj_packing_worker.price])
-        writer.writerow([8, obj_feeship.name, "Vận chuyển", 1, obj_feeship.price, obj_feeship.price])
+        return render(request, tmp, {"product": obj_product, "material": obj_material, "packaging_level1": obj_packaging_level1, "packaging_level2": obj_packaging_level2, 
+        "stamp": obj_stamp, "packing_worker": obj_packing_worker, "announced": obj_announced, "feeship": obj_feeship})
+# export to excell
+def export_to_csv(request, product, volume, material, packaging_level1, packaging_level2, stamp, packing_worker, announced, feeship):
+  
+    
+    # if(product and volume and material and packaging_level1 and packaging_level2 and stamp and packing_worker and announced and feeship):
+    #     res = HttpResponse(content_type = 'text/csv')
+    #     res['Content-Disposition'] = 'attachment; filename=bao-gia-'+str(datetime.now())+'.csv'
+    #     res.write(u'\ufeff'.encode('utf8'))
+    #     writer = csv.writer(res)
+    #     writer.writerow(["STT", " ","Tên", "Số lượng", "Đơn giá", "Thành tiền"])
+
+    #     obj_product = Product.objects.filter(unique_product = product)[0]
+    #     obj_volume = Volume.objects.filter(unique_volume = volume)[0]
+    #     obj_material = Material.objects.get(id=material)
+    #     obj_packaging_level1 = PackagingLevel1.objects.get(id=packaging_level1)
+    #     obj_packaging_level2 = PackagingLevel2.objects.get(id=packaging_level2)
+    #     obj_stamp = Stamp.objects.get(id=stamp)
+    #     obj_packing_worker = PackingWorker.objects.get(id=packing_worker)
+    #     obj_announced = Announced.objects.get(id=announced)
+    #     obj_feeship = FeeShipping.objects.get(id=feeship)
+
+    #     writer.writerow([1, obj_product.name, "Sản phẩm", 1, obj_product.price, obj_product.price])
+    #     writer.writerow([2, obj_volume.name, "Dung tích", 1, obj_volume.name, ""])
+    #     writer.writerow([3, obj_material.name, "Nguyên liệu", 1, obj_material.price, obj_material.price])
+    #     writer.writerow([4, obj_packaging_level1.name, "Bao bì cấp 1", 1, obj_packaging_level1.price, obj_packaging_level1.price])
+    #     writer.writerow([5, obj_packaging_level2.name, "Bao bì cấp 2", 1, obj_packaging_level2.price, obj_packaging_level2.price])
+    #     writer.writerow([6, obj_stamp.name, "Tem nhãn", 1, obj_stamp.price, obj_stamp.price])
+    #     writer.writerow([7, obj_packing_worker.name, "Nhân công đóng gói", 1, obj_packing_worker.price, obj_packing_worker.price])
+    #     writer.writerow([8, obj_feeship.name, "Vận chuyển", 1, obj_feeship.price, obj_feeship.price])
         
 
-        return res
+    #     return res
+    pass
 
 
 # API get volume with UID product
@@ -332,3 +316,182 @@ def load_feeship(request):
 
 
     return JsonResponse({"data": contex})
+
+# Show product
+def load_product_list(request):
+    tmp = "quote/product.html"
+    dt ={
+        "error": False,
+        "message": "",
+        "active_menu": libs.PRODUCT,
+        "has_page": False,
+        "no_data": False,
+        }
+    if(request.method == "POST"):
+        # load category from select box
+        cat = request.POST.get("cateogry", "")
+
+        obj_category = Category.objects.get(slug = cat)
+        
+        total_data = Product.objects.filter(category = obj_category).count()
+        obj_product = Product.objects.filter(category = obj_category).order_by('-id')[:libs.LIMIT_PAGE]
+        tmp = "quote/includes/product_list.html"
+        if(obj_product.count() == 0):
+            dt.update({
+                "no_data": True,
+                "message": "Không có dữ liệu hiển thị!"
+            })
+        if total_data > obj_product.count():
+    
+            dt.update({
+                "has_page": True,
+            })
+        temp = render_to_string(tmp,{"data":obj_product, "offset": 0, "has_page": True,} )    
+        obj_category_list = Category.objects.all()
+        dt.update({
+            "data": temp,
+            # "category": obj_category_list,
+            "total_data": total_data,
+            "limit_page": libs.LIMIT_PAGE
+        })
+
+        return JsonResponse(dt)
+
+    else:
+        try:
+            total_data = Product.objects.count()
+            obj_product = Product.objects.all().order_by('-id')[:libs.LIMIT_PAGE]
+            if total_data > obj_product.count():
+                dt.update({
+                    "has_page": True,
+                })
+            
+            obj_category = Category.objects.all()
+            dt.update({
+                "data": obj_product,
+                "category": obj_category,
+                "total_data": total_data,
+                "limit_page": libs.LIMIT_PAGE
+            })
+            return render(request, tmp, dt)
+        except ValueError:
+            dt.update({
+                "ERROR": True,
+                "message": ValueError.__str__()
+            })
+        
+            return render(request, tmp, dt)
+
+    
+
+    
+     
+
+# load more Product API
+def load_more_product(request):
+
+    if request.method == "GET":
+        dt = {
+            "has_page": False,
+        }
+
+        try:
+            tmp = "quote/includes/product_list.html"
+            offset = int(request.GET.get("offset", 0))
+            limit = int(request.GET.get("limit", 0))
+            data = Product.objects.all().order_by('-id')[offset:offset+limit]
+            total_data = Product.objects.count()
+            temp = render_to_string(tmp,{"data":data, "offset": int(offset), "has_page": True,} )
+            dt.update({
+                "data": temp,
+                "error": False,
+            })
+            if total_data > (offset+limit):
+                dt.update({
+                    "has_page": True,
+                   
+                })
+            
+
+            return JsonResponse(dt)
+        except ValueError:
+            dt.update({
+                "error": True, "status": 400, "message": ValueError.__str__()
+            })
+            return JsonResponse(dt)
+
+#API get detail product
+def get_detail_product(request):
+
+    dt = {
+        "error": False,
+        "message": "",
+    }
+    if(request.method == "GET"):
+        tmp = "quote/includes/detail_product.html"
+        slug = request.GET.get("slug", "")
+        try:
+            obj_product = Product.objects.get(slug = slug)
+            temp = render_to_string(tmp, {"data": obj_product})
+            dt.update({
+                "data": temp
+            })
+        except ValueError:
+            dt.update({
+                "error": True,
+                "message": ValueError.__str__()
+            })
+    return JsonResponse(dt)
+# load_product_category_list
+def load_product_category_list(request, slug):
+    tmp = "quote/product.html"
+    dt = {
+        "error": False,
+        "message": "",
+        "active_menu": libs.PRODUCT,
+        "has_page": False,
+        "category_selected": ""
+    }
+    
+    try:
+
+        total_data = Product.objects.count()
+        obj_category = Category.objects.filter(slug = slug)[0]
+        obj_product = Product.objects.filter(category = obj_category)[:libs.LIMIT_PAGE]
+        obj_category_list = Category.objects.all()
+
+        if total_data > obj_product.count():
+            dt.update({
+                "has_page": True,
+            })
+        dt.update({
+            "data": obj_product,
+            "category_selected": obj_category,
+            "category": obj_category_list,
+        })
+
+    except ValueError:
+        dt = {
+            "error": True,
+            "message": ValueError.__str__()
+        }
+    return render(request, tmp, dt)
+
+# HTTP Error 400
+def bad_request(request):
+    return render(request, 'quote/layout/400.html', {})
+
+
+# HTTP Error 403
+def permission_denied(request):
+    return render(request, 'quote/layout/403.html', {})
+
+
+# HTTP Error 404
+def page_not_found(request, exception, template_name="quote/layout/404.html"):
+    return render(request, template_name, {})
+
+
+# HTTP Error 500
+def server_error(request):
+    return render(request, 'quote/layout/500.html', {})

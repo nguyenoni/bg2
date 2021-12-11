@@ -17,10 +17,15 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.static import serve
 from django.conf import settings
+from django.conf import urls as conf_urls
 
 urlpatterns = [
-    path('media/<path>', serve, {'document_root': settings.MEDIA_ROOT}),
-    path('static/<path>', serve, {'document_root': settings.STATIC_ROOT}),
+    re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
     path('', include('quote.urls')),
     path('admin/', admin.site.urls),
 ]
+conf_urls.handler400 = 'apps.quote.views.bad_request'
+conf_urls.handler403 = 'apps.quote.views.permission_denied'
+conf_urls.handler500 = 'apps.quote.views.server_error'
+conf_urls.handler404 = 'apps.quote.views.page_not_found'

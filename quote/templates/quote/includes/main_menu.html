@@ -1,0 +1,14 @@
+{% load static %}
+
+<div class="page-sidebar-inner slimscroll">
+    <ul class="menu accordion-menu">
+        <li class="{% if active_menu == 'HOME' %}active{% endif %}"><a href="/" class="waves-effect waves-button"><span class="menu-icon icon-home"></span><p>Trang chủ</p><span class="active-page"></span></a></li>
+        <li class="{% if active_menu == 'LIST_PRODUCT_PROCESSING' %}active{% endif %}"><a href="/" class="waves-effect waves-button"><span class="menu-icon icon-calculator"></span><p>Báo giá</p><span class="active-page"></span></a></li>
+        
+        
+        
+        <li class="{% if active_menu == 'PRODUCT' %}active{% endif %}"><a href="{% url 'load_product_list' %}" class="waves-effect waves-button"><span class="menu-icon icon-grid"></span><p>Sản phẩm</p><span class="active-page"></span></a></li>
+        <li class="{% if active_menu == 'MATERIAL' %}active{% endif %}"><a href="order.html" class="waves-effect waves-button"><span class="menu-icon icon-drop"></span><p>Nguyên liệu</p><span class="active-page"></span></a></li>
+        <li><a href="customer.html" class="waves-effect waves-button"><span class="menu-icon icon-users"></span><p>Liên hệ</p><span class="active-page"></span></a></li>
+    </ul>
+</div><!-- Page Sidebar Inner -->

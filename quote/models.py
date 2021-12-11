@@ -37,13 +37,14 @@ class Product(models.Model):
     unique_product = models.CharField(max_length=20, unique=True, blank=True, verbose_name="UID sản phẩm")
     cover_image = models.ImageField(upload_to=get_upload_to_folder("products"), max_length=512, blank=True, verbose_name="Image")
     slug = models.SlugField(max_length=500, unique=True, blank=True,verbose_name="URL")
+    des= models.TextField(default="", blank=True, verbose_name="Mô tả")
     price = models.FloatField(default=0, verbose_name="Giá")
     category = models.ForeignKey(Category,on_delete=models.CASCADE, related_name="category")
     quantity = models.IntegerField(default=0, verbose_name="Số lượng")
     create_at = models.DateTimeField(auto_created=True, verbose_name="Ngày tạo")
     update_at = models.DateTimeField(auto_now=True, verbose_name="Ngày cập nhật")
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
-
+    
     @staticmethod
     def custom_slugs(slug):
         if slug is not None:

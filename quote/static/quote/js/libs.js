@@ -3,9 +3,8 @@ function get_csrfmiddlewaretoken() {
 }
 
 function show_mess(mess, tp){
-    console.log(tp)
     if(tp === ERR){
-        console.log(tp)
+
         toastr.error(mess)
     }
     else{

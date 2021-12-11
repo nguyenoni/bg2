@@ -115,7 +115,7 @@ Tạo báo giá tự động |Thaihuonggroup
                             </div>
                         </div>
                         <div class="form-group">
-                            <span class="btn btn-danger create-quote-pdf">Tạo báo giá</span>
+                            <span class="btn btn-danger create-quote-pdf">Xuất PDF</span>
                         </div>
                         
                     </form>
@@ -170,14 +170,13 @@ Tạo báo giá tự động |Thaihuonggroup
             </div>
         </div>
     </div>
+    <div id="pdf-file" style="max-width: 920px;">
+
+    </div>
 {% endblock content %}
 {% block script %}
-<script>
 
-</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-
-
 <script src="{% static '/quote/js/create-quote.js' %}"></script>
 <script>
     $('.select2').select2();
