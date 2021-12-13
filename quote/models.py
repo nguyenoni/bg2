@@ -106,6 +106,7 @@ class Volume(models.Model):
 # Nguyên liệu
 class Material(models.Model):
     name = models.CharField(max_length=255, default="", verbose_name="Tên nguyên liệu")
+    cover_image = models.ImageField(upload_to=get_upload_to_folder("material"), max_length=512, blank=True, verbose_name="Image")
     price = models.FloatField(default=0, verbose_name="Giá nguyên liệu")
     product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="material_product", verbose_name="Sản phẩm") #nguyên liệu của sản phẩm nào
     volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="material_volume", verbose_name="Dung tích")

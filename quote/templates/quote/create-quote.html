@@ -31,15 +31,26 @@ Tạo báo giá tự động |Thaihuonggroup
                         <div class="form-group">
                             <label>Chọn sản phẩm gia công</label>
                             <select class="form-control select2 product">
-                                <option value="">--Chọn sản phẩm --</option>
-                            {% if data %}
-                            {% for item in data %}
-                                <option value="{{ item.unique_product }}">{{ item.name }}</option>
-                            {% endfor %}
-                            {% endif %}
+                                {% if product_selected %}
+                                <option value="{{ product_selected.unique_product }}">{{ product_selected.name }}</option>
+                                {% endif %}
+
+                                {% if product_selected %}
                                 
-                            </select>
-                            
+                                    {% for item in data %}
+                                        {% if item != product_selected %}
+                                        <option value="{{ item.unique_product }}">{{item.name}}</option>
+                                        {% endif%}
+                                    
+                                    {% endfor %}
+                                {% else %}
+                                    <option value="">-- Chọn sản phẩm --</option>  
+                                    {% for item in data %}
+                                    <option value="{{ item.unique_product }}">{{item.name}}</option>
+                                    {% endfor %}
+                                {% endif %}
+    <!-- end -->
+                            </select>    
                         </div>
                         <!-- End chọn sản phẩm gia công -->
                         <!-- Chọn dung tích -->
@@ -47,6 +58,11 @@ Tạo báo giá tự động |Thaihuonggroup
                             <label>Chọn dung tích</label>
                             <select class="form-control select volume">
                                 <option value="">--Chọn dung tích--</option>
+                                {% if volume %}
+                                {% for item in volume %}
+                                    <option value="{{ item.unique_volume }}">{{ item.name }}</option>
+                                {% endfor %}
+                                {% endif %}
                             </select>
                             
                         </div>
@@ -115,7 +131,7 @@ Tạo báo giá tự động |Thaihuonggroup
                             </div>
                         </div>
                         <div class="form-group">
-                            <span class="btn btn-danger create-quote-pdf">Xuất PDF</span>
+                            <span class="btn btn-danger create-quote-pdf">Tạo báo giá</span>
                         </div>
                         
                     </form>

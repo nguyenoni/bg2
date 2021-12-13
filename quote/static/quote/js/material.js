@@ -1,67 +1,72 @@
 // when select product
-$('select.product').change(function (e) {
+$('select.volume').change(function (e) {
 
     // e.stopImmediatePropagation();
     e.preventDefault();
     let selected = $(this).children("option:selected").val();
-    if (selected !== null) {
+    if(selected !== null){
         dt = {
-            "cateogry": selected,
+            "volume": selected,
             "csrfmiddlewaretoken": get_csrfmiddlewaretoken(),
         }
 
         $.ajax({
             type: 'POST',
-            url: 'san-pham',
+            url: 'nguyen-lieu',
             dataType: 'json',
             data: dt,
-            success: function (res) {
-                if (res.error == false) {
+            success: function(res){
+                if(res.no_data == true){
+
+                }
+                if(res.error == false){
                     $('.list-product').empty();
 
-                    if (res.no_data == true) {
+                    if(res.no_data == true){
                         $('.list-product').append(res.message);
-                    } else {
+                    }else{
                         $('.list-product').append(res.data);
                     }
-
-
+                    
+                    
                     $('.load-more').attr("data-total", res.total_data);
                     $('.load-more').attr("data-limit", res.limit_page);
 
-                    if (res.has_page == false) {
+                    if(res.has_page == false){
                         $('.load-more').addClass('hide');
                     }
-                    else {
+                    else{
                         $('.load-more').removeClass('hide');
                     }
                 }
-                else {
+                else{
                     show_mess(res.message)
                 }
-
-
+    
+    
             }
-
-
+    
+    
         })
     }
 
 })
 
+// show 
 function load_dt(e, offset, limit){
     e.preventDefault();
     
     dt = {
-        "category": $('select.product').children("option:selected").val(),
+        "volume": $('select.volume').children("option:selected").val(),
         "offset": offset,
         "limit": limit,
         "csrfmiddlewaretoken": get_csrfmiddlewaretoken(),
     }
 
+    console.log(dt);
     $.ajax({
         type: 'POST',
-        url: 'api/load-more-product/',
+        url: 'api/load-more-material/',
         dataType: 'json',
         data: dt,
         success: function (res) {
@@ -92,70 +97,75 @@ function load_dt(e, offset, limit){
 
     })
 }
-// load more product
 
-$('.load-more').click(function (e) {
+// load more product
+$('.load-more').click(function(e){
     e.preventDefault();
-    let select = $('select.product').children("option:selected").val();
     let offset = $('.product-item').length;
     let limit = $(this).attr('data-limit');
-    if (select == "") {
-
-
+    let select = $('select.volume').children("option:selected").val();
+    if(select == ""){
         dt = {
             "offset": offset,
             "limit": limit
         }
         $.ajax({
             type: 'GET',
-            url: 'api/load-more-product/',
+            url: 'api/load-more-material/',
             dataType: 'json',
             data: dt,
-            success: function (res) {
-
-                if (res.error == false) {
+            success: function(res){
+    
+                if(res.error == false){
                     $('.list-product').append(res.data);
-                    if (res.has_page == false) {
+                    if(res.has_page == false){
                         $('.load-more').addClass('hide')
                     }
                 }
-                else {
+                else{
                     show_mess(res.message)
                 }
-
+    
+    
             }
+    
+    
         })
+
     }
     else{
-        load_dt(e, offset, limit);
+        load_dt(e, offset, limit)
     }
 
 })
 
-// item btn detail click
 
-function show_detail(url) {
-    if (url !== null) {
+function show_detail(key){
+
+    if(key !== null){
         let dt = {
-            "slug": url
+            "key": key
         }
         $.ajax({
             type: 'GET',
-            url: 'api/detail-product/',
+            url: 'api/detail-material/',
             dataType: 'json',
             data: dt,
-            success: function (res) {
-
-                if (res.error == false) {
+            success: function(res){
+                
+                if(res.error == false){
                     $('.modal-body').empty();
                     $('.modal-body').append(res.data);
 
                 }
-                else {
+                else{
                     show_mess(res.message)
                 }
+    
+    
             }
-
+    
+    
         })
     }
 }
