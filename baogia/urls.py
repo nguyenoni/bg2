@@ -25,7 +25,7 @@ urlpatterns = [
     path('', include('quote.urls')),
     path('admin/', admin.site.urls),
 ]
-conf_urls.handler400 = 'apps.quote.views.bad_request'
-conf_urls.handler403 = 'apps.quote.views.permission_denied'
-conf_urls.handler500 = 'apps.quote.views.server_error'
-conf_urls.handler404 = 'apps.quote.views.page_not_found'
+# conf_urls.handler400 = 'apps.quote.views.bad_request'
+# conf_urls.handler403 = 'apps.quote.views.permission_denied'
+# conf_urls.handler500 = 'apps.quote.views.server_error'
+# conf_urls.handler404 = 'apps.quote.views.page_not_found'
