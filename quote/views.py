@@ -2,7 +2,7 @@ from datetime import datetime
 from json.encoder import JSONEncoder
 from django.http import response
 from django.http.response import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, resolve_url
 from django.http import HttpResponse, request
 from django.views import View
 from .models import Announced, Category, FeeShipping, Material, PackagingLevel1, PackingWorker, Product, Stamp, Volume, PackagingLevel2
@@ -27,6 +27,32 @@ class list_category(View):
             return render(request, tmp, {"data": obj_category, "active_menu":libs.LIST_PRODUCT_PROCESSING})
 
 
+# Tạo báo giá từ url sản phẩm
+def create_quote_from_product(request, unique_product):
+    tmp = "quote/create-quote.html"
+    dt = {
+        "error": False,
+        "message": "",
+        "active_menu": libs.QUOTE
+    }
+    if(unique_product):
+        try:
+            obj_product = Product.objects.get(unique_product = unique_product)
+            obj_volume = Volume.objects.filter(product = obj_product)
+            obj_product_list = Product.objects.all()
+            dt.update({
+                "data": obj_product_list,
+                "product_selected": obj_product,
+                "volume": obj_volume
+
+            })
+        except ValueError:
+            dt.update({
+                "error": True,
+                "message": ValueError.__str__()
+            })
+    return render(request, tmp, dt)
+    pass
 def detail_category(request, slug):
     tmp = "quote/create-quote.html"
     if(slug and Category.objects.filter(slug = slug)[0]):
@@ -330,7 +356,7 @@ def load_product_list(request):
     if(request.method == "POST"):
         # load category from select box
         cat = request.POST.get("cateogry", "")
-
+    
         obj_category = Category.objects.get(slug = cat)
         
         total_data = Product.objects.filter(category = obj_category).count()
@@ -382,10 +408,68 @@ def load_product_list(request):
         
             return render(request, tmp, dt)
 
+def load_material_list(request):
+    tmp = "quote/material.html"
+    dt ={
+        "error": False,
+        "message": "",
+        "active_menu": libs.MATERIAL,
+        "has_page": False,
+        "no_data": False,
+        }
+    if(request.method == "POST"):
+        # load category from select box
+        unique_v = request.POST.get("volume", "")
+        obj_volume = Volume.objects.get(unique_volume = unique_v)
+        
+        total_data = Material.objects.filter(volume = obj_volume).count()
+        obj_material = Material.objects.filter(volume = obj_volume).order_by('-id')[:libs.LIMIT_PAGE]
+        tmp = "quote/includes/material_list.html"
+        if(obj_material.count() == 0):
+            dt.update({
+                "no_data": True,
+                "message": "Không có dữ liệu hiển thị!"
+            })
+        if total_data > obj_material.count():
     
+            dt.update({
+                "has_page": True,
+            })
+        temp = render_to_string(tmp,{"data":obj_material, "offset": 0, "has_page": True,} )    
+        # obj_volume_list = Volume.objects.all()
+        dt.update({
+            "data": temp,
+            # "volume": obj_volume_list,
+            "total_data": total_data,
+            "limit_page": libs.LIMIT_PAGE
+        })
 
-    
-     
+        return JsonResponse(dt)
+
+    else:
+        try:
+            total_data = Material.objects.count()
+            obj_material = Material.objects.all().order_by('-id')[:libs.LIMIT_PAGE]
+            if total_data > obj_material.count():
+                dt.update({
+                    "has_page": True,
+                })
+            
+            obj_volume = Volume.objects.all()
+            dt.update({
+                "data": obj_material,
+                "volume": obj_volume,
+                "total_data": total_data,
+                "limit_page": libs.LIMIT_PAGE
+            })
+            return render(request, tmp, dt)
+        except ValueError:
+            dt.update({
+                "ERROR": True,
+                "message": ValueError.__str__()
+            })
+        
+            return render(request, tmp, dt)  
 
 # load more Product API
 def load_more_product(request):
@@ -409,15 +493,101 @@ def load_more_product(request):
             if total_data > (offset+limit):
                 dt.update({
                     "has_page": True,
-                   
                 })
-            
-
-            return JsonResponse(dt)
         except ValueError:
             dt.update({
                 "error": True, "status": 400, "message": ValueError.__str__()
             })
+        return JsonResponse(dt)
+    else:
+        dt = {
+            "has_page": False,
+        }
+        try:
+            tmp = "quote/includes/product_list.html"
+            offset = int(request.POST.get("offset", 0))
+            limit = int(request.POST.get("limit", 0))
+            cat = request.POST.get("category","")
+    
+            obj_category = Category.objects.get(slug = cat)
+            data = Product.objects.filter(category = obj_category).order_by('-id')[offset:offset+limit]
+            total_data = Product.objects.filter(category = obj_category).count()
+            
+            temp = render_to_string(tmp,{"data":data, "offset": int(offset), "has_page": True,} )
+            dt.update({
+                "data": temp,
+                "error": False,
+            })
+            if total_data > (offset+limit):
+                dt.update({
+                    "has_page": True,
+                })
+            
+        except ValueError:
+            dt.update({
+                "error": True, "status": 400, "message": ValueError.__str__()
+            })
+        return JsonResponse(dt)
+
+# Load more Material on page material.html
+def load_more_material(request):
+        if request.method == "GET":
+            dt = {
+                "has_page": False,
+            }
+            try:
+                tmp = "quote/includes/material_list.html"
+                offset = int(request.GET.get("offset", 0))
+                limit = int(request.GET.get("limit", 0))
+                data = Material.objects.all().order_by('-id')[offset:offset+limit]
+                total_data = Material.objects.count()
+                temp = render_to_string(tmp,{"data":data, "offset": int(offset), "has_page": True,} )
+                dt.update({
+                    "data": temp,
+                    "error": False,
+                })
+                if total_data > (offset+limit):
+                    dt.update({
+                        "has_page": True,
+                    })
+                
+               
+            except ValueError:
+                dt.update({
+                    "error": True, "status": 400, "message": ValueError.__str__()
+                })
+
+            return JsonResponse(dt)
+        else:
+            dt = {
+                "has_page": False,
+            }
+            try:
+                tmp = "quote/includes/material_list.html"
+                offset = int(request.POST.get("offset", 0))
+                limit = int(request.POST.get("limit", 0))
+                volume = request.POST.get("volume", "")
+
+                obj_volume = Volume.objects.get(unique_volume = volume)
+                data = Material.objects.filter(volume = obj_volume).order_by('-id')[offset:offset+limit]
+                total_data = Material.objects.filter(volume = obj_volume).count()
+
+                temp = render_to_string(tmp,{"data":data, "offset": int(offset), "has_page": True,} )
+                dt.update({
+                    "data": temp,
+                    "error": False,
+                })
+                if total_data > (offset+limit):
+                    dt.update({
+                        "has_page": True,
+                    })
+                
+               
+            except ValueError:
+                dt.update({
+                    "error": True, "status": 400, "message": ValueError.__str__()
+                })
+
             return JsonResponse(dt)
 
 #API get detail product
@@ -442,6 +612,30 @@ def get_detail_product(request):
                 "message": ValueError.__str__()
             })
     return JsonResponse(dt)
+
+# get detail material
+def get_detail_material(request):
+    dt = {
+        "error": False,
+        "message": ""
+    }
+    if(request.method == "GET"):
+        tmp = "quote/includes/detail_material.html"
+        key = int(request.GET.get("key", 0))
+        try:
+            obj_material = Material.objects.get(id=key)
+            temp = render_to_string(tmp, {"data": obj_material})
+            dt.update({
+                "data": temp
+            })
+        except ValueError:
+            dt.update({
+                "error": True,
+                "message": ValueError.__str__()
+            })
+        return JsonResponse(dt)
+    
+
 # load_product_category_list
 def load_product_category_list(request, slug):
     tmp = "quote/product.html"

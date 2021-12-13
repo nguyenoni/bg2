@@ -23,7 +23,7 @@ function show_mess(mess,tp=""){
          }
          $.ajax({
             type: 'POST',
-            url: 'api/load-volume-product/',
+            url: '/api/load-volume-product/',
             dataType: 'json',
             data: dt,
             success: function(data){
@@ -36,9 +36,6 @@ function show_mess(mess,tp=""){
                     arr_dt.map(item=>{
                         $volume.append($.parseHTML(`<option value="${item.unique_volume}">${item.name}</option>`))
                     })
-                    // $('#nof').removeClass('hidden')
-                    // $('#nof>strong').text(data.message)
-                    // $('#comment').val('')
                 }
                 else{
                     show_mess(data.data.message)
@@ -56,7 +53,6 @@ $('select.volume').change(function(e){
     // e.preventDefault();
     let valv = $(this).children("option:selected").val();
     let valp = $('select.product').children("option:selected").val();
-
     $('.change-val').attr("valp",valp)
     $('.change-val').attr("valv",valv)
 
@@ -106,7 +102,7 @@ $('.material').click(function(e){
     }
     $.ajax({
        type: 'POST',
-       url: 'api/load-material/',
+       url: '/api/load-material/',
        dataType: 'json',
        data: dt,
        success: function(data){
@@ -293,7 +289,7 @@ $('.packaging-level1').click(function(e){
     }
     $.ajax({
        type: 'POST',
-       url: 'api/load-packaging-level1/',
+       url: '/api/load-packaging-level1/',
        dataType: 'json',
        data: dt,
        success: function(data){
@@ -325,7 +321,7 @@ $('.packaging-level2').click(function(e){
     }
     $.ajax({
        type: 'POST',
-       url: 'api/load-packaging-level2/',
+       url: '/api/load-packaging-level2/',
        dataType: 'json',
        data: dt,
        success: function(data){
@@ -357,7 +353,7 @@ $('.stamp').click(function(e){
     }
     $.ajax({
        type: 'POST',
-       url: 'api/load-stamp/',
+       url: '/api/load-stamp/',
        dataType: 'json',
        data: dt,
        success: function(data){
@@ -389,7 +385,7 @@ $('.packing-worker').click(function(e){
     }
     $.ajax({
        type: 'POST',
-       url: 'api/load-packing-worker/',
+       url: '/api/load-packing-worker/',
        dataType: 'json',
        data: dt,
        success: function(data){
@@ -422,7 +418,7 @@ $('.announced').click(function(e){
     }
     $.ajax({
        type: 'POST',
-       url: 'api/load-announced/',
+       url: '/api/load-announced/',
        dataType: 'json',
        data: dt,
        success: function(data){
@@ -454,7 +450,7 @@ $('.feeship').click(function(e){
     }
     $.ajax({
        type: 'POST',
-       url: 'api/load-feeship/',
+       url: '/api/load-feeship/',
        dataType: 'json',
        data: dt,
        success: function(data){

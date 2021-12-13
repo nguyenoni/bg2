@@ -7,11 +7,16 @@ urlpatterns = [
     path('export-pdf/<str:product>/<str:volume>/<int:material>/<int:packaging_level1>/<int:packaging_level2>/<int:stamp>/<int:packing_worker>/<int:announced>/<int:feeship>/', views.export_to_pdf, name='export_to_pdf'),
     path('export-csv/<str:product>/<str:volume>/<int:material>/<int:packaging_level1>/<int:packaging_level2>/<int:stamp>/<int:packing_worker>/<int:announced>/<int:feeship>/', views.export_to_csv, name='export_to_pdf'),
     
+    path('tao-bao-gia/<str:unique_product>', views.create_quote_from_product, name="create_quote_from_product"),
+
     path('san-pham', views.load_product_list, name="load_product_list"),
     path('san-pham/<slug:slug>', views.load_product_category_list, name="load_product_category_list"),
+    path('nguyen-lieu', views.load_material_list, name='load_material_list'),
     # API load more data
     path('api/load-more-product/', views.load_more_product, name="load_more_product"),
     path('api/detail-product/', views.get_detail_product, name = "get_detail_product"),
+    path('api/load-more-material/', views.load_more_material, name = "load_more_material"),
+    path('api/detail-material/', views.get_detail_material, name = "get_detail_material"),
     # API
     path('api/load-volume-product/', views.load_volume_product, name="load_volume_product"),
     path('api/load-material/', views.load_material, name="load_material"),
