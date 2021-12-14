@@ -4,7 +4,7 @@ from .views import list_category
 from . import views
 urlpatterns = [
     
-    path('export-pdf/<str:product>/<str:volume>/<int:material>/<int:packaging_level1>/<int:packaging_level2>/<int:stamp>/<int:packing_worker>/<int:announced>/<int:feeship>/', views.export_to_pdf, name='export_to_pdf'),
+    path('export-pdf/<str:product>/<str:volume>/<int:material>/<int:packaging_level1>/<int:packaging_level2>/<int:stamp>/<int:packing_worker>/<int:announced>/<int:feeship>/<int:quantity>', views.export_to_pdf, name='export_to_pdf'),
     path('export-csv/<str:product>/<str:volume>/<int:material>/<int:packaging_level1>/<int:packaging_level2>/<int:stamp>/<int:packing_worker>/<int:announced>/<int:feeship>/', views.export_to_csv, name='export_to_pdf'),
     
     path('tao-bao-gia/<str:unique_product>', views.create_quote_from_product, name="create_quote_from_product"),
@@ -12,6 +12,7 @@ urlpatterns = [
     path('san-pham', views.load_product_list, name="load_product_list"),
     path('san-pham/<slug:slug>', views.load_product_category_list, name="load_product_category_list"),
     path('nguyen-lieu', views.load_material_list, name='load_material_list'),
+    path('lien-he', views.contact, name="contact"),
     # API load more data
     path('api/load-more-product/', views.load_more_product, name="load_more_product"),
     path('api/detail-product/', views.get_detail_product, name = "get_detail_product"),

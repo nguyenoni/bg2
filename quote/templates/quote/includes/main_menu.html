@@ -9,6 +9,6 @@
         
         <li class="{% if active_menu == 'PRODUCT' %}active{% endif %}"><a href="{% url 'load_product_list' %}" class="waves-effect waves-button"><span class="menu-icon icon-grid"></span><p>Sản phẩm</p><span class="active-page"></span></a></li>
         <li class="{% if active_menu == 'MATERIAL' %}active{% endif %}"><a href="{% url 'load_material_list' %}" class="waves-effect waves-button"><span class="menu-icon icon-drop"></span><p>Nguyên liệu</p><span class="active-page"></span></a></li>
-        <li><a href="customer.html" class="waves-effect waves-button"><span class="menu-icon icon-users"></span><p>Liên hệ</p><span class="active-page"></span></a></li>
+        <li class="{% if active_menu == 'CONTACT' %}active{% endif %}"><a href="{% url 'contact' %}" class="waves-effect waves-button"><span class="menu-icon icon-users"></span><p>Liên hệ</p><span class="active-page"></span></a></li>
     </ul>
 </div><!-- Page Sidebar Inner -->

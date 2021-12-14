@@ -63,7 +63,6 @@ function load_dt(e, offset, limit){
         "csrfmiddlewaretoken": get_csrfmiddlewaretoken(),
     }
 
-    console.log(dt);
     $.ajax({
         type: 'POST',
         url: 'api/load-more-material/',

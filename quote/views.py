@@ -8,6 +8,8 @@ from django.views import View
 from .models import Announced, Category, FeeShipping, Material, PackagingLevel1, PackingWorker, Product, Stamp, Volume, PackagingLevel2
 from django.views.generic.detail import DetailView
 from . import libs
+from django.core.mail import EmailMessage
+from django.conf import settings
 # import unicodecsv as csv 
 from django.template.loader import get_template, render_to_string
 # from xhtml2pdf import pisa
@@ -33,7 +35,7 @@ def create_quote_from_product(request, unique_product):
     dt = {
         "error": False,
         "message": "",
-        "active_menu": libs.QUOTE
+        "active_menu": libs.LIST_PRODUCT_PROCESSING
     }
     if(unique_product):
         try:
@@ -62,13 +64,14 @@ def detail_category(request, slug):
     return render(request, tmp, {"data": obj_product, "active_menu": libs.LIST_PRODUCT_PROCESSING})
 
 # Export to pdf
-def export_to_pdf(request, product, volume, material, packaging_level1, packaging_level2, stamp, packing_worker, announced, feeship):
+def export_to_pdf(request, product, volume, material, packaging_level1, packaging_level2, stamp, packing_worker, announced, feeship, quantity):
     tmp = "quote/export_pdf.html"
     
-    if(product and volume and material and packaging_level1 and packaging_level2 and stamp and packing_worker and announced and feeship):
+    if(product and volume and material and packaging_level1 and packaging_level2 and stamp and packing_worker and announced and feeship and quantity):
     
         obj_product = Product.objects.filter(unique_product = product)[0]
-        # obj_volume = Volume.objects.filter(unique_volume = volume)[0]
+        price_product = obj_product.price * quantity
+        obj_volume = Volume.objects.filter(unique_volume = volume)[0]
         obj_material = Material.objects.get(id=material)
         obj_packaging_level1 = PackagingLevel1.objects.get(id=packaging_level1)
         obj_packaging_level2 = PackagingLevel2.objects.get(id=packaging_level2)
@@ -76,10 +79,11 @@ def export_to_pdf(request, product, volume, material, packaging_level1, packagin
         obj_packing_worker = PackingWorker.objects.get(id=packing_worker)
         obj_announced = Announced.objects.get(id=announced)
         obj_feeship = FeeShipping.objects.get(id=feeship)
+        total = (obj_product.price*quantity) + obj_material.price + obj_packaging_level1.price + obj_packaging_level2.price + obj_stamp.price + obj_packing_worker.price + obj_announced.price + obj_feeship.price
         tmp = "quote/export_pdf.html"
 
-        return render(request, tmp, {"product": obj_product, "material": obj_material, "packaging_level1": obj_packaging_level1, "packaging_level2": obj_packaging_level2, 
-        "stamp": obj_stamp, "packing_worker": obj_packing_worker, "announced": obj_announced, "feeship": obj_feeship})
+        return render(request, tmp, {"product": obj_product, "price_product": price_product,"quantity": quantity, "volume": obj_volume, "material": obj_material, "packaging_level1": obj_packaging_level1, "packaging_level2": obj_packaging_level2, 
+        "stamp": obj_stamp, "packing_worker": obj_packing_worker, "announced": obj_announced, "feeship": obj_feeship, "total": total, "time": str(datetime.now())})
 # export to excell
 def export_to_csv(request, product, volume, material, packaging_level1, packaging_level2, stamp, packing_worker, announced, feeship):
   
@@ -689,3 +693,43 @@ def page_not_found(request, exception, template_name="quote/layout/404.html"):
 # HTTP Error 500
 def server_error(request):
     return render(request, 'quote/layout/500.html', {})
+
+# Contact
+def contact(request):
+    temp = "quote/contact.html"
+    dt = {
+        "active_menu": libs.CONTACT,
+        "error": False
+    }
+    if(request.method == "POST"):
+        email_request = request.POST.get("email", "")
+        name = request.POST.get("name", "")
+        phone = request.POST.get("phone","")
+        content = request.POST.get("content", "")
+        data_info = {
+            "email": libs.strip_tags(email_request),
+            "phone": libs.strip_tags(phone),
+            "name": libs.strip_tags(name),
+            "content": libs.strip_tags(content)
+        }
+        subject = "[THÔNG BÁO] Liên Hệ Mới!"
+        email = libs.EMAIL_ADMIN
+        tmp_str = "quote/email_template.html"
+        body = render_to_string(tmp_str, {"data": data_info})
+        dt.update({
+            "message": "Chúng tôi đã nhận được liên hệ của bạn và sẽ phản hồi lại trong thời gian sớm nhất!",
+        })
+        mess = EmailMessage(subject, body, settings.EMAIL_HOST_USER, [email])
+        mess.content_subtype = 'html' # this is required because there is no plain text email message
+        result_send_email = mess.send()
+        # result_send_email = send_mail(subject,body,settings.EMAIL_HOST_USER,[email],fail_silently=True)
+        
+        if(result_send_email == 0):
+            dt.update({
+                "error": True,
+                "message": "Lỗi! hệ thống đang tạm thời gián đoạn."
+            })
+
+        return JsonResponse(dt)
+    else:
+        return render(request, temp, dt)

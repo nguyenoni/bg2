@@ -1,0 +1,75 @@
+{% extends "quote/layout/base.html" %}
+{% load static %}
+
+{% block title %}
+Sản phẩm gia công |Thaihuonggroup
+{% endblock title %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block breadcrumb %}
+<div class="preloader" style="display: block;">
+	<div class="lds-ripple">
+		<div class="lds-pos"></div>
+		<div class="lds-pos"></div>
+	</div>
+</div>
+<div class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li class="active">Liên hệ</li>
+    </ol>
+</div>
+{% endblock breadcrumb %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="panel panel-white">
+        <div class="panel-heading clearfix">
+            <!-- <h1 class="panel-title">Danh sách sản phẩm</h1> -->
+            <div class="panel-control">
+                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-collapse"
+                    data-original-title="Expand/Collapse"><i class="icon-arrow-down"></i></a>
+                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-reload"
+                    data-original-title="Reload"><i class="icon-reload"></i></a>
+            </div>
+        </div>
+        <div class="row row-custom">
+            <div class="col-md-5 center">
+                <div class="panel panel-white" id="js-alerts">
+                    <div class="panel-body">
+                        <div class="login-box">
+                            <a href="index.html" class="logo-name text-lg text-center m-t-xs"><strong>THAIHUONG GROUP</strong></a>
+                            <p class="text-center m-t-md">Vui lòng để lại lời nhắn cho chúng tôi.</p>
+                            <form class="m-t-md" >
+                                <div class="form-group">
+                                    <input type="text" class="form-control name" placeholder="Họ tên" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" class="form-control email" placeholder="Email" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="phone" name="phone" class="form-control phone"  placeholder="0921234567">
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="form-control message" id="content" rows="3"></textarea>
+                                </div>
+                                <span class="btn btn-success btn-block btn-send">Gửi</span>
+                            </form>
+                            <p class="text-center m-t-xs text-sm">2021 &copy; Viss</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+</div>
+{% endblock content %}
+{% block script %}
+<script src="{% static 'quote/js/contact.js'  %}"></script>
+{% endblock script %}

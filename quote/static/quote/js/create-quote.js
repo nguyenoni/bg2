@@ -85,7 +85,6 @@ function show_data_to_table(data, act){
                 </tr>`
             data_show.append(tr);
         })
-
     }
 }
 
