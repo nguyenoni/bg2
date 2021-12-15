@@ -12,6 +12,8 @@ LIST_PRODUCT_PROCESSING = "LIST_PRODUCT_PROCESSING"
 CONTACT = "CONTACT"
 EMAIL_ADMIN = 'songmv.oni@gmail.com'
 LIMIT_PAGE = 1
+# Message
+MESSAGE_NO_DATA = "<p>Không có dữ liệu hiển thị!</p>"
 
 # Generate unique uid
 def generate_uid(tp):

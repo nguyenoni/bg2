@@ -162,6 +162,10 @@ def load_material(request):
                 "data": libs.serializable(obj_material),
                 "title": "Chọn nguyên liệu"
             })
+            if(obj_material.count() == 0):
+                contex.update({
+                    "data": libs.MESSAGE_NO_DATA,
+                })
             return JsonResponse({"data": contex})
         except ValueError:
             contex.update({
@@ -192,6 +196,10 @@ def load_packaging_level1(request):
                 "data": libs.serializable(obj_packaging_level1),
                 "title": "Chọn bao bì cấp 1"
             })
+            if(obj_packaging_level1.count() == 0):
+                contex.update({
+                    "data": libs.MESSAGE_NO_DATA,
+                })
         except ValueError:
             contex.update({
                 "status": 400,
@@ -221,6 +229,10 @@ def load_packaging_level2(request):
                 "data": libs.serializable(obj_packaging_level2),
                 "title": "Chọn bao bì cấp 2"
             })
+            if(obj_packaging_level2.count() == 0):
+                contex.update({
+                    "data": libs.MESSAGE_NO_DATA,
+                })
         except ValueError:
             contex.update({
                 "status": 400,
@@ -250,6 +262,10 @@ def load_stamp(request):
                 "data": libs.serializable(obj_stamp),
                 "title": "Chọn gói tem nhãn"
             })
+            if(obj_stamp.count() == 0):
+                contex.update({
+                    "data": libs.MESSAGE_NO_DATA,
+                })
         except ValueError:
             contex.update({
                 "status": 400,
@@ -279,6 +295,10 @@ def load_packing_worker(request):
                 "data": libs.serializable(obj_packing_worker),
                 "title": "Chọn gói nhân công đóng gói"
             })
+            if(obj_packing_worker.count() == 0):
+                contex.update({
+                    "data": libs.MESSAGE_NO_DATA,
+                })
         except ValueError:
             contex.update({
                 "status": 400,
@@ -308,6 +328,10 @@ def load_announced(request):
                 "data": libs.serializable(obj_announced),
                 "title": "Chọn gói công bố"
             })
+            if(obj_announced.count() == 0):
+                contex.update({
+                    "data": libs.MESSAGE_NO_DATA,
+                })
         except ValueError:
             contex.update({
                 "status": 400,
@@ -337,6 +361,10 @@ def load_feeship(request):
                 "data": libs.serializable(obj_feeship),
                 "title": "Chọn gói vận chuyển"
             })
+            if(obj_feeship.count()==0):
+                contex.update({
+                    "data": libs.MESSAGE_NO_DATA,
+                })
         except ValueError:
             contex.update({
                 "status": 400,
@@ -346,6 +374,30 @@ def load_feeship(request):
 
 
     return JsonResponse({"data": contex})
+
+# API load quantity product
+def load_quantity_product(request):
+    if(request.method == "POST"):
+        dt = {
+            "error": False,
+            "message": "",
+        }
+        try:
+            unique_product = request.POST.get("product", "")
+            quantity = request.POST.get("quantity","")
+            obj_product = Product.objects.get(unique_product = unique_product)
+
+            if(obj_product):
+                dt.update({
+                    "data": obj_product.price * float(quantity),
+                })
+
+        except ValueError:
+            dt.update({
+                "error": True,
+                "message": ValueError.__str__()
+            })
+        return JsonResponse(dt)
 
 # Show product
 def load_product_list(request):
@@ -369,7 +421,7 @@ def load_product_list(request):
         if(obj_product.count() == 0):
             dt.update({
                 "no_data": True,
-                "message": "Không có dữ liệu hiển thị!"
+                "message": libs.MESSAGE_NO_DATA,
             })
         if total_data > obj_product.count():
     
@@ -377,7 +429,7 @@ def load_product_list(request):
                 "has_page": True,
             })
         temp = render_to_string(tmp,{"data":obj_product, "offset": 0, "has_page": True,} )    
-        obj_category_list = Category.objects.all()
+        # obj_category_list = Category.objects.all()
         dt.update({
             "data": temp,
             # "category": obj_category_list,
@@ -610,6 +662,7 @@ def get_detail_product(request):
             dt.update({
                 "data": temp
             })
+   
         except ValueError:
             dt.update({
                 "error": True,
@@ -632,6 +685,7 @@ def get_detail_material(request):
             dt.update({
                 "data": temp
             })
+      
         except ValueError:
             dt.update({
                 "error": True,

@@ -69,39 +69,40 @@ Tạo báo giá tự động |Thaihuonggroup
                         </div>
                         <div class="form-group">
                             <label>Nhập số lượng sản phẩm</label>
-                            <input type="number" name="number" class="form-control quantity" placeholder="10" val="">
+                            <input type="number" name="number" class="form-control quantity" placeholder="10" value="">
+                            <input type="hidden" value="" class="result_multi_product_quantity">
                         </div>
                         <div class="form-group ">
                             <div class="dataTables_wrapper table-responsive">
                                 <table class="table ">
                                     <tbody>
-                    
+                                        
                                         <tr>
                                             <td class="material-type hide"><strong>Nguyên liệu:</strong></td>
                                             <td class="material-title hide">Tên nguyên liệu</td>
                                             <td class="material-price hide text-success"></td>
-                                            <td class=""><span class="btn btn-success btn-xs material material-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data">Chọn nguyên liệu</span></td>
+                                            <td class=""><span class="btn btn-success btn-xs material material-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data"><span class="menu-icon icon-plus"></span> Chọn nguyên liệu</span></td>
                                             <td class="material-action hide" scope="row"> <span title="Sửa" style="color:#38434e; cursor: pointer;" class="icon-pencil material" data-toggle="modal" data-target="#show-data"></span> <span title="Xóa" style="color:red; cursor: pointer;" class="icon-trash delete-item" type-del="material"></span> </td>
                                         </tr>
                                         <tr>
                                             <td class="packaging-level1-type hide"><strong>Bao bì cấp 1:</strong></td>
                                             <td class="packaging-level1-title hide">Tên bao bì cấp 1</td>
                                             <td class="packaging-level1-price hide text-success"></td>
-                                            <td class=""><span class="btn btn-success btn-xs packaging-level1 packaging-level1-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data">Chọn bao bì cấp 1</span></td>
+                                            <td class=""><span class="btn btn-success btn-xs packaging-level1 packaging-level1-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data"><span class="menu-icon icon-plus"></span> Chọn bao bì cấp 1</span></td>
                                             <td class="packaging-level1-action hide" scope="row"> <span title="Sửa" style="color:#38434e; cursor: pointer;" class="icon-pencil packaging-level1" data-toggle="modal" data-target="#show-data"></span> <span title="Xóa" style="color:red; cursor: pointer;" class="icon-trash delete-item"class="icon-trash delete-item" type-del="packaging-level1"></span> </td>
                                         </tr>
                                         <tr>
                                             <td class="packaging-level2-type hide"><strong>Bao bì cấp 2:</strong></td>
                                             <td class="packaging-level2-title hide">Tên bao bì cấp 2</td>
                                             <td class="packaging-level2-price hide text-success"></td>
-                                            <td class=""><span class="btn btn-success btn-xs packaging-level2 packaging-level2-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data">Chọn bao bì cấp 2</span></td>
+                                            <td class=""><span class="btn btn-success btn-xs packaging-level2 packaging-level2-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data"><span class="menu-icon icon-plus"></span> Chọn bao bì cấp 2</span></td>
                                             <td class="packaging-level2-action hide" scope="row"> <span title="Sửa" style="color:#38434e; cursor: pointer;" class="icon-pencil packaging-level2"data-toggle="modal" data-target="#show-data"></span> <span title="Xóa" style="color:red; cursor: pointer;" class="icon-trash delete-item" type-del="packaging-level2"></span> </td>
                                         </tr>
                                         <tr>
                                             <td class="stamp-type hide"><strong>Tem nhãn:</strong></td>
                                             <td class="stamp-title hide">Tên tem nhãn</td>
                                             <td class="stamp-price hide text-success"></td>
-                                            <td class=""><span class="btn btn-success btn-xs stamp stamp-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data">Chọn tem nhãn</span></td>
+                                            <td class=""><span class="btn btn-success btn-xs stamp stamp-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data"><span class="menu-icon icon-plus"></span> Chọn tem nhãn</span></td>
                                             <td class="stamp-action hide" scope="row"> <span title="Sửa" style="color:#38434e; cursor: pointer;" class="icon-pencil stamp" data-toggle="modal" data-target="#show-data"></span> <span title="Xóa" style="color:red; cursor: pointer;" class="icon-trash delete-item" type-del="stamp"></span> </td>
                                         </tr>
                                 
@@ -109,27 +110,27 @@ Tạo báo giá tự động |Thaihuonggroup
                                             <td class="packing-worker-type hide"><strong>Gói nhân công đóng gói:</strong></td>
                                             <td class="packing-worker-title hide">Tên gói nhân công đóng gói</td>
                                             <td class="packing-worker-price hide text-success"></td>
-                                            <td class=""><span class="btn btn-success btn-xs packing-worker packing-worker-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data">Chọn gói nhân công đóng gói</span></td>
+                                            <td class=""><span class="btn btn-success btn-xs packing-worker packing-worker-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data"><span class="menu-icon icon-plus"></span> Chọn gói nhân công đóng gói</span></td>
                                             <td class="packing-worker-action hide" scope="row"> <span title="Sửa" style="color:#38434e; cursor: pointer;" class="icon-pencil packing-worker" data-toggle="modal" data-target="#show-data"></span> <span title="Xóa" style="color:red; cursor: pointer;" class="icon-trash delete-item" type-del="packing-worker"></span> </td>
                                         </tr>
                                         <tr>
                                             <td class="announced-type hide"><strong>Gói công bố kiểm nghiệm:</strong></td>
                                             <td class="announced-title hide">Tên gói công bố kiểm nghiệm</td>
                                             <td class="announced-price hide text-success"></td>
-                                            <td class=""><span class="btn btn-success btn-xs announced announced-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data">Chọn gói công bố kiểm nghiệm</span></td>
+                                            <td class=""><span class="btn btn-success btn-xs announced announced-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data"><span class="menu-icon icon-plus"></span> Chọn gói công bố kiểm nghiệm</span></td>
                                             <td class="announced-action hide" scope="row"> <span title="Sửa" style="color:#38434e; cursor: pointer;" class="icon-pencil announced" data-toggle="modal" data-target="#show-data"></span> <span title="Xóa" style="color:red; cursor: pointer;" class="icon-trash delete-item" type-del="announced"></span> </td>
                                         </tr>
                                         <tr>
                                             <td class="feeship-type hide"><strong>Gói vận chuyển:</strong></td>
                                             <td class="feeship-title hide">Tên gói phí vận chuyển</td>
                                             <td class="feeship-price hide text-success"></td>
-                                            <td class=""><span class="btn btn-success btn-xs feeship feeship-button fee change-val" valp="" valv="" data-toggle="modal" data-target="#show-data">Chọn gói vận chuyển</span></td>
+                                            <td class=""><span class="btn btn-success btn-xs feeship feeship-button fee change-val" valp="" valv="" data-toggle="modal" data-target="#show-data"><span class="menu-icon icon-plus"></span> Chọn gói vận chuyển</span></td>
                                             <td class="feeship-action hide" scope="row"> <span title="Sửa" style="color:#38434e; cursor: pointer;" class="icon-pencil feeship" data-toggle="modal" data-target="#show-data"></span></span> <span title="Xóa" style="color:red; cursor: pointer;" class="icon-trash delete-item" type-del="feeship"></span> </td>
                                         </tr>
                                         <tr>
                                             <td class="total-tt hide"></td>
                                             <td class="total-title hide" scope="row"><strong>Tổng tiền(tạm tính): </strong></td>
-                                            <td class="total-price text-danger hide"><b>0</b> <sup>vnđ</sup></td>
+                                            <td class="total-price text-danger hide"><b>0</b> <sup>đ</sup></td>
                                         </tr>
                                     </tbody>
                                 </table>

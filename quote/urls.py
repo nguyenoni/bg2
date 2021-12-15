@@ -27,6 +27,7 @@ urlpatterns = [
     path('api/load-packing-worker/', views.load_packing_worker, name="load_stamp"),
     path('api/load-announced/', views.load_announced, name="load_announced"),
     path('api/load-feeship/', views.load_feeship, name="load_feeship"),
+    path('api/load-quantity-product/', views.load_quantity_product, name="load_quantity_product"),
 
     path('', list_category.as_view(), name='list_category'),
     path('<slug:slug>', views.detail_category, name='detail_category'),

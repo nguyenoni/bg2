@@ -10,6 +10,27 @@ function show_mess(mess,tp=""){
         toastr.success(mess);
     }
 }
+// Reset all()
+function reset(){
+    // $('.change-val').removeClass('hide');
+    remove_item_choose("material", false);
+    remove_item_choose("packaging-level1", false);
+    remove_item_choose("packaging-level2",false);
+    remove_item_choose("stamp",false);
+    remove_item_choose("packing-worker",false);
+    remove_item_choose("announced", false);
+    remove_item_choose("feeship",false);
+    // remove_item_choose("total", false);
+    $('.total-title').addClass("hide");
+    $('.total-price').addClass("hide");
+    $('.result_multi_product_quantity').val("")
+    $('.quantity').val("");
+}
+// when icon reload click
+$('.icon-reload').click(function(e){
+    e.preventDefault();
+    reset();
+})
 // when select product
     $('select.product').change(function (e) {
 
@@ -36,6 +57,11 @@ function show_mess(mess,tp=""){
                     arr_dt.map(item=>{
                         $volume.append($.parseHTML(`<option value="${item.unique_volume}">${item.name}</option>`))
                     })
+
+                    $('.result_multi_product_quantity').val("")
+                    $('.quantity').val("")
+                    reset();
+                    update_total();
                 }
                 else{
                     show_mess(data.data.message)
@@ -55,6 +81,10 @@ $('select.volume').change(function(e){
     let valp = $('select.product').children("option:selected").val();
     $('.change-val').attr("valp",valp)
     $('.change-val').attr("valv",valv)
+    $('.result_multi_product_quantity').val("")
+    $('.quantity').val("")
+    update_total();
+    reset();
 
 })
 
@@ -70,7 +100,7 @@ function show_title_modal(tt){
 function show_data_to_table(data, act){
     show_title_modal(data.title);
     arr_dt = data.data
-    if(arr_dt){
+    if(typeof arr_dt != "string"){
         
         let data_show = $('.data-show');
         data_show.empty();
@@ -79,12 +109,16 @@ function show_data_to_table(data, act){
                     <th scope="row">${index+1}</th> 
                     <!-- <th><img src="assets/images/avatar1.png" style="width: 60px;" /></th> -->
                     <th>${item.name}</th>
-                    <td class="text-success"><b>${item.price}</b> <sup>vnđ</sup></td>
-                    <th>${item.note}</th>
-                    <th><span class="btn btn-success btn-xs add-to-quote" onclick="add_to_qoute(${item.key}, '${item.name}', ${item.price}, '${item.note}', '${act}')">Thêm vào báo giá</span></th>
+                    <td class="text-success"><b>${item.price}</b> <sup>đ</sup></td>
+                    <th>${truncate(item.note,20)}</th>
+                    <th><span class="btn btn-success btn-xs add-to-quote" onclick="add_to_qoute(${item.key},'${act}')">Thêm vào báo giá</span></th>
                 </tr>`
             data_show.append(tr);
         })
+    }else{
+        let data_show = $('.data-show');
+        data_show.empty();
+        data_show.append(data.data);
     }
 }
 
@@ -108,6 +142,7 @@ $('.material').click(function(e){
            if(data.data.status==200){
             //    show_mess(data.data.message)
                arr_dt = data.data.data
+               set_data_to_local(arr_dt, LIST_MATERIAL);
                show_data_to_table(data.data, MATERIAL)
            }
            else{
@@ -120,46 +155,78 @@ $('.material').click(function(e){
 
 })
 
+// Function set data to local storage
+function set_data_to_local(dt, type_set){
+    if(dt){
+        localStorage.removeItem(type_set)
+        localStorage.setItem(type_set, JSON.stringify(dt))
+    }
+}
+
+function find_item(dt, key){
+    let result;
+    if(dt){
+        result = dt.find(element => element.key == key);
+    }
+    return result
+}
+
 // Event click to add-to-quote
 // $('.add-to-quote').click(function(e){
 //     dataLayer.push({ 'event': 'button1-click' });
 // })
 // Function add to qoute when click in set item to quote
-function add_to_qoute(key, name, price, note, action){
-    data = {
-        "key":key,
-        "name": name,
-        "price": price,
-        "note": note
-    }
+function add_to_qoute(key, action){
+
     if(action ===MATERIAL){
         // Add data choose to row in qoute page
+        arr = JSON.parse(localStorage.getItem(LIST_MATERIAL))
+        let data = find_item(arr, key)
         add_data_to_row_quote(data, 'material');
         show_mess("Đã thêm nguyên liệu vào báo giá");
+        hide_modal();
     }
     else if(action === PACKAGINGLEVEL1){
+        arr = JSON.parse(localStorage.getItem(LIST_PACKAGINGLEVEL1))
+        let data = find_item(arr, key)
         add_data_to_row_quote(data, 'packaging-level1');
         show_mess("Đã thêm bao bì cấp 1 vào báo giá");
+        hide_modal();
     }
     else if(action === PACKAGINGLEVEL2){
+        arr = JSON.parse(localStorage.getItem(LIST_PACKAGINGLEVEL2))
+        let data = find_item(arr, key)
         add_data_to_row_quote(data, 'packaging-level2');
         show_mess("Đã thêm bao bì cấp 2 vào báo giá");
+        hide_modal();
     }
     else if(action === STAMP){
+        arr = JSON.parse(localStorage.getItem(LIST_STAMP))
+        let data = find_item(arr, key)
         add_data_to_row_quote(data, 'stamp');
         show_mess("Đã thêm tem nhãn vào báo giá");
+        hide_modal();
     }
     else if(action === PACKINGWORKER){
+        arr = JSON.parse(localStorage.getItem(LIST_PACKINGWORKER))
+        let data = find_item(arr, key)
         add_data_to_row_quote(data, 'packing-worker');
         show_mess("Đã thêm nhân công đóng gói vào báo giá");
+        hide_modal();
     }
     else if(action === ANNOUNCED){
+        arr = JSON.parse(localStorage.getItem(LIST_ANNOUNCED))
+        let data = find_item(arr, key)
         add_data_to_row_quote(data, 'announced');
         show_mess("Đã thêm gói công bố kiểm nghiệm vào báo giá");
+        hide_modal();
     }
     else if(action === FEESHIP){
+        arr = JSON.parse(localStorage.getItem(LIST_FEESHIP))
+        let data = find_item(arr, key)
         add_data_to_row_quote(data, 'feeship');
         show_mess("Đã thêm gói vận chuyển vào báo giá");
+        hide_modal();
     }
     
 }
@@ -174,9 +241,12 @@ function update_total(){
     let stamp = parseInt($(".stamp-price>b").text());
     let announced = parseInt($(".announced-price>b").text());
     let feeship = parseInt($(".feeship-price>b").text());
-
+    let result_multi_price_quantity = parseInt($('.result_multi_product_quantity').val());
     // console.log(packaging_level1)
-    
+
+    if(!isNaN(result_multi_price_quantity)){
+        total += result_multi_price_quantity
+    }
     if(!isNaN(material)){
         total+=material;
     }if(!isNaN(packaging_level1)){
@@ -203,7 +273,7 @@ function update_total(){
     $('.total-title').removeClass('hide');
 
     $('.total-price').empty();
-    $('.total-price').append($.parseHTML(`<b>${total.toLocaleString("fi-FI")}</b> <sup>vnđ</sup>`));
+    $('.total-price').append($.parseHTML(`<b>${total.toLocaleString("fi-FI")}</b> <sup>đ</sup>`));
     
     
     localStorage.removeItem("total");
@@ -228,7 +298,7 @@ function add_data_to_row_quote(data, class_add_data){
         price.text("");
 
         title.text(data.name);
-        price.append($.parseHTML(`<b>${data.price}</b> <sup>vnđ</sup>`));
+        price.append($.parseHTML(`<b>${data.price}</b> <sup>đ</sup>`));
         // price.text(data.price)
 
         type.removeClass('hide');
@@ -253,7 +323,7 @@ $('.delete-item').click(function(e){
     remove_item_choose(type_del);
 })
 // Delete item chose and remove on localStorage
-function remove_item_choose(item){
+function remove_item_choose(item, is_show_mes = true){
     localStorage.removeItem(item);
     
     // remove data in row choose
@@ -271,7 +341,10 @@ function remove_item_choose(item){
     price.addClass('hide');
     btn.removeClass('hide');
     act.addClass('hide');
-    show_mess("Đã xóa lựa chọn khỏi báo giá!");
+    if(is_show_mes == true){
+        show_mess("Đã xóa lựa chọn khỏi báo giá!");
+    }
+    
     update_total();
 }
 
@@ -295,6 +368,7 @@ $('.packaging-level1').click(function(e){
            if(data.data.status==200){
             //    show_mess(data.data.message)
                arr_dt = data.data.data;
+               set_data_to_local(arr_dt, LIST_PACKAGINGLEVEL1);
                show_data_to_table(data.data, PACKAGINGLEVEL1);
            }
            else{
@@ -329,6 +403,7 @@ $('.packaging-level2').click(function(e){
                
             //    show_mess(data.data.message)
                arr_dt = data.data.data;
+               set_data_to_local(arr_dt, LIST_PACKAGINGLEVEL2);
                show_data_to_table(data.data, PACKAGINGLEVEL2);
            }
            else{
@@ -360,7 +435,8 @@ $('.stamp').click(function(e){
            if(data.data.status==200){
                
             //    show_mess(data.data.message)
-               arr_dt = data.data.data;
+                arr_dt = data.data.data;
+                set_data_to_local(arr_dt, LIST_STAMP);
                show_data_to_table(data.data, STAMP);
            }
            else{
@@ -393,6 +469,7 @@ $('.packing-worker').click(function(e){
                
             //    show_mess(data.data.message)
                arr_dt = data.data.data;
+               set_data_to_local(arr_dt, LIST_PACKINGWORKER);
                show_data_to_table(data.data, PACKINGWORKER);
            }
            else{
@@ -426,6 +503,7 @@ $('.announced').click(function(e){
                
             //    show_mess(data.data.message)
                arr_dt = data.data.data;
+               set_data_to_local(arr_dt, LIST_ANNOUNCED);
                show_data_to_table(data.data, ANNOUNCED);
            }
            else{
@@ -458,6 +536,7 @@ $('.feeship').click(function(e){
                
             //    show_mess(data.data.message)
                arr_dt = data.data.data;
+               set_data_to_local(arr_dt, LIST_FEESHIP);
                show_data_to_table(data.data, FEESHIP);
            }
            else{
@@ -467,3 +546,43 @@ $('.feeship').click(function(e){
 
    })
 })
+
+// When change number input
+$('.quantity').bind('keyup mouseup', function (e) {
+    e.preventDefault();
+    let quantity = $(this).val();
+    let product = $('select.product').children("option:selected").val();
+    let volume = $('select.volume').children("option:selected").val();
+
+    if(quantity !== "" & volume !== "" & product !== ""){
+        dt = {
+            "product": product,
+            "quantity": quantity,
+            'csrfmiddlewaretoken': get_csrfmiddlewaretoken(),
+        }
+        // console.log(dt);
+        $.ajax({
+            type: 'POST',
+            url: '/api/load-quantity-product/',
+            dataType: 'json',
+            data: dt,
+            success: function(res){
+                if(res.error == false){
+                    
+                 //    show_mess(data.data.message)
+                    $('.result_multi_product_quantity').val("")
+                    $('.result_multi_product_quantity').val(res.data)
+                    update_total();
+                }
+                else{
+                    show_mess(data.data.message);
+                }
+            }
+     
+        })
+    }else{
+        $('.result_multi_product_quantity').val("");
+        $('.quantity').val("");           
+        update_total();
+    }           
+});
