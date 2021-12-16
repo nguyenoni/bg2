@@ -64,27 +64,69 @@ def detail_category(request, slug):
     return render(request, tmp, {"data": obj_product, "active_menu": libs.LIST_PRODUCT_PROCESSING})
 
 # Export to pdf
-def export_to_pdf(request, product, volume, material, packaging_level1, packaging_level2, stamp, packing_worker, announced, feeship, quantity):
-    tmp = "quote/export_pdf.html"
-    
-    if(product and volume and material and packaging_level1 and packaging_level2 and stamp and packing_worker and announced and feeship and quantity):
-    
-        obj_product = Product.objects.filter(unique_product = product)[0]
-        price_product = obj_product.price * quantity
-        obj_volume = Volume.objects.filter(unique_volume = volume)[0]
-        obj_material = Material.objects.get(id=material)
-        obj_packaging_level1 = PackagingLevel1.objects.get(id=packaging_level1)
-        obj_packaging_level2 = PackagingLevel2.objects.get(id=packaging_level2)
-        obj_stamp = Stamp.objects.get(id=stamp)
-        obj_packing_worker = PackingWorker.objects.get(id=packing_worker)
-        obj_announced = Announced.objects.get(id=announced)
-        obj_feeship = FeeShipping.objects.get(id=feeship)
-        total = (obj_product.price*quantity) + obj_material.price + obj_packaging_level1.price + obj_packaging_level2.price + obj_stamp.price + obj_packing_worker.price + obj_announced.price + obj_feeship.price
-        tmp = "quote/export_pdf.html"
+def export_to_pdf(request, quote):
+    url = quote.split("-")
+    print(url)
+    data = "rGvutXYWp84u5HH6jGIo1w=="
+    # encrypted = libs.encrypt(data)
+    # print('encrypted ECB Base64:',encrypted.decode("utf-8", "ignore"))
 
-        return render(request, tmp, {"product": obj_product, "price_product": price_product,"quantity": quantity, "volume": obj_volume, "material": obj_material, "packaging_level1": obj_packaging_level1, "packaging_level2": obj_packaging_level2, 
-        "stamp": obj_stamp, "packing_worker": obj_packing_worker, "announced": obj_announced, "feeship": obj_feeship, "total": total, "time": str(datetime.now())})
-# export to excell
+    
+    print(libs.get_decrypt(data))
+
+    return HttpResponse(quote.split("-"))
+# def export_to_pdf(request, product, volume, material, packaging_level1, packaging_level2, stamp, packing_worker, announced, feeship, quantity):
+#     tmp = "quote/export_pdf.html"
+#     dt = {
+#         "total": 0,
+#     }
+#     if(product and volume and material and packing_worker and announced and quantity):
+
+#         p_pklv1 = 0
+#         p_pklv2 = 0
+#         p_st = 0
+#         p_fs = 0
+#         if(packaging_level1 != 0):
+#             obj_packaging_level1 = PackagingLevel1.objects.get(id=packaging_level1)
+#             dt.update({
+#                 "packaging_level1": obj_packaging_level1,
+#             })
+#             p_pklv1 = obj_packaging_level1.price
+#         if(packaging_level2 != 0):
+#             obj_packaging_level2 = PackagingLevel2.objects.get(id=packaging_level2)
+#             dt.update({
+#                 "packaging_level2": obj_packaging_level2,
+#             })
+#             p_pklv2 = obj_packaging_level2.price
+#         if(stamp != 0):
+#             obj_stamp = Stamp.objects.get(id=stamp)
+#             dt.update({
+#                 "stamp": obj_stamp,
+#             })
+#             p_st = obj_stamp.price
+#         if(feeship != 0):
+#             obj_feeship = FeeShipping.objects.get(id=feeship)
+#             dt.update({
+#                 "feeship": obj_feeship, 
+#             })
+#             p_fs = obj_feeship.price
+#         else:
+#             pass
+
+#         obj_product = Product.objects.filter(unique_product = product)[0]
+#         price_product = obj_product.price * quantity
+#         obj_volume = Volume.objects.filter(unique_volume = volume)[0]
+#         obj_material = Material.objects.get(id=material)
+#         obj_packing_worker = PackingWorker.objects.get(id=packing_worker)
+#         obj_announced = Announced.objects.get(id=announced)
+
+#         total = (obj_product.price*quantity) + obj_material.price + p_pklv1 + p_pklv2 + p_st + obj_packing_worker.price + obj_announced.price + p_fs
+#         dt.update({"product": obj_product, "price_product": price_product,"quantity": quantity, "volume": obj_volume, "material": obj_material, 
+#          "packing_worker": obj_packing_worker, "announced": obj_announced, "total": total, "time": str(datetime.now())})
+   
+
+#     return render(request, tmp, dt)
+# # export to excell
 def export_to_csv(request, product, volume, material, packaging_level1, packaging_level2, stamp, packing_worker, announced, feeship):
   
     

@@ -78,7 +78,7 @@ Tạo báo giá tự động |Thaihuonggroup
                                     <tbody>
                                         
                                         <tr>
-                                            <td class="material-type hide"><strong>Nguyên liệu:</strong></td>
+                                            <td class="material-type hide"><strong>Nguyên liệu<sup><i class="icon-info" title="Giá nguyên liệu được tính trên một sản phẩm"></i></sup> :</strong></td>
                                             <td class="material-title hide">Tên nguyên liệu</td>
                                             <td class="material-price hide text-success"></td>
                                             <td class=""><span class="btn btn-success btn-xs material material-button change-val" valp="" valv="" data-toggle="modal" data-target="#show-data"><span class="menu-icon icon-plus"></span> Chọn nguyên liệu</span></td>
@@ -197,7 +197,7 @@ Tạo báo giá tự động |Thaihuonggroup
     </div>
 {% endblock content %}
 {% block script %}
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script src="{% static '/quote/js/create-quote.js' %}"></script>
 <script>

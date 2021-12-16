@@ -105,15 +105,15 @@
 
 
       <tr>
-        <th>STT</th>
         <th></th>
+        <th>#</th>
         <th>Tên</th>
         <th>Số lượng</th>
         <th>Đơn giá</th>
         <th>Thành tiền</th>
       </tr>
       <tr>
-        <td>1</td>
+        <td></td>
         <th>Sản phẩm</th>
         <td>{{ product.name }}</td>
         <td>{{ quantity }}</td>
@@ -121,61 +121,69 @@
         <td>{{ price_product|floatformat:0|intcomma }} <sup>đ</sup></td>
       </tr>
       <tr>
-        <td>2</td>
+        <td></td>
         <th>Nguyên liệu</th>
         <td>{{ material.name }}</td>
-        <td>1</td>
-        <td>{{ material.price|floatformat:0|intcomma }} <sup>đ</sup></td>
-        <td>{{ material.price|floatformat:0|intcomma }} <sup>đ</sup></td>
+        <td>{{quantity}}</td>
+        <td>{{material.price|floatformat:0|intcomma}} <sup>đ</sup></td>
+        <td>{% widthratio material.price 1 quantity|floatformat:0|intcomma%} <sup>đ</sup></td>
       </tr>
+      {% if packaging_level1 %}
       <tr>
-        <td>3</td>
+        <td></td>
         <th>Bao bì cấp 1</th>
         <td>{{ packaging_level1.name }}</td>
-        <td>1</td>
+        <td>{{quantity}}</td>
         <td>{{ packaging_level1.price|floatformat:0|intcomma }} <sup>đ</sup></td>
-        <td>{{ packaging_level1.price|floatformat:0|intcomma }} <sup>đ</sup></td>
+        <td>{% widthratio packaging_level1.price 1 quantity|floatformat:0|intcomma%}  <sup>đ</sup></td>
       </tr>
+      {% endif %}
+      {% if packaging_level2 %}
       <tr>
-        <td>4</td>
+        <td></td>
         <th>Bao bì cấp 2</th>
         <td>{{ packaging_level2.name }}</td>
-        <td>1</td>
+        <td>{{quantity}}</td>
         <td>{{ packaging_level2.price|floatformat:0|intcomma }} <sup>đ</sup></td>
-        <td>{{ packaging_level2.price|floatformat:0|intcomma }} <sup>đ</sup></td>
+        <td>{% widthratio packaging_level2.price 1 quantity|floatformat:0|intcomma%}   <sup>đ</sup></td>
       </tr>
+      {% endif %}
+      {% if stamp %}
       <tr>
-        <td>5</td>
+        <td></td>
         <th>Tem nhãn</th>
         <td>{{ stamp.name }}</td>
-        <td>1</td>
+        <td>{{quantity}}</td>
         <td>{{ stamp.price|floatformat:0|intcomma }} <sup>đ</sup></td>
-        <td>{{ stamp.price|floatformat:0|intcomma }} <sup>đ</sup></td>
+        <td>{% widthratio stamp.price 1 quantity|floatformat:0|intcomma%}   <sup>đ</sup></td>
       </tr>
+      {% endif %}
       <tr>
-        <td>6</td>
-        <th>Nhân công đóng gói</th>
+        <td></td>
+        <th>Chi phí nhân công</th>
         <td>{{ packing_worker.name }}</td>
-        <td>1</td>
+        <td>{{quantity}}</td>
         <td>{{ packing_worker.price|floatformat:0|intcomma }} <sup>đ</sup></td>
-        <td>{{ packing_worker.price|floatformat:0|intcomma }} <sup>đ</sup></td>
+        <td>{% widthratio packing_worker.price 1 quantity|floatformat:0|intcomma%}   <sup>đ</sup></td>
       </tr>
       <tr>
-        <td>7</td>
+        <td></td>
         <th>Chi phí giấy công bố, kiểm nghiệm</th>
         <td>{{ announced.name }}</td>
         <td>1</td>
         <td>{{ announced.price|floatformat:0|intcomma }} <sup>đ</sup></td>
         <td>{{ announced.price|floatformat:0|intcomma }} <sup>đ</sup></td>
       </tr>
+      {% if feeship %}
       <tr>
-        <td>8</td>
-        <th>Vận chuyển</th>
+        <td></td>
+        <th>Chi phí vận chuyển</th>
         <td>{{ feeship.name }}</td>
         <td>1</td>
         <td>{{ feeship.price|floatformat:0|intcomma }} <sup>đ</sup></td>
         <td>{{ feeship.price|floatformat:0|intcomma }} <sup>đ</sup></td>
       </tr>
+      {% endif %}
       <tr>
         <td></td>
         <td></td>
