@@ -5,7 +5,7 @@ from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, resolve_url
 from django.http import HttpResponse, request
 from django.views import View
-from .models import Announced, Category, FeeShipping, Material, PackagingLevel1, PackingWorker, Product, Stamp, Volume, PackagingLevel2
+from .models import Announced, Category, FeeShipping, Material, PackagingLevel1, PackingWorker, Product, Stamp, Volume, PackagingLevel2, Param
 from django.views.generic.detail import DetailView
 from . import libs
 from django.core.mail import EmailMessage
@@ -65,16 +65,70 @@ def detail_category(request, slug):
 
 # Export to pdf
 def export_to_pdf(request, quote):
-    url = quote.split("-")
-    print(url)
-    data = "rGvutXYWp84u5HH6jGIo1w=="
-    # encrypted = libs.encrypt(data)
-    # print('encrypted ECB Base64:',encrypted.decode("utf-8", "ignore"))
+    obj_param = Param.objects.get(md5=quote)
+    url = obj_param.url
+    arr = url.split("-")
+    product = arr[0]
+    volume = arr[1] 
+    material = int(arr[2])
+    packaging_level1 = int(arr[3])
+    packaging_level2 = int(arr[4])
+    stamp = int(arr[5])
+    packing_worker = int(arr[6])
+    announced = int(arr[7])
+    feeship = int(arr[8])
+    quantity = int(arr[9])
+    tmp = "quote/export_pdf.html"
+    dt = {
+        "total": 0,
+    }
+    if(product and volume and material and packing_worker and announced and quantity):
 
-    
-    print(libs.get_decrypt(data))
+        p_pklv1 = 0
+        p_pklv2 = 0
+        p_st = 0
+        p_fs = 0
+        if(packaging_level1 != 0):
+            obj_packaging_level1 = PackagingLevel1.objects.get(id=packaging_level1)
+            dt.update({
+                "packaging_level1": obj_packaging_level1,
+            })
+            p_pklv1 = obj_packaging_level1.price
+        if(packaging_level2 != 0):
+            obj_packaging_level2 = PackagingLevel2.objects.get(id=packaging_level2)
+            dt.update({
+                "packaging_level2": obj_packaging_level2,
+            })
+            p_pklv2 = obj_packaging_level2.price
+        if(stamp != 0):
+            obj_stamp = Stamp.objects.get(id=stamp)
+            dt.update({
+                "stamp": obj_stamp,
+            })
+            p_st = obj_stamp.price
+        if(feeship != 0):
+            obj_feeship = FeeShipping.objects.get(id=feeship)
+            dt.update({
+                "feeship": obj_feeship, 
+            })
+            p_fs = obj_feeship.price
+        else:
+            pass
 
-    return HttpResponse(quote.split("-"))
+        obj_product = Product.objects.filter(unique_product = product)[0]
+        price_product = obj_product.price * quantity
+        obj_volume = Volume.objects.filter(unique_volume = volume)[0]
+        obj_material = Material.objects.get(id=material)
+        obj_packing_worker = PackingWorker.objects.get(id=packing_worker)
+        obj_announced = Announced.objects.get(id=announced)
+
+        total = (obj_product.price*quantity) + obj_material.price + p_pklv1 + p_pklv2 + p_st + obj_packing_worker.price + obj_announced.price + p_fs
+        dt.update({"product": obj_product, "price_product": price_product,"quantity": quantity, "volume": obj_volume, "material": obj_material, 
+         "packing_worker": obj_packing_worker, "announced": obj_announced, "total": total, "time": str(datetime.now())})
+   
+
+    return render(request, tmp, dt)
+
 # def export_to_pdf(request, product, volume, material, packaging_level1, packaging_level2, stamp, packing_worker, announced, feeship, quantity):
 #     tmp = "quote/export_pdf.html"
 #     dt = {
@@ -160,7 +214,31 @@ def export_to_csv(request, product, volume, material, packaging_level1, packagin
     #     return res
     pass
 
-
+# API get param
+def api_get_param(request):
+    dt = {
+        "error": False
+    }
+    if(request.method == "POST"):
+        slug = request.POST.get('slug', '')
+        try:
+            if(Param.objects.filter(url = slug).count()== 0):
+                # URL chưa có
+                obj_param = Param.objects.create(url = slug, md5 = libs.get_md5_sign_key([slug]))
+                dt.update({
+                    "data": obj_param.to_dict()
+                })
+            else:
+                obj_param = Param.objects.get(url = slug)
+                dt.update({
+                    "data": obj_param.to_dict()
+                })
+        except ValueError:
+            dt.update({
+                "error": True,
+                "message": "Hệ thống không thể xử lý yêu cầu, vui lòng thử lại!"
+            })
+    return JsonResponse(dt)
 # API get volume with UID product
 def load_volume_product(request):
     contex={
@@ -771,24 +849,14 @@ def load_product_category_list(request, slug):
         }
     return render(request, tmp, dt)
 
-# HTTP Error 400
-def bad_request(request):
-    return render(request, 'quote/layout/400.html', {})
-
-
-# HTTP Error 403
-def permission_denied(request):
-    return render(request, 'quote/layout/403.html', {})
 
 
 # HTTP Error 404
-def page_not_found(request, exception, template_name="quote/layout/404.html"):
-    return render(request, template_name, {})
-
-
-# HTTP Error 500
-def server_error(request):
-    return render(request, 'quote/layout/500.html', {})
+def handler404(request, exception):
+    tmp = "quote/404.html"
+    return render(request, tmp, status= 404)
+def handler500(request):
+    return render(request, 'quote/500.html', status=500)
 
 # Contact
 def contact(request):
@@ -829,3 +897,153 @@ def contact(request):
         return JsonResponse(dt)
     else:
         return render(request, temp, dt)
+
+# Load packaging level
+def load_packaging_level(request):
+    tmp = "quote/packaging_level.html"
+    dt ={
+        "error": False,
+        "message": "",
+        "active_menu": libs.PACKAGING,
+        "has_page": False,
+        "no_data": False,
+        }
+    if(request.method == "POST"):
+        # load category from select box
+        unique_v = request.POST.get("volume", "")
+        obj_volume = Volume.objects.get(unique_volume = unique_v)
+        
+        total_data = PackagingLevel1.objects.filter(volume = obj_volume).count()
+        obj_packaging = PackagingLevel1.objects.filter(volume = obj_volume).order_by('-id')[:libs.LIMIT_PAGE]
+        tmp = "quote/includes/packaging_list.html"
+        if(obj_packaging.count() == 0):
+            dt.update({
+                "no_data": True,
+                "message": "Không có dữ liệu hiển thị!"
+            })
+        if total_data > obj_packaging.count():
+    
+            dt.update({
+                "has_page": True,
+            })
+        temp = render_to_string(tmp,{"data":obj_packaging, "offset": 0, "has_page": True,} )    
+        # obj_volume_list = Volume.objects.all()
+        dt.update({
+            "data": temp,
+            # "volume": obj_volume_list,
+            "total_data": total_data,
+            "limit_page": libs.LIMIT_PAGE
+        })
+
+        return JsonResponse(dt)
+
+    else:
+        try:
+            total_data = PackagingLevel1.objects.count()
+            obj_packaging = PackagingLevel1.objects.all().order_by('-id')[:libs.LIMIT_PAGE]
+            if total_data > obj_packaging.count():
+                dt.update({
+                    "has_page": True,
+                })
+            
+            obj_volume = Volume.objects.all()
+            dt.update({
+                "data": obj_packaging,
+                "volume": obj_volume,
+                "total_data": total_data,
+                "limit_page": libs.LIMIT_PAGE
+            })
+            return render(request, tmp, dt)
+        except ValueError:
+            dt.update({
+                "ERROR": True,
+                "message": ValueError.__str__()
+            })
+        
+            return render(request, tmp, dt)  
+
+    return render(request, tmp, dt)
+
+# API load detail packaging level
+def get_detail_packaging(request):
+    dt = {
+        "error": False,
+        "message": ""
+    }
+    if(request.method == "GET"):
+        tmp = "quote/includes/detail_packaging.html"
+        key = int(request.GET.get("key", 0))
+        try:
+            obj_packaging_level1 = PackagingLevel1.objects.get(id=key)
+            temp = render_to_string(tmp, {"data": obj_packaging_level1})
+            dt.update({
+                "data": temp
+            })
+      
+        except ValueError:
+            dt.update({
+                "error": True,
+                "message": ValueError.__str__()
+            })
+        return JsonResponse(dt)
+
+# Load more Packaging on page packaging.html
+def load_more_packaging(request):
+        if request.method == "GET":
+            dt = {
+                "has_page": False,
+            }
+            try:
+                tmp = "quote/includes/packaging_list.html"
+                offset = int(request.GET.get("offset", 0))
+                limit = int(request.GET.get("limit", 0))
+                data = PackagingLevel1.objects.all().order_by('-id')[offset:offset+limit]
+                total_data = PackagingLevel1.objects.count()
+                temp = render_to_string(tmp,{"data":data, "offset": int(offset), "has_page": True,} )
+                dt.update({
+                    "data": temp,
+                    "error": False,
+                })
+                if total_data > (offset+limit):
+                    dt.update({
+                        "has_page": True,
+                    })
+                
+            except ValueError:
+                dt.update({
+                    "error": True, "status": 400, "message": ValueError.__str__()
+                })
+
+            return JsonResponse(dt)
+        else:
+            dt = {
+                "has_page": False,
+            }
+            try:
+                tmp = "quote/includes/packaging_list.html"
+                offset = int(request.POST.get("offset", 0))
+                limit = int(request.POST.get("limit", 0))
+                volume = request.POST.get("volume", "")
+
+                obj_volume = Volume.objects.get(unique_volume = volume)
+                data = PackagingLevel1.objects.filter(volume = obj_volume).order_by('-id')[offset:offset+limit]
+                total_data = PackagingLevel1.objects.filter(volume = obj_volume).count()
+
+                temp = render_to_string(tmp,{"data":data, "offset": int(offset), "has_page": True,} )
+                dt.update({
+                    "data": temp,
+                    "error": False,
+                })
+                if total_data > (offset+limit):
+                    dt.update({
+                        "has_page": True,
+                    })
+                
+               
+            except ValueError:
+                dt.update({
+                    "error": True, "status": 400, "message": ValueError.__str__()
+                })
+
+            return JsonResponse(dt)
+

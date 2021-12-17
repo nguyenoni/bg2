@@ -11,7 +11,7 @@ $('.create-quote-pdf').click(function (e) {
     let packing_worker = JSON.parse(localStorage.getItem("packing-worker"))
     let announced = JSON.parse(localStorage.getItem("announced"))
     let feeship = JSON.parse(localStorage.getItem("feeship"))
-    let url = ``;
+
 
     if(packaging_level1 == undefined){
         packaging_level1 = 0;
@@ -49,11 +49,21 @@ $('.create-quote-pdf').click(function (e) {
         packaging_level2 = (packaging_level2 ==0)? packaging_level2.toString() : packaging_level2.key.toString();
         stamp = (stamp == 0)?stamp.toString():stamp.key.toString();
         feeship = (feeship==0)?feeship.toString():feeship.key.toString();
+        const param = `${product}-${volume}-${material.key}-${packaging_level1}-${packaging_level2}-${stamp}-${packing_worker.key}-${announced.key}-${feeship}-${quantity}`;
         
-        let a = `export-pdf/${encrypt(product)}-${encrypt(volume)}-${encrypt(material.key.toString())}-${encrypt(packaging_level1)}-${encrypt(packaging_level2)}-${encrypt(stamp)}-${encrypt(packing_worker.key.toString())}-${encrypt(announced.key.toString())}-${encrypt(feeship)}-${encrypt(quantity.toString())}`
-        // url = `/export-pdf/${product}/${volume}/${material.key}/${packaging_level1 = (packaging_level1 ==0)? packaging_level1 : packaging_level1.key}/${packaging_level2 = (packaging_level2 ==0)? packaging_level2 : packaging_level2.key}/${stamp = (stamp == 0)?stamp:stamp.key}/${packing_worker.key}/${announced.key}/${feeship=(feeship==0)?feeship:feeship.key}/${quantity}`;
-        window.open(a)
-        console.log(a);
+        let dt = {
+            "slug": param,
+            'csrfmiddlewaretoken': get_csrfmiddlewaretoken(),
+        }
+        res = request("POST", '/api/get-param/',dt)
+ 
+        if(res.error == false){
+            let url = `export-pdf/${res.data.url}`;
+            window.open(url);
+        }
+        else{
+            show_mess(res.message, ERR);
+        }
     }
 
 })

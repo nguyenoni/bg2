@@ -1,11 +1,7 @@
 import uuid 
 from datetime import date
 from django.utils.html import strip_tags
-
-import base64 
-from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad,unpad
-from Crypto.Random import get_random_bytes #only for AES CBC mode
+import hashlib
 
 HOME = "HOME"
 QUOTE = "QUOTE"
@@ -15,6 +11,7 @@ PACKAGING_LEVEL1 = "PACKAGING_LEVEL1"
 PACKAGING_LEVEL2 = "PACKAGING_LEVEL2"
 LIST_PRODUCT_PROCESSING = "LIST_PRODUCT_PROCESSING"
 CONTACT = "CONTACT"
+PACKAGING = "PACKAGING"
 EMAIL_ADMIN = 'songmv.oni@gmail.com'
 LIMIT_PAGE = 1
 # Message
@@ -43,26 +40,10 @@ def removed_tags(strs):
         return strip_tags(strs)
     return []
 
-
-key = 'AAAAAAAAAAAAAAAA' #Must Be 16 char for AES128
-
-iv =  'BBBBBBBBBBBBBBBB'.encode('utf-8') #16 char for AES128
-
-def encrypt(data,key,iv):
-        data= pad(data.encode(),16)
-        cipher = AES.new(key.encode('utf-8'),AES.MODE_CBC,iv)
-        return base64.b64encode(cipher.encrypt(data))
-
-def decrypt(enc,key,iv):
-        enc = base64.b64decode(enc)
-        cipher = AES.new(key.encode('utf-8'), AES.MODE_CBC, iv)
-        return unpad(cipher.decrypt(enc),16)
-
-def get_decrypt(el):
-    decrypted = decrypt(el,key,iv)
-    return decrypted.decode("utf-8", "ignore")
-# encrypted = encrypt(data)
-# print('encrypted ECB Base64:',encrypted.decode("utf-8", "ignore"))
-
-# decrypted = decrypt(encrypted)
-# print('data: ',decrypted.decode("utf-8", "ignore"))
+def get_md5_sign_key(data=[]):
+    hash_md5 = hashlib.md5()
+    my_str = ""
+    for item in data:
+        my_str+=item
+    hash_md5.update(my_str.encode('utf-8'))
+    return hash_md5.hexdigest()

@@ -1,0 +1,134 @@
+{% extends "quote/layout/base.html" %}
+{% load static %}
+
+{% block title %}
+Sản phẩm gia công |Thaihuonggroup
+{% endblock title %}
+
+
+{% block breadcrumb %}
+<div class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li class="active">Nguyên liệu</li>
+    </ol>
+</div>
+{% endblock breadcrumb %}
+
+{% block content %}
+<div class="col-md-12">
+    <div class="panel panel-white">
+        <div class="panel-heading clearfix">
+            <h1 class="panel-title">Danh sách nguyên liệu</h1>
+            <div class="panel-control">
+                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-collapse"
+                    data-original-title="Expand/Collapse"><i class="icon-arrow-down"></i></a>
+                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-reload"
+                    data-original-title="Reload"><i class="icon-reload"></i></a>
+            </div>
+        </div>
+        <div class="row row-custom">
+            <form class="col-md-6">
+       
+                <!-- End chọn sản phẩm gia công -->
+                <!-- Chọn dung tích -->
+                <div class="form-group">
+                    <label>Lọc theo dung tích</label>
+                    <select class="form-control select2 volume">
+                        {% if volume_selected %}
+                        <option value="{{ item.slug }}">{{ item.name }}</option>
+                        {% endif %}
+
+                        {% if volume_selected %}
+                           
+                            {% for item in volume %}
+                                {% if item != volume_selected %}
+                                <option value="{{ item.unique_volume }}">{{item.name}}</option>
+                                {% endif%}
+                            
+                            {% endfor %}
+                        {% else %}
+                            <option value="">-- Chọn dung tích --</option>  
+                            {% for item in volume %}
+                            <option value="{{ item.unique_volume }}">{{item.name}}</option>
+                            {% endfor %}
+                        {% endif %}
+                    </select>
+
+                </div>
+                <div class="form-group ">
+                    <div class="dataTables_wrapper table-responsive">
+                        <table class="table ">
+                            <tbody class="list-product">
+                                <tr>
+                                    <th style="width: 0.2em;">#</th>
+                                    <th>Hình ảnh</th>
+                                    <th>Tên nguyên liệu</th>
+                                    <th>Giá</th>
+                                    <td>#</td>
+                                </tr>
+                                {% if data %}
+                                    {% for item in data %}
+                                        <tr class="product-item">
+                                            <td style="width: 0.2em;">{{ forloop.counter }}</td>
+                                            <td><img src="{{ item.image.url }}" style="width: 60px;" /></td>
+                                            <td class="">{{ item.name }}</td>
+                                            <td class="text-success"><b>{{ item.price }}</b> <sup>vnđ</sup></td>
+                                            <td class=""><span
+                                                    class="btn btn-success btn-xs item-btn-detail" onclick="show_detail('{{ item.id }}')"
+                                                 data-toggle="modal" data-target="#show-data">Chi tiết</span></td>
+                                        </tr>
+                                    {% endfor %}
+                                {% endif %}
+                                
+                            </tbody>
+                        </table>
+                        
+                        <button class="btn btn-danger load-more {% if has_page == False %}hide{% endif %}" data-total="{{total_data}}" data-limit="{{ limit_page }}">Xem thêm</button>
+                    </div>
+                </div>
+      
+
+            </form>
+
+            <!-- Modal -->
+
+
+            <div class="modal fade bd-example-modal-lg" id="show-data" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Chi tiết nguyên liệu</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            
+                         
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary btn-secondary"
+                                data-dismiss="modal">Đóng</button>
+                            <!-- <button type="button" class="btn btn-primary copy-voucher" val="" data-url="">Copy mã giảm giá</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end modal -->
+
+        </div>
+
+    </div>
+</div>
+</div>
+{% endblock content %}
+{% block script %}
+<script type="application/javascript"  src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script type="application/javascript" src="{% static 'quote/js/packaging.js' %}"></script>
+<script>
+    $('.select2').select2();
+</script>
+{% endblock script %}

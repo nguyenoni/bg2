@@ -354,3 +354,18 @@ class Quote(models.Model):
         verbose_name = "Bảng báo giá"
         verbose_name_plural = "Bảng báo giá"
         ordering = ['id']
+# Custom url when create quote
+class Param(models.Model):
+    url = models.TextField(blank=True, verbose_name="URL")
+    md5 = models.CharField(blank=True, default="", max_length= 255, verbose_name="MD5")
+
+    def to_dict(self):
+        return {
+            "url": self.md5,
+        }
+
+    class Meta:
+        verbose_name = "Bảng url export PDF"
+        verbose_name_plural = "Bảng export PDF"
+        ordering = ['id']
+    

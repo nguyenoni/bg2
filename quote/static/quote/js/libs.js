@@ -52,13 +52,3 @@ const LIST_PACKINGWORKER = "list_packingworker";
 const LIST_ANNOUNCED = "list_announced";
 const LIST_FEESHIP = "list_feeship";
 
-
-
-//JS FIX IV ENCRYPTION CBC
-function encrypt(el){
-    var key ='AAAAAAAAAAAAAAAA'//key used in Python
-    key = CryptoJS.enc.Utf8.parse(key);
-    var iv = CryptoJS.enc.Utf8.parse('BBBBBBBBBBBBBBBB')
-    var encrypted = CryptoJS.AES.encrypt(el, key, { iv: iv, mode: CryptoJS.mode.CBC});
-    return encrypted.toString();
-}
