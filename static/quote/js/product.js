@@ -18,7 +18,6 @@ $('select.product').change(function (e) {
             success: function (res) {
                 if (res.error == false) {
                     $('.list-product').empty();
-
                     if (res.no_data == true) {
                         $('.list-product').append(res.message);
                     } else {

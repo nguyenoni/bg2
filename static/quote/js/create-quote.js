@@ -163,17 +163,6 @@ $('.material').click(function (e) {
     else {
         show_mess(data.data.message)
     }
-    // $.ajax({
-    //     type: 'POST',
-    //     url: '',
-    //     dataType: 'json',
-    //     data: dt,
-    //     success: function (data) {
-           
-    //     }
-
-    // })
-
 
 })
 

@@ -58,7 +58,7 @@ $('.create-quote-pdf').click(function (e) {
         res = request("POST", '/api/get-param/',dt)
  
         if(res.error == false){
-            let url = `export-pdf/${res.data.url}`;
+            let url = `/export-pdf/${res.data.url}`;
             window.open(url);
         }
         else{

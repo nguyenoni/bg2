@@ -5,7 +5,7 @@ from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, resolve_url
 from django.http import HttpResponse, request
 from django.views import View
-from .models import Announced, Category, FeeShipping, Material, PackagingLevel1, PackingWorker, Product, Stamp, Volume, PackagingLevel2, Param
+from .models import Announced, Category, FeeShipping, ImageMaterial, ImagePackagingLevel1, ImageProduct, Material, PackagingLevel1, PackingWorker, Product, Stamp, Volume, PackagingLevel2, Param
 from django.views.generic.detail import DetailView
 from . import libs
 from django.core.mail import EmailMessage
@@ -23,10 +23,17 @@ from django.template.loader import get_template, render_to_string
 class list_category(View):
 
     def get(self, request):
-        tmp = "quote/category.html"
+        tmp = "quote/index.html"
+        # tmp = "quote/category.html"
+        obj_product = Product.objects.all()
         obj_category = Category.objects.all()
-        if(obj_category):
-            return render(request, tmp, {"data": obj_category, "active_menu":libs.LIST_PRODUCT_PROCESSING})
+        dt ={
+            "data": obj_product, "active_menu":libs.CREATE_QUOTE,
+            "category": obj_category
+        }
+        # return HttpResponse("ahihi")
+        if(obj_product):
+            return render(request, tmp, dt)
 
 
 # Tạo báo giá từ url sản phẩm
@@ -35,12 +42,12 @@ def create_quote_from_product(request, unique_product):
     dt = {
         "error": False,
         "message": "",
-        "active_menu": libs.LIST_PRODUCT_PROCESSING
+        "active_menu": libs.CREATE_QUOTE
     }
     if(unique_product):
         try:
             obj_product = Product.objects.get(unique_product = unique_product)
-            obj_volume = Volume.objects.filter(product = obj_product)
+            obj_volume = Volume.objects.all()
             obj_product_list = Product.objects.all()
             dt.update({
                 "data": obj_product_list,
@@ -54,14 +61,14 @@ def create_quote_from_product(request, unique_product):
                 "message": ValueError.__str__()
             })
     return render(request, tmp, dt)
-    pass
-def detail_category(request, slug):
-    tmp = "quote/create-quote.html"
-    if(slug and Category.objects.filter(slug = slug)[0]):
-        obj_category = Category.objects.filter(slug=slug)[0]
-        obj_product = Product.objects.filter(category = obj_category)
 
-    return render(request, tmp, {"data": obj_product, "active_menu": libs.LIST_PRODUCT_PROCESSING})
+def crete_quote(request):
+    tmp = "quote/create-quote.html"
+    
+    # obj_category = Category.objects.filter(slug=slug)[0]
+    obj_product = Product.objects.all()
+
+    return render(request, tmp, {"data": obj_product, "active_menu": libs.CREATE_QUOTE})
 
 # Export to pdf
 def export_to_pdf(request, quote):
@@ -125,7 +132,8 @@ def export_to_pdf(request, quote):
         total = (obj_product.price*quantity) + obj_material.price + p_pklv1 + p_pklv2 + p_st + obj_packing_worker.price + obj_announced.price + p_fs
         dt.update({"product": obj_product, "price_product": price_product,"quantity": quantity, "volume": obj_volume, "material": obj_material, 
          "packing_worker": obj_packing_worker, "announced": obj_announced, "total": total, "time": str(datetime.now())})
-   
+
+        print(dt)
 
     return render(request, tmp, dt)
 
@@ -248,8 +256,8 @@ def load_volume_product(request):
     if(request.method == "POST" and request.POST.get('unique_product')):
         unique_product = request.POST.get('unique_product')
         try:
-            obj_product = Product.objects.filter(unique_product = unique_product)[0]
-            obj_volume = Volume.objects.filter(product = obj_product)
+            # obj_product = Product.objects.filter(unique_product = unique_product)[0]
+            obj_volume = Volume.objects.all()
             contex.update({
                 "data": libs.serializable(obj_volume),
                 "message": "Load dung tích thành công!"
@@ -521,7 +529,7 @@ def load_quantity_product(request):
 
 # Show product
 def load_product_list(request):
-    tmp = "quote/product.html"
+    tmp = "quote/index.html"
     dt ={
         "error": False,
         "message": "",
@@ -767,28 +775,80 @@ def load_more_material(request):
             return JsonResponse(dt)
 
 #API get detail product
-def get_detail_product(request):
+def get_detail_product(request, slug):
 
     dt = {
         "error": False,
         "message": "",
+        "active_menu": libs.PRODUCT,
     }
-    if(request.method == "GET"):
-        tmp = "quote/includes/detail_product.html"
-        slug = request.GET.get("slug", "")
-        try:
-            obj_product = Product.objects.get(slug = slug)
-            temp = render_to_string(tmp, {"data": obj_product})
-            dt.update({
-                "data": temp
-            })
-   
-        except ValueError:
-            dt.update({
-                "error": True,
-                "message": ValueError.__str__()
-            })
-    return JsonResponse(dt)
+    tmp = "quote/detail_product.html"
+
+    try:
+        obj_product = Product.objects.get(slug = slug)
+        obj_images = ImageProduct.objects.filter(product = obj_product)
+        # temp = render_to_string(tmp, {"data": obj_product})
+        dt.update({
+            "data": obj_product,
+            'images': obj_images
+        })
+
+    except ValueError:
+        dt.update({
+            "error": True,
+            "message": ValueError.__str__()
+        })
+    # return JsonResponse(dt)
+    return render(request, tmp, dt)
+
+# Detail material
+def detail_material(request, pk):
+    dt = {
+        "error": False,
+        "message": "",
+        "active_menu": libs.MATERIAL,
+    }
+    tmp = "quote/detail_material.html"
+
+    try:
+        obj_material = Material.objects.get(id = pk)
+        obj_images = ImageMaterial.objects.filter(material = obj_material)
+        # temp = render_to_string(tmp, {"data": obj_product})
+        dt.update({
+            "data": obj_material,
+            'images': obj_images
+        })
+
+    except ValueError:
+        dt.update({
+            "error": True,
+            "message": ValueError.__str__()
+        })
+    # return JsonResponse(dt)
+    return render(request, tmp, dt)
+# get detail packaging level
+def detail_packaging_level1(request, pk):
+    tmp = "quote/detail_packaging_level1.html"
+    dt = {
+        "error": False,
+        "message": "",
+        "active_menu": libs.PACKAGING
+    }
+    try:
+        obj_packaging_level1 = PackagingLevel1.objects.get(id = pk)
+        obj_image = ImagePackagingLevel1.objects.filter(packaginglevel1 = obj_packaging_level1)
+        dt.update({
+            "data": obj_packaging_level1,
+            "images": obj_image
+        })
+
+    except ValueError:
+        dt.update({
+            "error": True,
+            "message": ValueError.__str__()
+        })
+
+    return render(request, tmp, dt)
 
 # get detail material
 def get_detail_material(request):

@@ -79,7 +79,7 @@ class Volume(models.Model):
     name = models.CharField(max_length=50, default= "", verbose_name="Tên dung tích")
     unique_volume = models.CharField(max_length=20, unique=True, blank=True, verbose_name="UID Dung tích")
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="volume_product")
+    # product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="volume_product")
     create_at = models.DateField(auto_now_add=True, verbose_name="Ngày tạo")
     update_at = models.DateField(auto_now=True, verbose_name="Cập nhật")
 
@@ -133,7 +133,7 @@ class Material(models.Model):
     def __str__(self):
         return self.name
 
-# Bao bì cấp 1
+# Bao bì cấp 1 Chai lọ
 class PackagingLevel1(models.Model):
     name = models.CharField(max_length=255, default="", verbose_name="Tên bao bì cấp 1")
     type_packaging = models.CharField(max_length=50, default="", verbose_name="Loại bao bì")
@@ -179,7 +179,7 @@ class PackagingLevel1(models.Model):
     def __str__(self):
         return self.name
 
-# Bao bì cấp 2
+# Bao bì cấp 2 Hộp
 class PackagingLevel2(models.Model):
     name = models.CharField(max_length=255, default="", verbose_name="Tên bao bì cấp 2")
     price = models.FloatField(default=0, verbose_name="Giá bao bì")
@@ -369,3 +369,31 @@ class Param(models.Model):
         verbose_name_plural = "Bảng export PDF"
         ordering = ['id']
     
+# Hình ảnh sản phẩm
+class ImageProduct(models.Model):
+    image = models.ImageField(upload_to=get_upload_to_folder("products"), max_length=512, blank=True, verbose_name="Image")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=False, blank=False, verbose_name=("Product"), related_name="child_media")
+
+    class Meta:
+        verbose_name = "Hình ảnh sản phẩm"
+        verbose_name_plural = "Hình ảnh sản phẩm"
+        ordering = ['id']
+# Hình ảnh Nguyên liệu
+class ImageMaterial(models.Model):
+    image = models.ImageField(upload_to=get_upload_to_folder("materials"), max_length=512, blank=True, verbose_name="Image")
+    material = models.ForeignKey(Material, on_delete=models.CASCADE, null=False, blank=False, verbose_name=("Material"), related_name="child_media")
+
+    class Meta:
+        verbose_name = "Hình ảnh Nguyên liệu"
+        verbose_name_plural = "Hình ảnh Nguyên liệu"
+        ordering = ['id']
+
+# Hình ảnh Bao bì cấp 1 Chai lọ
+class ImagePackagingLevel1(models.Model):
+    image = models.ImageField(upload_to=get_upload_to_folder("packaginglevel1"), max_length=512, blank=True, verbose_name="Image")
+    packaginglevel1 = models.ForeignKey(PackagingLevel1, on_delete=models.CASCADE, null=False, blank=False, verbose_name=("PackagingLevel1"), related_name="child_media")
+
+    class Meta:
+        verbose_name = "Hình ảnh Bao bì cấp 1"
+        verbose_name_plural = "Hình ảnh Bao bì cấp 1"
+        ordering = ['id']

@@ -73,7 +73,8 @@ Sản phẩm gia công |Thaihuonggroup
                                         <tr class="product-item">
                                             <td style="width: 0.2em;">{{ forloop.counter }}</td>
                                             <td><img src="{{ item.cover_image.url }}" style="width: 60px;" /></td>
-                                            <td class="">{{ item.name }}</td>
+                                            <td class=""><a href="#" class="nav-link"  onclick="show_detail('{{ item.slug }}')"
+                                                data-toggle="modal" data-target="#show-data">{{ item.name }}</a></td>
                                             <td class="text-success"><b>{{ item.price }}</b> <sup>vnđ</sup></td>
                                             <td class=""><span
                                                     class="btn btn-success btn-xs item-btn-detail" onclick="show_detail('{{ item.slug }}')"
@@ -128,7 +129,7 @@ Sản phẩm gia công |Thaihuonggroup
 {% endblock content %}
 {% block script %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-<script src="{% static 'quote/js/product.js' %}"></script>
+<script  type="application/javascript"  src="{% static 'quote/js/product.js' %}"></script>
 <script>
     $('.select2').select2();
 </script>
