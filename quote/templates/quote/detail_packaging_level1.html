@@ -112,13 +112,27 @@
                 </section>
             </div>
             <div class="col-md-6">
-                <h3>{{ data.name }}</h3>
+                <h1>{{ data.name }}</h1>
                 <hr />
-                <p>{{ data.note|truncatewords:25 }}</p>
+                <p>{{ data.note|safe|truncatewords:25 }}</p>
                 <hr />
-                <p><strong class="text-success">Giá bán: {{ data.price }}<sup>đ</sup></strong></p>
+                <p><strong class="text-success">Giá bán: {{ data.price|floatformat:0 }}<sup>đ</sup></strong></p>
                 <hr />
-            
+                <h3>Thông tin bổ sung:</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <th>Loại bao bì</th>
+                        <th>Chất liệu</th>
+                        <th>Nhà cung cấp</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ data.type_packaging }}</td>
+                            <td>{{ data.type_material }}</td>
+                            <td>{{ data.provider }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="row row_product list-product">
                 <div class="col-md-12">
@@ -126,7 +140,7 @@
                     <hr />
                     
                     <p>
-                        {{data.note}}
+                        {{data.note|safe}}
                     </p>
                 </div>
                 <!-- {% if data %}
@@ -151,19 +165,12 @@
 
         </div>
 
-
-
-
-
     </div>
 
 </div>
 
 {% endblock content %}
 {% block script %}
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script> -->
 <script type="application/javascript" src="{% static 'quote/js/detail_product.js' %}"></script>
-<!-- <script type="application/javascript">
-    $('.select2').select2();
-</script> -->
+
 {% endblock script %}

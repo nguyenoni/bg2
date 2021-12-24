@@ -3,13 +3,12 @@
 <div class="page-sidebar-inner slimscroll">
     <ul class="menu accordion-menu">
         <li class="{% if active_menu == 'HOME' %}active{% endif %}"><a href="/" class="waves-effect waves-button"><span class="menu-icon icon-home"></span><p>Trang chủ</p><span class="active-page"></span></a></li>
-        <li class="{% if active_menu == 'CREATE_QUOTE' %}active{% endif %}"><a href="{% url 'form-quote' %}" class="waves-effect waves-button"><span class="menu-icon icon-calculator"></span><p>Báo giá</p><span class="active-page"></span></a></li>
-        
-        
-        
+    
         <li class="{% if active_menu == 'PRODUCT' %}active{% endif %}"><a href="{% url 'load_product_list' %}" class="waves-effect waves-button"><span class="menu-icon icon-grid"></span><p>Sản phẩm</p><span class="active-page"></span></a></li>
         <li class="{% if active_menu == 'MATERIAL' %}active{% endif %}"><a href="{% url 'load_material_list' %}" class="waves-effect waves-button"><span class="menu-icon icon-drop"></span><p>Nguyên liệu</p><span class="active-page"></span></a></li>
-        <li class="{% if active_menu == 'PACKAGING' %}active{% endif %}"><a href="{% url 'load_packaging_level' %}" class="waves-effect waves-button"><span class="menu-icon icon-drawer"></span><p>Bao bì</p><span class="active-page"></span></a></li>
+        <li class="{% if active_menu == 'PACKAGING_LEVEL1' %}active{% endif %}"><a href="{% url 'load_packaging_level' %}" class="waves-effect waves-button"><span class="menu-icon icon-drawer"></span><p>Bao bì cấp 1</p><span class="active-page"></span></a></li>
+        <li class="{% if active_menu == 'PACKAGING_LEVEL2' %}active{% endif %}"><a href="{% url 'list_packaging_level2' %}" class="waves-effect waves-button"><span class="menu-icon icon-drawer"></span><p>Bao bì cấp 2</p><span class="active-page"></span></a></li>
+        <li class="{% if active_menu == 'CREATE_QUOTE' %}active{% endif %}"><a href="{% url 'form-quote' %}" class="waves-effect waves-button"><span class="menu-icon icon-calculator"></span><p>Báo giá</p><span class="active-page"></span></a></li>
         <li class="{% if active_menu == 'CONTACT' %}active{% endif %}"><a href="{% url 'contact' %}" class="waves-effect waves-button"><span class="menu-icon icon-users"></span><p>Liên hệ</p><span class="active-page"></span></a></li>
 
     </ul>

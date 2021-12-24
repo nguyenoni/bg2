@@ -47,3 +47,11 @@ def get_md5_sign_key(data=[]):
         my_str+=item
     hash_md5.update(my_str.encode('utf-8'))
     return hash_md5.hexdigest()
+
+def get_type_packaging():
+    return {
+        "Hộp": "Hộp",
+        "Chai": "Chai",
+        "Lọ": "Lọ"
+    }
+            

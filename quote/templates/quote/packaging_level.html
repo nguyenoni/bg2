@@ -19,6 +19,23 @@ Sản phẩm gia công |Thaihuonggroup
     .load-more {
          margin: 2em;
      }
+     .card-img-top {
+        width: 100%;
+        height: 10vw;
+        object-fit: cover;
+    }
+    .col {
+        margin-bottom: 2em;
+
+    }
+
+    @media (max-width: 768px) {
+        img.card-img-top {
+            width: 100%;
+            height: 25vw;
+        }
+
+    }
  </style>
 <div class="page-breadcrumb">
     <ol class="breadcrumb">
@@ -41,26 +58,31 @@ Sản phẩm gia công |Thaihuonggroup
             </div>
         </div>
         <div class="row row-custom">
-            <form class="col-md-6">
+            <form class="col-md-2">
        
                 <!-- End chọn sản phẩm gia công -->
                 <!-- Chọn dung tích -->
                 <div class="form-group">
+                    <label>Loại sản phẩm</label>
+                    <select class="form-control category">
+                        {% if category %}
+          
+                            <option value="">-- Chọn danh mục --</option>  
+                            {% for item in category %}
+                            <option value="{{ item.slug }}">{{item.name}}</option>
+                            {% endfor %}
+                        {% endif %}
+                    </select>
+
+                </div>
+            </form>
+
+            <form class="col-md-2">
+                <!-- Chọn dung tích -->
+                <div class="form-group">
                     <label>Lọc theo dung tích</label>
                     <select class="form-control select2 volume">
-                        {% if volume_selected %}
-                        <option value="{{ item.slug }}">{{ item.name }}</option>
-                        {% endif %}
-
-                        {% if volume_selected %}
-                           
-                            {% for item in volume %}
-                                {% if item != volume_selected %}
-                                <option value="{{ item.unique_volume }}">{{item.name}}</option>
-                                {% endif%}
-                            
-                            {% endfor %}
-                        {% else %}
+                        {% if volume %}
                             <option value="">-- Chọn dung tích --</option>  
                             {% for item in volume %}
                             <option value="{{ item.unique_volume }}">{{item.name}}</option>
@@ -70,8 +92,7 @@ Sản phẩm gia công |Thaihuonggroup
 
                 </div>
             </form>
-
-            <!-- Modal -->
+           
         </div>
         <div class="row row-custom">
             <div class="row row_product list-product">
@@ -79,11 +100,11 @@ Sản phẩm gia công |Thaihuonggroup
                 {% for item in data %}
                 <div class="col col-md-3 col-sm-2 product-item">
                     <div class="card" style="">
-                        <img class="card-img-top" style="width: 100%; height: auto;" src="{{item.image.url}}"
+                        <img class="card-img-top" style="" src="{{item.image.url}}"
                             alt="Card image cap">
                         <div class="card-body">
                             <h5 class="card-title">{{item.name}}</h5>
-                            <p class="card-text">{{ item.note|truncatewords:12 }}</p>
+                            <p class="card-text">{{ item.note|safe|truncatewords:12 }}</p>
                             <a href="{% url 'detail_packaging_level1' pk=item.id %}" class="btn btn-success">Chi tiết</a>
                         </div>
                     </div>
@@ -106,5 +127,7 @@ Sản phẩm gia công |Thaihuonggroup
 <script type="application/javascript" src="{% static 'quote/js/packaging.js' %}"></script>
 <script>
     $('.select2').select2();
+    $('.category').select2();
+    $('.type-packaging').select2();
 </script>
 {% endblock script %}

@@ -1,12 +1,13 @@
 // when select product
-$('select.volume').change(function (e) {
+$('select.category').change(function (e) {
 
     // e.stopImmediatePropagation();
     e.preventDefault();
+    // Get slug of category
     let selected = $(this).children("option:selected").val();
     if(selected !== null){
         dt = {
-            "volume": selected,
+            "slug": selected, //slug category
             "csrfmiddlewaretoken": get_csrfmiddlewaretoken(),
         }
 
@@ -57,7 +58,7 @@ function load_dt(e, offset, limit){
     e.preventDefault();
     
     dt = {
-        "volume": $('select.volume').children("option:selected").val(),
+        "slug": $('select.category').children("option:selected").val(),
         "offset": offset,
         "limit": limit,
         "csrfmiddlewaretoken": get_csrfmiddlewaretoken(),
@@ -102,7 +103,7 @@ $('.load-more').click(function(e){
     e.preventDefault();
     let offset = $('.product-item').length;
     let limit = $(this).attr('data-limit');
-    let select = $('select.volume').children("option:selected").val();
+    let select = $('select.category').children("option:selected").val();
     if(select == ""){
         dt = {
             "offset": offset,

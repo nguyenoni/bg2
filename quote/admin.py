@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin.decorators import register
 from django.db import models
-from .models import ImagePackagingLevel1,ImageMaterial,ImageProduct,Category, Product, Volume, Material, PackagingLevel1, PackagingLevel2, Stamp, PackingWorker,Announced,FeeShipping
+from .models import BannerHome, ImagePackagingLevel2,ImagePackagingLevel1,ImageMaterial,ImageProduct,Category, Product, Volume, Material, PackagingLevel1, PackagingLevel2, Stamp, PackingWorker,Announced,FeeShipping
 # Register your models here.
 
 @admin.register(Category)
@@ -84,9 +84,23 @@ class ImageMaterialAdmin(admin.ModelAdmin):
     list_filter = ('material',)
     search_field = ('material', 'image',)
     ordering = ('id',)
+
 @admin.register(ImagePackagingLevel1)
 class ImagePackagingLevel1Admin(admin.ModelAdmin):
     list_display = ["image", "packaginglevel1",]
     list_filter = ('packaginglevel1',)
     search_field = ('packaginglevel1', 'image')
+    ordering = ('id',)
+@admin.register(ImagePackagingLevel2)
+class ImagePackagingLevel2Admin(admin.ModelAdmin):
+    list_display = ["image", "packaginglevel2",]
+    list_filter = ('packaginglevel2',)
+    search_field = ('packaginglevel2', 'image',)
+    ordering = ('id',)
+
+@admin.register(BannerHome)
+class BannerHomeAdmin(admin.ModelAdmin):
+    list_display = ['image', "create_at", "status",]
+    list_filter = ['image', 'create_at', 'status',]
+    search_field = ('image', 'create_at',)
     ordering = ('id',)

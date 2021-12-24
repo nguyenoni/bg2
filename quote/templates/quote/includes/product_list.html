@@ -2,11 +2,11 @@
 {% for item in data %}
 <div class="col col-md-3 col-sm-2 product-item">
     <div class="card" style="">
-        <img class="card-img-top" style="width: 100%; height: auto;" src="{{item.cover_image.url}}"
+        <img class="card-img-top" style="" src="{{item.cover_image.url}}"
             alt="Card image cap">
         <div class="card-body">
             <h5 class="card-title">{{item.name}}</h5>
-            <p class="card-text">{{ item.des|truncatewords:12 }}</p>
+            <p class="card-text">{{ item.des|safe|truncatewords:12 }}</p>
             <a href="{% url 'detail_product' slug=item.slug %}" class="btn btn-success">Chi tiết</a>
         </div>
     </div>

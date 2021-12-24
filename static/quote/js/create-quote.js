@@ -253,30 +253,31 @@ function update_total() {
     let announced = parseInt($(".announced-price>b").text());
     let feeship = parseInt($(".feeship-price>b").text());
     let result_multi_price_quantity = parseInt($('.result_multi_product_quantity').val());
+    let quantity = parseInt($('.quantity').val());
     // console.log(packaging_level1)
 
     if (!isNaN(result_multi_price_quantity)) {
         total += result_multi_price_quantity
     }
     if (!isNaN(material)) {
-        total += material;
+        total += material*quantity;
     } if (!isNaN(packaging_level1)) {
-        total += packaging_level1;
+        total += packaging_level1*quantity;
     }
     if (!isNaN(packaging_level2)) {
-        total += packaging_level2;
+        total += packaging_level2*quantity;
     }
     if (!isNaN(packing_worker)) {
-        total += packing_worker;
+        total += packing_worker*quantity;
     }
     if (!isNaN(stamp)) {
-        total += stamp;
+        total += stamp*quantity;
     }
     if (!isNaN(announced)) {
-        total += announced;
+        total += announced; //1
     }
     if (!isNaN(feeship)) {
-        total += feeship;
+        total += feeship; // 1
     }
 
     $('.total-tt').removeClass('hide');

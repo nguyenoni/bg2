@@ -1,0 +1,155 @@
+{% extends "quote/layout/base.html" %}
+{% load static %}
+
+{% block title %}
+{{data.name}} |Thaihuonggroup
+{% endblock title %}
+{% block css %}
+<style>
+    img.card-img-top {
+        max-width: 100%
+    }
+
+    .row.row_product {
+        /* max-width: 1020px !important; */
+        margin: 0.5em;
+    }
+
+    .col {
+        margin-bottom: 2em;
+
+    }
+
+    .row_product>.col>.card {
+        border: 1px solid #ccc;
+        padding: 2em;
+    }
+
+    .form-control {
+        padding: unset !important;
+    }
+
+    span.btn.btn-danger.load-more {
+        margin: 2em;
+    }
+
+    img.img-child {
+        max-width: 100%;
+        width: 100px; height: 100px;
+    }
+
+    @media (max-width: 768px){ .panel>.row>div:first-child {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    img.img-child {
+       
+        width: 4em; height: 4em;
+    }
+}
+</style>
+{% endblock %}
+{% block breadcrumb %}
+<div class="page-breadcrumb">
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li><a href="{% url 'list_packaging_level2' %}">Bao bì cấp 2</a></li>
+        <li class="active">{{ data.name }}</li>
+    </ol>
+</div>
+{% endblock breadcrumb %}
+
+{% block content %}
+
+<div class="col-md-12">
+    <div class="panel panel-white">
+        <div class="panel-heading clearfix">
+            <h1 class="panel-title">Chi tiết Bao bì cấp 2</h1>
+            <div class="panel-control">
+                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-collapse"
+                    data-original-title="Expand/Collapse"><i class="icon-arrow-down"></i></a>
+                <a href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="" class="panel-reload"
+                    data-original-title="Reload"><i class="icon-reload"></i></a>
+            </div>
+        </div>
+
+        <div class="row row-custom">
+            <div class="col-md-6">
+                <section class="image_post">
+                    <div class="row text-center">
+                        <div class="col-md-10 col-lg-10 col-span-1">
+                            <!-- artigo em destaque -->
+                            <div class="featured-article">
+                                <a href="#">
+                                    <!-- {% with obj_img_list|first as obj_img_first %} -->
+
+                                    <img id="img-show" src="{{ data.image.url }}" alt=""
+                                        class=" img-responsive thumb">
+                                    <!-- {% endwith %} -->
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="row">
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <img class="img-child" style="" src="{{ data.image.url }}" value="{{ data.image.url }}"
+                                alt="" />
+                        </div>
+                        {% if images %}
+                        {% for item in images %}
+                        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                            <img class="img-child" style="" src="{{ item.image.url }}" value="{{ item.image.url }}"
+                                alt="" />
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        
+                    </div>
+                    <hr />
+                    <!--Button like, share facebook , tweeter-->
+
+                </section>
+            </div>
+            <div class="col-md-6">
+                <h3>{{ data.name }}</h3>
+                <hr />
+                <p>{{ data.note|safe|truncatewords:25 }}</p>
+                <hr />
+                <p><strong class="text-success">Giá bán: {{ data.price|floatformat:0 }}<sup>đ</sup></strong></p>
+                <hr />
+            
+            </div>
+            <div class="row row_product list-product">
+                <div class="col-md-12">
+                    <p><strong>Mô tả</strong></p>
+                    <hr />
+                    
+                    <p>
+                        {{data.note|safe}}
+                    </p>
+                </div>
+              
+            </div>
+        </div>
+        <div class="row row-custom">
+
+
+        </div>
+
+
+
+
+
+    </div>
+
+</div>
+
+{% endblock content %}
+{% block script %}
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script> -->
+<script type="application/javascript" src="{% static 'quote/js/detail_product.js' %}"></script>
+<!-- <script type="application/javascript">
+    $('.select2').select2();
+</script> -->
+{% endblock script %}

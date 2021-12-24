@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.fields.files import ImageField
 from .libs import generate_uid, get_upload_to_folder
 from django.template.defaultfilters import slugify
+from ckeditor_uploader.fields import RichTextUploadingField
 
 # Create your models here.
 class Category(models.Model):
@@ -37,7 +38,8 @@ class Product(models.Model):
     unique_product = models.CharField(max_length=20, unique=True, blank=True, verbose_name="UID sản phẩm")
     cover_image = models.ImageField(upload_to=get_upload_to_folder("products"), max_length=512, blank=True, verbose_name="Image")
     slug = models.SlugField(max_length=500, unique=True, blank=True,verbose_name="URL")
-    des= models.TextField(default="", blank=True, verbose_name="Mô tả")
+    # des= models.TextField(default="", blank=True, verbose_name="Mô tả")
+    des = RichTextUploadingField(blank=True, null = True ,verbose_name='Mô tả')
     price = models.FloatField(default=0, verbose_name="Giá")
     category = models.ForeignKey(Category,on_delete=models.CASCADE, related_name="category")
     quantity = models.IntegerField(default=0, verbose_name="Số lượng")
@@ -111,7 +113,8 @@ class Material(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="material_product", verbose_name="Sản phẩm") #nguyên liệu của sản phẩm nào
     volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="material_volume", verbose_name="Dung tích")
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
-    note = models.TextField(null=True, blank=True, verbose_name="Ghi chú", default="")
+    # note = models.TextField(null=True, blank=True, verbose_name="Ghi chú", default="")
+    note = RichTextUploadingField(blank=True, null = True ,verbose_name='Ghi chú')
     create_at = models.DateField(auto_now_add=True, verbose_name="Ngày tạo")
     update_at = models.DateField(auto_now=True, verbose_name="Cập nhật")
 
@@ -147,7 +150,8 @@ class PackagingLevel1(models.Model):
     price = models.FloatField(default=0, verbose_name="Giá")
     quantity_can_order_with_price = models.IntegerField(default=0, verbose_name="Số lượng đặt hàng tương ứng với giá")
     time_to_send = models.TextField(default="", verbose_name="Thời gian giao hàng")
-    note = models.TextField(default="", verbose_name="Ghi chú")
+    # note = models.TextField(default="", verbose_name="Ghi chú")
+    note = RichTextUploadingField(blank=True, null = True ,verbose_name='Ghi chú')
     create_at = models.DateTimeField(auto_now_add=True, verbose_name="Ngày tạo")
     update_at = models.DateTimeField(auto_now=True, verbose_name="Ngày cập nhật")
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
@@ -182,11 +186,13 @@ class PackagingLevel1(models.Model):
 # Bao bì cấp 2 Hộp
 class PackagingLevel2(models.Model):
     name = models.CharField(max_length=255, default="", verbose_name="Tên bao bì cấp 2")
+    image = models.ImageField(upload_to=get_upload_to_folder("images"), max_length=512, blank=True, verbose_name="Image")
     price = models.FloatField(default=0, verbose_name="Giá bao bì")
     type_packaging = models.CharField(max_length=50, default="", verbose_name="Loại bao bì")
     product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="packaging_product", verbose_name="Sản phẩm") #nguyên liệu của sản phẩm nào
     volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="packaging_volume", verbose_name="Dung tích")
-    note = models.TextField(default="", verbose_name="Ghi chú")
+    # note = models.TextField(default="", verbose_name="Ghi chú")
+    note = RichTextUploadingField(blank=True, null = True ,verbose_name='Ghi chú')
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
     create_at = models.DateField(auto_now_add=True, verbose_name="Ngày tạo")
     update_at = models.DateField(auto_now=True, verbose_name="Cập nhật")
@@ -217,7 +223,8 @@ class Stamp(models.Model):
     volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="stamp_volume", verbose_name="Dung tích")
     type_stamp = models.CharField(max_length=255, default="", verbose_name="Loại tem nhãn")
     price = models.FloatField(default=0, verbose_name="Giá")
-    note = models.TextField(default="", verbose_name="Ghi chú")
+    # note = models.TextField(default="", verbose_name="Ghi chú")
+    note = RichTextUploadingField(blank=True, null = True ,verbose_name='Ghi chú')
     create_at = models.DateField(auto_now_add=True, verbose_name="Ngày tạo")
     update_at = models.DateField(auto_now=True, verbose_name="Cập nhật")
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
@@ -248,7 +255,8 @@ class PackingWorker(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE, related_name="packing_worker_product", verbose_name="Sản phẩm")
     volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="packing_worker_volume", verbose_name="Dung tích")
     price = models.FloatField(default=0, verbose_name="Giá")
-    note = models.TextField(default="", verbose_name="Ghi chú")
+    # note = models.TextField(default="", verbose_name="Ghi chú")
+    note = RichTextUploadingField(blank=True, null = True ,verbose_name='Ghi chú')
     create_at = models.DateField(auto_now_add=True, verbose_name="Ngày tạo")
     update_at = models.DateField(auto_now=True, verbose_name="Cập nhật")
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
@@ -278,7 +286,8 @@ class Announced(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE, related_name="annonced_product", verbose_name="Sản phẩm")
     volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="annonced_volume", verbose_name="Dung tích")
     price = models.FloatField(default=0, verbose_name="Giá")
-    note = models.TextField(default="", verbose_name="Ghi chú")
+    # note = models.TextField(default="", verbose_name="Ghi chú")
+    note = RichTextUploadingField(blank=True, null = True ,verbose_name='Ghi chú')
     create_at = models.DateField(auto_now_add=True, verbose_name="Ngày tạo")
     update_at = models.DateField(auto_now=True, verbose_name="Cập nhật")
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
@@ -307,7 +316,8 @@ class FeeShipping(models.Model):
     product = models.ForeignKey(Product,on_delete=models.CASCADE, related_name="fee_shipping_product", verbose_name="Sản phẩm")
     volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="fee_shipping_volume", verbose_name="Dung tích")
     price = models.FloatField(default=0, verbose_name="Giá")
-    note = models.TextField(default="", verbose_name="Ghi chú")
+    # note = models.TextField(default="", verbose_name="Ghi chú")
+    note = RichTextUploadingField(blank=True, null = True ,verbose_name='Ghi chú')
     create_at = models.DateField(auto_now_add=True, verbose_name="Ngày tạo")
     update_at = models.DateField(auto_now=True, verbose_name="Cập nhật")
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
@@ -396,4 +406,25 @@ class ImagePackagingLevel1(models.Model):
     class Meta:
         verbose_name = "Hình ảnh Bao bì cấp 1"
         verbose_name_plural = "Hình ảnh Bao bì cấp 1"
+        ordering = ['id']
+
+# Hình ảnh Bao bì cấp 1 Chai lọ
+class ImagePackagingLevel2(models.Model):
+    image = models.ImageField(upload_to=get_upload_to_folder("packaginglevel1"), max_length=512, blank=True, verbose_name="Image")
+    packaginglevel2 = models.ForeignKey(PackagingLevel2, on_delete=models.CASCADE, null=False, blank=False, verbose_name=("PackagingLevel2"), related_name="child_media")
+
+    class Meta:
+        verbose_name = "Hình ảnh Bao bì cấp 2"
+        verbose_name_plural = "Hình ảnh Bao bì cấp 2"
+        ordering = ['id']
+
+
+class BannerHome(models.Model):
+    image = models.ImageField(upload_to=get_upload_to_folder("bannerhome"), max_length=512, blank=True, verbose_name="Image")
+    status = models.BooleanField(default=True, verbose_name="Trạng thái")
+    create_at = models.DateTimeField(auto_created=True, verbose_name="Ngày tạo")
+    
+    class Meta:
+        verbose_name = "Banner trang chủ"
+        verbose_name_plural = "Banner trang chủ"
         ordering = ['id']
