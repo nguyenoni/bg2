@@ -100,11 +100,11 @@ Sản phẩm gia công |Thaihuonggroup
                 {% for item in data %}
                 <div class="col col-md-3 col-sm-2 product-item">
                     <div class="card" style="">
-                        <img class="card-img-top" style="" src="{{item.image.url}}"
-                            alt="Card image cap">
+                        <a href="{% url 'detail_packaging_level1' pk=item.id %}"><img class="card-img-top" style="" src="{{item.image.url}}"
+                            alt="Card image cap"></a>
                         <div class="card-body">
                             <h5 class="card-title">{{item.name}}</h5>
-                            <p class="card-text">{{ item.note|safe|truncatewords:12 }}</p>
+                            <p class="card-text"><strong class="text-success">Giá thành: {{ item.price|floatformat:0 }}<sup>đ</sup> /sp</strong></p>
                             <a href="{% url 'detail_packaging_level1' pk=item.id %}" class="btn btn-success">Chi tiết</a>
                         </div>
                     </div>

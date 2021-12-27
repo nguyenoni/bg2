@@ -3,6 +3,16 @@ body{
     color: rgba(0,0,0,.8);
     line-height: 1.2;
 }
+/* logo */
+.img-logo{
+  max-width: 100% !important;
+}
+@media (max-width: 768px) {
+  .img-logo{
+    max-width: 30% !important;
+  }
+
+}
 /* Write your custom CSS here */
 .user-page-container {
   display: -webkit-box;

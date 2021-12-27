@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING
 from django.db import models
 from django.db.models.fields.files import ImageField
 from .libs import generate_uid, get_upload_to_folder
@@ -34,7 +35,12 @@ class Category(models.Model):
         return self.name
 
 class Product(models.Model):
+    TYPE_PRO = (
+        ('ml', 'mililit'),
+        ('g', 'gram'),
+    )
     name = models.CharField(max_length=255, default="", verbose_name="Tên sản phẩm")
+    type_product = models.CharField(max_length = 20,choices = TYPE_PRO,default = 'ml', verbose_name="Loại sản phẩm", blank=True)
     unique_product = models.CharField(max_length=20, unique=True, blank=True, verbose_name="UID sản phẩm")
     cover_image = models.ImageField(upload_to=get_upload_to_folder("products"), max_length=512, blank=True, verbose_name="Image")
     slug = models.SlugField(max_length=500, unique=True, blank=True,verbose_name="URL")
@@ -71,6 +77,7 @@ class Product(models.Model):
     def to_dict(self):
         return {
             "name": self.name,
+            "type_product": self.type_product,
             "slug": self.price,
             "price": self.price,
             "quantity": self.quantity,
@@ -78,7 +85,13 @@ class Product(models.Model):
         }
 # Dung tích
 class Volume(models.Model):
-    name = models.CharField(max_length=50, default= "", verbose_name="Tên dung tích")
+    TYPE_VOL = (
+        ('ml', 'mililit'),
+        ('g', 'gram'),
+    )
+    name = models.CharField(max_length= 20, default= "", verbose_name="Tên dung tích")
+    number_volume = models.IntegerField(default=0, verbose_name="Dung tích")
+    type_volume = models.CharField( max_length = 20,choices = TYPE_VOL,default = 'ml', verbose_name="Loại dung tích", blank=True)
     unique_volume = models.CharField(max_length=20, unique=True, blank=True, verbose_name="UID Dung tích")
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
     # product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="volume_product")
@@ -97,26 +110,31 @@ class Volume(models.Model):
     def to_dict(self):
         return {
             "name": self.name,
+            "number_volume": self.number_volume,
+            "type_volume": self.type_volume,
             "unique_volume": self.unique_volume,
             "is_activate": self.status,
             "create_at": self.create_at,
             "update_at": self.update_at
         }
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 # Nguyên liệu
 class Material(models.Model):
     name = models.CharField(max_length=255, default="", verbose_name="Tên nguyên liệu")
+    convert_to_ml= models.IntegerField(default=0, verbose_name="Quy đổi 1kg sang ml", blank=True)
+    price_per_ml = models.FloatField(default=0, verbose_name="Giá 1ml", blank=True)
     cover_image = models.ImageField(upload_to=get_upload_to_folder("material"), max_length=512, blank=True, verbose_name="Image")
     price = models.FloatField(default=0, verbose_name="Giá nguyên liệu")
     product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="material_product", verbose_name="Sản phẩm") #nguyên liệu của sản phẩm nào
-    volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="material_volume", verbose_name="Dung tích")
+    # volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="material_volume", verbose_name="Dung tích")
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
     # note = models.TextField(null=True, blank=True, verbose_name="Ghi chú", default="")
     note = RichTextUploadingField(blank=True, null = True ,verbose_name='Ghi chú')
     create_at = models.DateField(auto_now_add=True, verbose_name="Ngày tạo")
     update_at = models.DateField(auto_now=True, verbose_name="Cập nhật")
+    for_create_quote = models.BooleanField(default=False, blank=True, verbose_name="Dành cho tạo bảng giá")
 
     def to_dict(self):
         return {
@@ -138,23 +156,24 @@ class Material(models.Model):
 
 # Bao bì cấp 1 Chai lọ
 class PackagingLevel1(models.Model):
-    name = models.CharField(max_length=255, default="", verbose_name="Tên bao bì cấp 1")
-    type_packaging = models.CharField(max_length=50, default="", verbose_name="Loại bao bì")
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=False, blank=False, related_name="packaging_level_1_product")
-    volume = models.ForeignKey(Volume, on_delete=models.CASCADE, null=False, blank=False, verbose_name="Dung tích", related_name="packagin_level1_volume")
-    image = models.ImageField(upload_to=get_upload_to_folder("images"), max_length=512, blank=True, verbose_name="Image")
-    type_material = models.CharField(max_length=255, default="", verbose_name="Chất liệu")
-    quantity_provider_sell = models.IntegerField(default=0, verbose_name="Chất liệu NCC có thể bán")
-    min_order = models.IntegerField(default=0, verbose_name="Min order")
-    provider = models.CharField(max_length=255, default="", verbose_name="Nhà cung cấp")
-    price = models.FloatField(default=0, verbose_name="Giá")
+    name                    = models.CharField(max_length=255, default="", verbose_name="Tên bao bì cấp 1")
+    type_packaging          = models.CharField(max_length=50, default="", verbose_name="Loại bao bì")
+    # một bao bì cấp 1 có nhiều sản phẩm
+    product                 = models.ManyToManyField(Product, null=False, blank=True, verbose_name='Sản phẩm')
+    # product                 = models.ForeignKey(Product, on_delete=models.CASCADE, null=False, blank=False, related_name="packaging_level_1_product")
+    volume                  = models.ForeignKey(Volume, on_delete=models.CASCADE, null=False, blank=False, verbose_name="Dung tích", related_name="packagin_level1_volume")
+    image                   = models.ImageField(upload_to=get_upload_to_folder("images"), max_length=512, blank=True, verbose_name="Image")
+    type_material           = models.CharField(max_length=255, default="", verbose_name="Chất liệu")
+    quantity_provider_sell  = models.IntegerField(default=0, verbose_name="Chất liệu NCC có thể bán")
+    min_order               = models.IntegerField(default=0, verbose_name="Min order")
+    provider                = models.CharField(max_length=255, default="", verbose_name="Nhà cung cấp")
+    price                   = models.FloatField(default=0, verbose_name="Giá")
     quantity_can_order_with_price = models.IntegerField(default=0, verbose_name="Số lượng đặt hàng tương ứng với giá")
-    time_to_send = models.TextField(default="", verbose_name="Thời gian giao hàng")
-    # note = models.TextField(default="", verbose_name="Ghi chú")
-    note = RichTextUploadingField(blank=True, null = True ,verbose_name='Ghi chú')
-    create_at = models.DateTimeField(auto_now_add=True, verbose_name="Ngày tạo")
-    update_at = models.DateTimeField(auto_now=True, verbose_name="Ngày cập nhật")
-    status = models.BooleanField(default=True, verbose_name="Trạng thái")
+    time_to_send            = models.TextField(default="", verbose_name="Thời gian giao hàng")
+    note                    = RichTextUploadingField(blank=True, null = True ,verbose_name='Ghi chú')
+    create_at               = models.DateTimeField(auto_now_add=True, verbose_name="Ngày tạo")
+    update_at               = models.DateTimeField(auto_now=True, verbose_name="Ngày cập nhật")
+    status                  = models.BooleanField(default=True, verbose_name="Trạng thái")
 
     class Meta:
         verbose_name = "Bao bì cấp 1"
@@ -189,7 +208,8 @@ class PackagingLevel2(models.Model):
     image = models.ImageField(upload_to=get_upload_to_folder("images"), max_length=512, blank=True, verbose_name="Image")
     price = models.FloatField(default=0, verbose_name="Giá bao bì")
     type_packaging = models.CharField(max_length=50, default="", verbose_name="Loại bao bì")
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="packaging_product", verbose_name="Sản phẩm") #nguyên liệu của sản phẩm nào
+    # một bao bì cấp 1 có nhiều sản phẩm
+    product                 = models.ManyToManyField(Product, null=False, blank=True, verbose_name='Sản phẩm')
     volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="packaging_volume", verbose_name="Dung tích")
     # note = models.TextField(default="", verbose_name="Ghi chú")
     note = RichTextUploadingField(blank=True, null = True ,verbose_name='Ghi chú')
@@ -313,8 +333,8 @@ class Announced(models.Model):
 #Phí vận chuyển
 class FeeShipping(models.Model):
     name = models.CharField(max_length=255, default="", verbose_name="Tên gói phí vận chuyển")
-    product = models.ForeignKey(Product,on_delete=models.CASCADE, related_name="fee_shipping_product", verbose_name="Sản phẩm")
-    volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="fee_shipping_volume", verbose_name="Dung tích")
+    # product = models.ForeignKey(Product,on_delete=models.CASCADE, related_name="fee_shipping_product", verbose_name="Sản phẩm")
+    # volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="fee_shipping_volume", verbose_name="Dung tích")
     price = models.FloatField(default=0, verbose_name="Giá")
     # note = models.TextField(default="", verbose_name="Ghi chú")
     note = RichTextUploadingField(blank=True, null = True ,verbose_name='Ghi chú')
@@ -428,3 +448,13 @@ class BannerHome(models.Model):
         verbose_name = "Banner trang chủ"
         verbose_name_plural = "Banner trang chủ"
         ordering = ['id']
+
+class Logo(models.Model):
+    image = models.ImageField(upload_to=get_upload_to_folder("logo"), max_length=512, blank=False, verbose_name="Logo" )
+    create_at = models.DateTimeField(auto_now_add=True, verbose_name="Ngày tạo")
+
+    class Meta:
+        verbose_name = "Logo"
+        verbose_name_plural = "Logo"
+        ordering = ['id']
+        

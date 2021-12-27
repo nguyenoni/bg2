@@ -47,9 +47,5 @@ urlpatterns = [
     # Khác
     path('lien-he', views.contact, name="contact"),
     path('', views.homepage, name='list_category'),
-    # path('<slug:slug>', views.crete_quote, name='detail_category'),
 
-
-
-    
 ]

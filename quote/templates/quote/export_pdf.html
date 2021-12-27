@@ -68,7 +68,7 @@
 
     <div class="row">
       <div class="col-md-3 text-center">
-        <img src="https://thaihuonggroup.com.vn/wp-content/uploads/2021/11/logo_th-169x49.png" alt="Girl in a jacket"
+        <img src="https://thaihuong.com.vn/files/assets/logo_th.png" alt="Girl in a jacket"
           width="169" height="49">
         <p style="margin-top: 15px;"><strong>
             Công ty TNHH Đầu Tư và Thương Mại Thái Hương
@@ -126,7 +126,7 @@
         <td>{{ material.name }}</td>
         <td>{{quantity}}</td>
         <td>{{material.price|floatformat:0|intcomma}} <sup>đ</sup></td>
-        <td>{% widthratio material.price 1 quantity|floatformat:0|intcomma%} <sup>đ</sup></td>
+        <td>{{tt_material|floatformat:0|intcomma}} <sup>đ</sup></td>
       </tr>
       {% if packaging_level1 %}
       <tr>
@@ -135,7 +135,7 @@
         <td>{{ packaging_level1.name }}</td>
         <td>{{quantity}}</td>
         <td>{{ packaging_level1.price|floatformat:0|intcomma }} <sup>đ</sup></td>
-        <td>{% widthratio packaging_level1.price 1 quantity|floatformat:0|intcomma%}  <sup>đ</sup></td>
+        <td>{{tt_packaging_level_1|floatformat:0|intcomma}} <sup>đ</sup></td>
       </tr>
       {% endif %}
       {% if packaging_level2 %}
@@ -145,7 +145,7 @@
         <td>{{ packaging_level2.name }}</td>
         <td>{{quantity}}</td>
         <td>{{ packaging_level2.price|floatformat:0|intcomma }} <sup>đ</sup></td>
-        <td>{% widthratio packaging_level2.price 1 quantity|floatformat:0|intcomma%}   <sup>đ</sup></td>
+        <td>{{tt_packaging_level_2|floatformat:0|intcomma}} <sup>đ</sup></td>
       </tr>
       {% endif %}
       {% if stamp %}
@@ -155,17 +155,20 @@
         <td>{{ stamp.name }}</td>
         <td>{{quantity}}</td>
         <td>{{ stamp.price|floatformat:0|intcomma }} <sup>đ</sup></td>
-        <td>{% widthratio stamp.price 1 quantity|floatformat:0|intcomma%}   <sup>đ</sup></td>
+        <td>{{tt_stamp|floatformat:0|intcomma}} <sup>đ</sup></td>
       </tr>
       {% endif %}
+      {% if packing_worker %}
       <tr>
         <td></td>
         <th>Chi phí nhân công</th>
         <td>{{ packing_worker.name }}</td>
         <td>{{quantity}}</td>
         <td>{{ packing_worker.price|floatformat:0|intcomma }} <sup>đ</sup></td>
-        <td>{% widthratio packing_worker.price 1 quantity|floatformat:0|intcomma%}   <sup>đ</sup></td>
+        <td>{{tt_packing_worker|floatformat:0|intcomma}} <sup>đ</sup></td>
       </tr>
+      {% endif %}
+      {% if announced %}
       <tr>
         <td></td>
         <th>Chi phí giấy công bố, kiểm nghiệm</th>
@@ -174,6 +177,8 @@
         <td>{{ announced.price|floatformat:0|intcomma }} <sup>đ</sup></td>
         <td>{{ announced.price|floatformat:0|intcomma }} <sup>đ</sup></td>
       </tr>
+      {% endif %}
+
       {% if feeship %}
       <tr>
         <td></td>

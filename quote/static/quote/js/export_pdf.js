@@ -25,6 +25,13 @@ $('.create-quote-pdf').click(function (e) {
     if(stamp == undefined){
         stamp = 0
     }
+    if(packing_worker == undefined){
+        packing_worker = 0
+    }
+    if(announced == undefined){
+        announced = 0
+    }
+
     
     if($('select.product').children("option:selected").val() == ""){
         show_mess("Vui lòng chọn sản phẩm!", ERR);
@@ -38,19 +45,16 @@ $('.create-quote-pdf').click(function (e) {
     else if(material == null){
         show_mess("Vui lòng chọn nguyên liệu!", ERR);
     }
-    else if(packing_worker == null){
-        show_mess("Vui lòng chọn nhân công đóng gói!", ERR);
-    }
-    else if(announced == null){
-        show_mess("Vui lòng chọn gói công bố kiểm nghiệm!", ERR);
-    }
     else {
         packaging_level1 =  (packaging_level1 ==0)? packaging_level1.toString() : packaging_level1.key.toString();
         packaging_level2 = (packaging_level2 ==0)? packaging_level2.toString() : packaging_level2.key.toString();
         stamp = (stamp == 0)?stamp.toString():stamp.key.toString();
         feeship = (feeship==0)?feeship.toString():feeship.key.toString();
-        const param = `${product}-${volume}-${material.key}-${packaging_level1}-${packaging_level2}-${stamp}-${packing_worker.key}-${announced.key}-${feeship}-${quantity}`;
-        
+        announced =(announced ==0)?announced.toString():packing_worker.key.toString();
+        packing_worker = (packing_worker ==0)?packing_worker.toString():packing_worker.key.toString();
+
+        const param = `${product}-${volume}-${material.key}-${packaging_level1}-${packaging_level2}-${stamp}-${packing_worker}-${announced}-${feeship}-${quantity}`;
+        console.log(param);
         let dt = {
             "slug": param,
             'csrfmiddlewaretoken': get_csrfmiddlewaretoken(),
@@ -59,6 +63,7 @@ $('.create-quote-pdf').click(function (e) {
  
         if(res.error == false){
             let url = `/export-pdf/${res.data.url}`;
+            
             window.open(url);
         }
         else{

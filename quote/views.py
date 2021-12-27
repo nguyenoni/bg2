@@ -82,30 +82,57 @@ def export_to_pdf(request, quote):
     dt = {
         "total": 0,
     }
-    if(product and volume and material and packing_worker and announced and quantity):
-
+    if(product and volume and material and quantity):
+        # Gia de tinh tong tien
         p_pklv1 = 0
         p_pklv2 = 0
         p_st = 0
         p_fs = 0
+        p_packw = 0
+        p_ann = 0
+        # Thành tiền
+        tt_material = 0
+        tt_packaging_level_1 = 0
+        tt_packaging_level_2 = 0
+        tt_stamp = 0
+        tt_packing_worker = 0
+
         if(packaging_level1 != 0):
             obj_packaging_level1 = PackagingLevel1.objects.get(id=packaging_level1)
             dt.update({
                 "packaging_level1": obj_packaging_level1,
             })
             p_pklv1 = obj_packaging_level1.price
+            tt_packaging_level_1 = obj_packaging_level1.price *quantity
         if(packaging_level2 != 0):
             obj_packaging_level2 = PackagingLevel2.objects.get(id=packaging_level2)
             dt.update({
                 "packaging_level2": obj_packaging_level2,
             })
             p_pklv2 = obj_packaging_level2.price
+            tt_packaging_level_2 = obj_packaging_level2.price * quantity
         if(stamp != 0):
             obj_stamp = Stamp.objects.get(id=stamp)
             dt.update({
                 "stamp": obj_stamp,
             })
             p_st = obj_stamp.price
+            tt_stamp = obj_stamp.price*quantity
+        if(packing_worker !=0):
+            obj_packing_worker = PackingWorker.objects.get(id=packing_worker)
+            dt.update({
+                "packing_worker": obj_packing_worker
+            })
+            p_packw = obj_packing_worker.price
+            tt_packing_worker = obj_packing_worker.price*quantity
+             
+        if(announced != 0):
+            obj_announced = Announced.objects.get(id=announced)
+            dt.update({
+                "announced": obj_announced
+            })
+            p_ann = obj_announced.price
+            
         if(feeship != 0):
             obj_feeship = FeeShipping.objects.get(id=feeship)
             dt.update({
@@ -119,66 +146,28 @@ def export_to_pdf(request, quote):
         price_product = obj_product.price * quantity
         obj_volume = Volume.objects.filter(unique_volume = volume)[0]
         obj_material = Material.objects.get(id=material)
-        obj_packing_worker = PackingWorker.objects.get(id=packing_worker)
-        obj_announced = Announced.objects.get(id=announced)
 
-        total = (obj_product.price*quantity) + (obj_material.price*quantity) + (p_pklv1*quantity) + (p_pklv2*quantity) + (p_st*quantity) + (obj_packing_worker.price*quantity) + obj_announced.price + p_fs
+        # Tính giá theo ml hoặc gram người dùng chọn ở phí client
+        if(obj_volume.type_volume == 'ml'):       
+            obj_material.price = obj_material.price_per_ml * float(quantity*int(obj_volume.number_volume))
+        else:
+            obj_material.price =((float(obj_volume.type_volume)*obj_material.price)/1000.0)*float(quantity)
+
+        tt_material = obj_material.price*quantity
+        
+
+        total = (obj_product.price*quantity) + (obj_material.price*quantity) + (p_pklv1*quantity) + (p_pklv2*quantity) + (p_st*quantity) + (p_packw*quantity) + p_ann + p_fs
         dt.update({"product": obj_product, "price_product": price_product,"quantity": quantity, "volume": obj_volume, "material": obj_material, 
-         "packing_worker": obj_packing_worker, "announced": obj_announced, "total": total, "time": str(datetime.now())})
+         "total": total, "time": str(datetime.now()),
+         "tt_material": tt_material,
+         "tt_packaging_level_1": tt_packaging_level_1,
+         "tt_packaging_level_2": tt_packaging_level_2,
+         "tt_stamp": tt_stamp,
+         "tt_packing_worker": tt_packing_worker,
+         })
 
     return render(request, tmp, dt)
 
-# def export_to_pdf(request, product, volume, material, packaging_level1, packaging_level2, stamp, packing_worker, announced, feeship, quantity):
-#     tmp = "quote/export_pdf.html"
-#     dt = {
-#         "total": 0,
-#     }
-#     if(product and volume and material and packing_worker and announced and quantity):
-
-#         p_pklv1 = 0
-#         p_pklv2 = 0
-#         p_st = 0
-#         p_fs = 0
-#         if(packaging_level1 != 0):
-#             obj_packaging_level1 = PackagingLevel1.objects.get(id=packaging_level1)
-#             dt.update({
-#                 "packaging_level1": obj_packaging_level1,
-#             })
-#             p_pklv1 = obj_packaging_level1.price
-#         if(packaging_level2 != 0):
-#             obj_packaging_level2 = PackagingLevel2.objects.get(id=packaging_level2)
-#             dt.update({
-#                 "packaging_level2": obj_packaging_level2,
-#             })
-#             p_pklv2 = obj_packaging_level2.price
-#         if(stamp != 0):
-#             obj_stamp = Stamp.objects.get(id=stamp)
-#             dt.update({
-#                 "stamp": obj_stamp,
-#             })
-#             p_st = obj_stamp.price
-#         if(feeship != 0):
-#             obj_feeship = FeeShipping.objects.get(id=feeship)
-#             dt.update({
-#                 "feeship": obj_feeship, 
-#             })
-#             p_fs = obj_feeship.price
-#         else:
-#             pass
-
-#         obj_product = Product.objects.filter(unique_product = product)[0]
-#         price_product = obj_product.price * quantity
-#         obj_volume = Volume.objects.filter(unique_volume = volume)[0]
-#         obj_material = Material.objects.get(id=material)
-#         obj_packing_worker = PackingWorker.objects.get(id=packing_worker)
-#         obj_announced = Announced.objects.get(id=announced)
-
-#         total = (obj_product.price*quantity) + obj_material.price + p_pklv1 + p_pklv2 + p_st + obj_packing_worker.price + obj_announced.price + p_fs
-#         dt.update({"product": obj_product, "price_product": price_product,"quantity": quantity, "volume": obj_volume, "material": obj_material, 
-#          "packing_worker": obj_packing_worker, "announced": obj_announced, "total": total, "time": str(datetime.now())})
-   
-
-#     return render(request, tmp, dt)
 # # export to excell
 def export_to_csv(request, product, volume, material, packaging_level1, packaging_level2, stamp, packing_worker, announced, feeship):
   
@@ -247,8 +236,8 @@ def load_volume_product(request):
     if(request.method == "POST" and request.POST.get('unique_product')):
         unique_product = request.POST.get('unique_product')
         try:
-            # obj_product = Product.objects.filter(unique_product = unique_product)[0]
-            obj_volume = Volume.objects.all()
+            obj_product = Product.objects.get(unique_product = unique_product)
+            obj_volume = Volume.objects.filter(type_volume = obj_product.type_product)
             contex.update({
                 "data": libs.serializable(obj_volume),
                 "message": "Load dung tích thành công!"
@@ -271,14 +260,21 @@ def load_material(request):
     if(request.method == "POST" and request.POST.get("valp") and request.POST.get("valv")):
         valp = request.POST.get("valp","")
         valv = request.POST.get("valv","")
+        quantity = int(request.POST.get("quantity", 0))
+
 
         try:
-            obj_product = Product.objects.filter(unique_product=valp)[0]
-            obj_volume = Volume.objects.filter(unique_volume = valv)[0]
-            obj_material = Material.objects.filter(product = obj_product, volume = obj_volume)
+            obj_product = Product.objects.get(unique_product=valp)
+            obj_volume = Volume.objects.get(unique_volume = valv)
+            obj_material = Material.objects.filter(product = obj_product, for_create_quote = True).distinct()
+      
+            # volume_multi_quantiy = quantity *int(obj_volume.name)
+            # print(volume_multi_quantiy)
+
+          
             contex.update({
                 "message": "Load dữ liệu thành công!",
-                "data": libs.serializable(obj_material),
+                "data": libs.serializer_material(obj_material, quantity, obj_volume),
                 "title": "Chọn nguyên liệu"
             })
             if(obj_material.count() == 0):
@@ -289,10 +285,9 @@ def load_material(request):
         except ValueError:
             contex.update({
                 "status": 400,
-                "message": ValueError.__str__()
+                "message": "Lỗi hệ thống"
             })
         
-
     return JsonResponse({"data": contex})
 
 # API load packaging level 1
@@ -309,7 +304,7 @@ def load_packaging_level1(request):
         try:
             obj_product = Product.objects.filter(unique_product=valp)[0]
             obj_volume = Volume.objects.filter(unique_volume = valv)[0]
-            obj_packaging_level1 = PackagingLevel1.objects.filter(product = obj_product, volume = obj_volume)
+            obj_packaging_level1 = PackagingLevel1.objects.filter(product = obj_product, volume = obj_volume).distinct()
             contex.update({
                 "message": "Load dữ liệu thành công!",
                 "data": libs.serializable(obj_packaging_level1),
@@ -342,7 +337,7 @@ def load_packaging_level2(request):
         try:
             obj_product = Product.objects.filter(unique_product=valp)[0]
             obj_volume = Volume.objects.filter(unique_volume = valv)[0]
-            obj_packaging_level2 = PackagingLevel2.objects.filter(product = obj_product, volume = obj_volume)
+            obj_packaging_level2 = PackagingLevel2.objects.filter(product = obj_product, volume = obj_volume).distinct()
             contex.update({
                 "message": "Load dữ liệu thành công!",
                 "data": libs.serializable(obj_packaging_level2),
@@ -467,14 +462,14 @@ def load_feeship(request):
         "message": ""
     }
 
-    if(request.method == "POST" and request.POST.get("valp") and request.POST.get("valv")):
-        valp = request.POST.get("valp","")
-        valv = request.POST.get("valv","")
+    if(request.method == "POST"):
+        # valp = request.POST.get("valp","")
+        # valv = request.POST.get("valv","")
 
         try:
-            obj_product = Product.objects.filter(unique_product=valp)[0]
-            obj_volume = Volume.objects.filter(unique_volume = valv)[0]
-            obj_feeship = FeeShipping.objects.filter(product = obj_product, volume = obj_volume)
+            # obj_product = Product.objects.filter(unique_product=valp)[0]
+            # obj_volume = Volume.objects.filter(unique_volume = valv)[0]
+            obj_feeship = FeeShipping.objects.all()
             contex.update({
                 "message": "Load dữ liệu thành công!",
                 "data": libs.serializable(obj_feeship),
@@ -599,9 +594,9 @@ def load_material_list(request):
         slug = request.POST.get("slug", "")
         obj_category = Category.objects.get(slug = slug)
         obj_product = Product.objects.filter(category = obj_category)
-        obj_material = Material.objects.filter(product__in = obj_product).order_by('-id')[:libs.LIMIT_PAGE]
+        obj_material = Material.objects.filter(product__in = obj_product, for_create_quote = False).order_by('-id')[:libs.LIMIT_PAGE]
         # obj_material = get_data_from_product(obj_product)
-        total_data = Material.objects.filter(product__in = obj_product).count()
+        total_data = Material.objects.filter(product__in = obj_product, for_create_quote = False).count()
         # obj_material = Material.objects.filter(volume = obj_volume).order_by('-id')[:libs.LIMIT_PAGE]
         
         tmp = "quote/includes/material_list.html"
@@ -628,8 +623,8 @@ def load_material_list(request):
 
     else:
         try:
-            total_data = Material.objects.count()
-            obj_material = Material.objects.all().order_by('-id')[:libs.LIMIT_PAGE]
+            total_data = Material.objects.filter(for_create_quote = False).count()
+            obj_material = Material.objects.filter(for_create_quote = False).order_by('-id')[:libs.LIMIT_PAGE]
             if total_data > obj_material.count():
                 dt.update({
                     "has_page": True,
@@ -721,8 +716,8 @@ def load_more_material(request):
                 tmp = "quote/includes/material_list.html"
                 offset = int(request.GET.get("offset", 0))
                 limit = int(request.GET.get("limit", 0))
-                data = Material.objects.all().order_by('-id')[offset:offset+limit]
-                total_data = Material.objects.count()
+                data = Material.objects.filter(for_create_quote=False).order_by('-id')[offset:offset+limit]
+                total_data = Material.objects.filter(for_create_quote=False).count()
                 temp = render_to_string(tmp,{"data":data, "offset": int(offset), "has_page": True,} )
                 dt.update({
                     "data": temp,
@@ -752,10 +747,10 @@ def load_more_material(request):
                 slug  = request.POST.get("slug", "")
                 obj_category = Category.objects.get(slug = slug)
                 obj_product = Product.objects.filter(category = obj_category)
-                print(obj_product)
-                data = Material.objects.filter(product__in = obj_product).order_by('-id')[offset:offset+limit]
+
+                data = Material.objects.filter(product__in = obj_product, for_create_quote=False).order_by('-id')[offset:offset+limit]
                 # print(data)
-                total_data = Material.objects.filter(product__in = obj_product).count()
+                total_data = Material.objects.filter(product__in = obj_product, for_create_quote = False).count()
 
                 temp = render_to_string(tmp,{"data":data, "offset": int(offset), "has_page": True,} )
                 dt.update({
@@ -871,17 +866,17 @@ def list_packaging_level2(request):
             obj_volume = Volume.objects.get(unique_volume = unique_v)
             obj_category = Category.objects.get(slug = slug_category)
             obj_product = Product.objects.filter(category = obj_category)
-            total_data = PackagingLevel2.objects.filter(product__in = obj_product ,volume = obj_volume).count()
-            obj_packaging = PackagingLevel2.objects.filter(product__in = obj_product ,volume = obj_volume).order_by('-id')[:libs.LIMIT_PAGE]
+            total_data = PackagingLevel2.objects.filter(product__in = obj_product ,volume = obj_volume).distinct().count()
+            obj_packaging = PackagingLevel2.objects.filter(product__in = obj_product ,volume = obj_volume).distinct().order_by('-id')[:libs.LIMIT_PAGE]
         elif(slug_category != '' and unique_v ==''):
             obj_category = Category.objects.get(slug = slug_category)
             obj_product = Product.objects.filter(category = obj_category)
-            total_data = PackagingLevel2.objects.filter(product__in = obj_product ).count()
-            obj_packaging = PackagingLevel2.objects.filter(product__in = obj_product).order_by('-id')[:libs.LIMIT_PAGE]
+            total_data = PackagingLevel2.objects.filter(product__in = obj_product ).distinct().count()
+            obj_packaging = PackagingLevel2.objects.filter(product__in = obj_product).distinct().order_by('-id')[:libs.LIMIT_PAGE]
         elif(slug_category =='' and unique_v != ''):
             obj_volume = Volume.objects.get(unique_volume = unique_v)
-            total_data = PackagingLevel2.objects.filter(volume = obj_volume).count()
-            obj_packaging = PackagingLevel2.objects.filter(volume = obj_volume).order_by('-id')[:libs.LIMIT_PAGE]
+            total_data = PackagingLevel2.objects.filter(volume = obj_volume).distinct().count()
+            obj_packaging = PackagingLevel2.objects.filter(volume = obj_volume).distinct().order_by('-id')[:libs.LIMIT_PAGE]
 
         tmp = "quote/includes/packaging_level2_list.html"
         if(obj_packaging.count() == 0):
@@ -907,8 +902,8 @@ def list_packaging_level2(request):
 
     else:
         try:
-            total_data = PackagingLevel2.objects.count()
-            obj_packaging = PackagingLevel2.objects.all().order_by('-id')[:libs.LIMIT_PAGE]
+            total_data = PackagingLevel2.objects.all().distinct().count()
+            obj_packaging = PackagingLevel2.objects.all().distinct().order_by('-id')[:libs.LIMIT_PAGE]
             if total_data > obj_packaging.count():
                 dt.update({
                     "has_page": True,
@@ -1087,17 +1082,17 @@ def load_packaging_level(request):
             obj_volume = Volume.objects.get(unique_volume = unique_v)
             obj_category = Category.objects.get(slug = slug_category)
             obj_product = Product.objects.filter(category = obj_category)
-            total_data = PackagingLevel1.objects.filter(product__in = obj_product ,volume = obj_volume).count()
-            obj_packaging = PackagingLevel1.objects.filter(product__in = obj_product ,volume = obj_volume).order_by('-id')[:libs.LIMIT_PAGE]
+            total_data = PackagingLevel1.objects.filter(product__in = obj_product ,volume = obj_volume).distinct().count()
+            obj_packaging = PackagingLevel1.objects.filter(product__in = obj_product ,volume = obj_volume).distinct().order_by('-id')[:libs.LIMIT_PAGE]
         elif(slug_category != '' and unique_v ==''):
             obj_category = Category.objects.get(slug = slug_category)
             obj_product = Product.objects.filter(category = obj_category)
-            total_data = PackagingLevel1.objects.filter(product__in = obj_product ).count()
-            obj_packaging = PackagingLevel1.objects.filter(product__in = obj_product).order_by('-id')[:libs.LIMIT_PAGE]
+            total_data = PackagingLevel1.objects.filter(product__in = obj_product ).distinct().count()
+            obj_packaging = PackagingLevel1.objects.filter(product__in = obj_product).distinct().order_by('-id')[:libs.LIMIT_PAGE]
         elif(slug_category =='' and unique_v != ''):
             obj_volume = Volume.objects.get(unique_volume = unique_v)
-            total_data = PackagingLevel1.objects.filter(volume = obj_volume).count()
-            obj_packaging = PackagingLevel1.objects.filter(volume = obj_volume).order_by('-id')[:libs.LIMIT_PAGE]
+            total_data = PackagingLevel1.objects.filter(volume = obj_volume).distinct().count()
+            obj_packaging = PackagingLevel1.objects.filter(volume = obj_volume).distinct().order_by('-id')[:libs.LIMIT_PAGE]
 
         tmp = "quote/includes/packaging_list.html"
         if(obj_packaging.count() == 0):
@@ -1123,8 +1118,8 @@ def load_packaging_level(request):
 
     else:
         try:
-            total_data = PackagingLevel1.objects.count()
-            obj_packaging = PackagingLevel1.objects.all().order_by('-id')[:libs.LIMIT_PAGE]
+            total_data = PackagingLevel1.objects.all().distinct().count()
+            obj_packaging = PackagingLevel1.objects.all().distinct().order_by('-id')[:libs.LIMIT_PAGE]
             if total_data > obj_packaging.count():
                 dt.update({
                     "has_page": True,
@@ -1190,20 +1185,20 @@ def load_more_packaging(request):
                     obj_volume = Volume.objects.get(unique_volume = unique_v)
                     obj_category = Category.objects.get(slug = slug_category)
                     obj_product = Product.objects.filter(category = obj_category)
-                    total_data = PackagingLevel1.objects.filter(product__in = obj_product ,volume = obj_volume).count()
-                    data = PackagingLevel1.objects.filter(product__in = obj_product ,volume = obj_volume).order_by('-id')[offset:offset+limit]
+                    total_data = PackagingLevel1.objects.filter(product__in = obj_product ,volume = obj_volume).distinct().count()
+                    data = PackagingLevel1.objects.filter(product__in = obj_product ,volume = obj_volume).distinct().order_by('-id')[offset:offset+limit]
                 elif(slug_category != '' and unique_v ==''):
                     obj_category = Category.objects.get(slug = slug_category)
                     obj_product = Product.objects.filter(category = obj_category)
-                    total_data = PackagingLevel1.objects.filter(product__in = obj_product ).count()
-                    data = PackagingLevel1.objects.filter(product__in = obj_product).order_by('-id')[offset:offset+limit]
+                    total_data = PackagingLevel1.objects.filter(product__in = obj_product ).distinct().count()
+                    data = PackagingLevel1.objects.filter(product__in = obj_product).distinct().order_by('-id')[offset:offset+limit]
                 elif(slug_category =='' and unique_v != ''):
                     obj_volume = Volume.objects.get(unique_volume = unique_v)
-                    total_data = PackagingLevel1.objects.filter(volume = obj_volume).count()
-                    data = PackagingLevel1.objects.filter(volume = obj_volume).order_by('-id')[offset:offset+limit] 
+                    total_data = PackagingLevel1.objects.filter(volume = obj_volume).distinct().count()
+                    data = PackagingLevel1.objects.filter(volume = obj_volume).distinct().order_by('-id')[offset:offset+limit] 
                 else:
-                    data = PackagingLevel1.objects.all().order_by('-id')[offset:offset+limit]
-                    total_data = PackagingLevel1.objects.count()
+                    data = PackagingLevel1.objects.all().distinct().order_by('-id')[offset:offset+limit]
+                    total_data = PackagingLevel1.objects.all().distinct().count()
                 temp = render_to_string(tmp,{"data":data, "offset": int(offset), "has_page": True,} )
                 dt.update({
                     "data": temp,
@@ -1236,17 +1231,17 @@ def load_more_packaging(request):
                     obj_volume = Volume.objects.get(unique_volume = unique_v)
                     obj_category = Category.objects.get(slug = slug_category)
                     obj_product = Product.objects.filter(category = obj_category)
-                    total_data = PackagingLevel1.objects.filter(product__in = obj_product ,volume = obj_volume).count()
-                    data = PackagingLevel1.objects.filter(product__in = obj_product ,volume = obj_volume).order_by('-id')[offset:offset+limit]
+                    total_data = PackagingLevel1.objects.filter(product__in = obj_product ,volume = obj_volume).distinct().count()
+                    data = PackagingLevel1.objects.filter(product__in = obj_product ,volume = obj_volume).distinct().order_by('-id')[offset:offset+limit]
                 elif(slug_category != '' and unique_v ==''):
                     obj_category = Category.objects.get(slug = slug_category)
                     obj_product = Product.objects.filter(category = obj_category)
-                    total_data = PackagingLevel1.objects.filter(product__in = obj_product ).count()
-                    data = PackagingLevel1.objects.filter(product__in = obj_product).order_by('-id')[offset:offset+limit]
+                    total_data = PackagingLevel1.objects.filter(product__in = obj_product ).distinct().count()
+                    data = PackagingLevel1.objects.filter(product__in = obj_product).distinct().order_by('-id')[offset:offset+limit]
                 elif(slug_category =='' and unique_v != ''):
                     obj_volume = Volume.objects.get(unique_volume = unique_v)
-                    total_data = PackagingLevel1.objects.filter(volume = obj_volume).count()
-                    data = PackagingLevel1.objects.filter(volume = obj_volume).order_by('-id')[offset:offset+limit] 
+                    total_data = PackagingLevel1.objects.filter(volume = obj_volume).distinct().count()
+                    data = PackagingLevel1.objects.filter(volume = obj_volume).distinct().order_by('-id')[offset:offset+limit] 
 
                 temp = render_to_string(tmp,{"data":data, "offset": int(offset), "has_page": True,} )
                 dt.update({
@@ -1284,19 +1279,20 @@ def load_more_packaging_level2(request):
                 obj_volume = Volume.objects.get(unique_volume = unique_v)
                 obj_category = Category.objects.get(slug = slug_category)
                 obj_product = Product.objects.filter(category = obj_category)
-                total_data = PackagingLevel2.objects.filter(product__in = obj_product ,volume = obj_volume).count()
-                data = PackagingLevel2.objects.filter(product__in = obj_product ,volume = obj_volume).order_by('-id')[offset:offset+limit]
+                total_data = PackagingLevel2.objects.filter(product__in = obj_product ,volume = obj_volume).distinct().count()
+                data = PackagingLevel2.objects.filter(product__in = obj_product ,volume = obj_volume).distinct().order_by('-id')[offset:offset+limit]
             elif(slug_category != '' and unique_v ==''):
                 obj_category = Category.objects.get(slug = slug_category)
                 obj_product = Product.objects.filter(category = obj_category)
-                total_data = PackagingLevel2.objects.filter(product__in = obj_product ).count()
-                data = PackagingLevel2.objects.filter(product__in = obj_product).order_by('-id')[offset:offset+limit]
+                total_data = PackagingLevel2.objects.filter(product__in = obj_product ).distinct().count()
+                data = PackagingLevel2.objects.filter(product__in = obj_product).distinct().order_by('-id')[offset:offset+limit]
             elif(slug_category =='' and unique_v != ''):
                 obj_volume = Volume.objects.get(unique_volume = unique_v)
-                total_data = PackagingLevel2.objects.filter(volume = obj_volume).count()
+                total_data = PackagingLevel2.objects.filter(volume = obj_volume).distinct().count()
+                data = PackagingLevel2.objects.filter(volume = obj_volume).distinct().order_by('-id')[offset:offset+limit]
             else:
-                data = PackagingLevel2.objects.all().order_by('-id')[offset:offset+limit]
-                total_data = PackagingLevel2.objects.count()
+                data = PackagingLevel2.objects.all().distinct().order_by('-id')[offset:offset+limit]
+                total_data = PackagingLevel2.objects.all().distinct().count()
 
             temp = render_to_string(tmp,{"data":data, "offset": int(offset), "has_page": True,} )
             dt.update({
@@ -1330,16 +1326,16 @@ def load_more_packaging_level2(request):
                 obj_volume = Volume.objects.get(unique_volume = unique_v)
                 obj_category = Category.objects.get(slug = slug_category)
                 obj_product = Product.objects.filter(category = obj_category)
-                total_data = PackagingLevel2.objects.filter(product__in = obj_product ,volume = obj_volume).count()
-                data = PackagingLevel2.objects.filter(product__in = obj_product ,volume = obj_volume).order_by('-id')[offset:offset+limit]
+                total_data = PackagingLevel2.objects.filter(product__in = obj_product ,volume = obj_volume).distinct().count()
+                data = PackagingLevel2.objects.filter(product__in = obj_product ,volume = obj_volume).distinct().order_by('-id')[offset:offset+limit]
             elif(slug_category != '' and unique_v ==''):
                 obj_category = Category.objects.get(slug = slug_category)
                 obj_product = Product.objects.filter(category = obj_category)
-                total_data = PackagingLevel2.objects.filter(product__in = obj_product ).count()
-                data = PackagingLevel2.objects.filter(product__in = obj_product).order_by('-id')[offset:offset+limit]
+                total_data = PackagingLevel2.objects.filter(product__in = obj_product ).distinct().count()
+                data = PackagingLevel2.objects.filter(product__in = obj_product).distinct().order_by('-id')[offset:offset+limit]
             elif(slug_category =='' and unique_v != ''):
                 obj_volume = Volume.objects.get(unique_volume = unique_v)
-                total_data = PackagingLevel2.objects.filter(volume = obj_volume).count()
+                total_data = PackagingLevel2.objects.filter(volume = obj_volume).distinct().count()
 
             temp = render_to_string(tmp,{"data":data, "offset": int(offset), "has_page": True,} )
             dt.update({

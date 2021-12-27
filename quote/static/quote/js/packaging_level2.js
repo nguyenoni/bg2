@@ -19,6 +19,7 @@ $('.load-more').click(function (e) {
         dt.limit = limit;
 
         let res = request("GET", "api/load-more-packaging-level2/", dt)
+        console.log(res);
         if (res.error == false) {
             $('.list-product').append(res.data);
             if (res.has_page == false) {
@@ -43,6 +44,7 @@ function load_dt(e, offset, limit) {
     dt.csrfmiddlewaretoken = get_csrfmiddlewaretoken();
 
     let res = request("POST", 'api/load-more-packaging-level2/', dt)
+    
     if (res.error == false) {
         if (res.no_data == true) {
             $('.list-product').append(res.message);

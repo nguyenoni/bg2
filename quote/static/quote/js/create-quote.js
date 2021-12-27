@@ -62,36 +62,6 @@ $('select.product').change(function (e) {
         show_mess(res.data.message)
     }
  
-    //  $.ajax({
-    //     type: 'POST',
-    //     url: '/api/load-volume-product/',
-    //     dataType: 'json',
-    //     data: dt,
-    //     success: function(data){
-    //         if(data.data.status==200){
-    //             show_mess(data.data.message)
-    //             arr_dt = data.data.data
-    //             $volume = $('select.volume')
-    //             $volume.children().remove();
-    //             $volume.append($.parseHTML(`<option value="">--Chọn dung tích--</option>`))
-    //             arr_dt.map(item=>{
-    //                 $volume.append($.parseHTML(`<option value="${item.unique_volume}">${item.name}</option>`))
-    //             })
-
-    //             $('.result_multi_product_quantity').val("")
-    //             $('.quantity').val("")
-    //             reset();
-    //             update_total();
-    //         }
-    //         else{
-    //             show_mess(data.data.message)
-    //         }
-
-
-    //     }
-
-
-    // })
 })
 
 // when select volume
@@ -145,24 +115,44 @@ function show_data_to_table(data, act) {
 // When button click choose material
 $('.material').click(function (e) {
     // e.preventDefault();
-    let valv = $('.change-val').attr("valv")
-    let valp = $('.change-val').attr("valp")
+    let valv = $('.change-val').attr("valv");
+    let valp = $('.change-val').attr("valp");
+    let quantity = $('.quantity').val();
 
-    dt = {
-        'valp': valp,
-        'valv': valv,
-        'csrfmiddlewaretoken': get_csrfmiddlewaretoken(),
+    if(quantity == ""){
+        hide_modal();
+        show_mess("Vui lòng nhập số lượng sản phẩm cần gia công!", ERR);
+        
     }
-    let data = request("POST", "/api/load-material/",dt)
-    if (data.data.status == 200) {
-        //    show_mess(data.data.message)
-        arr_dt = data.data.data
-        set_data_to_local(arr_dt, LIST_MATERIAL);
-        show_data_to_table(data.data, MATERIAL)
+    else if(valp == ""){
+        hide_modal();
+        show_mess("Vui lòng chọn sản phẩm cần gia công!", ERR);
+        
     }
-    else {
-        show_mess(data.data.message)
+    else if(valv == ""){
+        hide_modal();
+        show_mess("Vui lòng chọn dung tích!", ERR);
+        
     }
+    else{
+        dt = {
+            'valp': valp,
+            'valv': valv,
+            'quantity': quantity,
+            'csrfmiddlewaretoken': get_csrfmiddlewaretoken(),
+        }
+        let data = request("POST", "/api/load-material/",dt)
+        if (data.data.status == 200) {
+            //    show_mess(data.data.message)
+            arr_dt = data.data.data
+            set_data_to_local(arr_dt, LIST_MATERIAL);
+            show_data_to_table(data.data, MATERIAL)
+        }
+        else {
+            show_mess(data.data.message)
+        }
+    }
+    
 
 })
 
@@ -565,7 +555,7 @@ $('.quantity').bind('keyup mouseup', function (e) {
     let quantity = $(this).val();
     let product = $('select.product').children("option:selected").val();
     let volume = $('select.volume').children("option:selected").val();
-
+   
     if (quantity !== "" & volume !== "" & product !== "") {
         dt = {
             "product": product,

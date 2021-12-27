@@ -116,7 +116,7 @@
                 <hr />
                 <p>{{ data.des|safe|truncatewords:25 }}</p>
                 <hr />
-                <p><strong class="text-success">Giá bán: {{ data.price|floatformat:0 }}<sup>đ</sup></strong></p>
+                <p><strong class="text-success">Giá bán: {{ data.price|floatformat:0 }}<sup>đ</sup> /sp</strong></p>
                 <hr />
                 <a href="{% url 'create_quote_from_product' unique_product=data.unique_product %}"
                     class="btn btn-success">Tạo báo giá</a>

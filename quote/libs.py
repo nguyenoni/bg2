@@ -34,6 +34,20 @@ def serializable(objs):
 
     return arr_result
 
+# serializer material
+def serializer_material(objs, quantity, obj_volume):
+    arr_result = []
+    if(obj_volume.type_volume == 'ml'):
+        for item in objs:
+            item.price = item.price_per_ml * float(quantity*int(obj_volume.number_volume))
+            arr_result.append(item.to_dict())
+        return arr_result
+    else:
+        for item in objs:
+            item.price = ((float(obj_volume.number_volume)*item.price)/1000.0)*float(quantity)
+            arr_result.append(item.to_dict())
+        return arr_result
+
 def removed_tags(strs):
     if strs is not None:
         strs.strip()
