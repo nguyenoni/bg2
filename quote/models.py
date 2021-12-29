@@ -303,8 +303,8 @@ class PackingWorker(models.Model):
 # Công bố kiểm nghiệm
 class Announced(models.Model):
     name = models.CharField(max_length=255, default="", verbose_name="Tên gói công bố kiểm nghiệm")
-    product = models.ForeignKey(Product,on_delete=models.CASCADE, related_name="annonced_product", verbose_name="Sản phẩm")
-    volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="annonced_volume", verbose_name="Dung tích")
+    # product = models.ForeignKey(Product,on_delete=models.CASCADE, related_name="annonced_product", verbose_name="Sản phẩm")
+    # volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="annonced_volume", verbose_name="Dung tích")
     price = models.FloatField(default=0, verbose_name="Giá")
     # note = models.TextField(default="", verbose_name="Ghi chú")
     note = RichTextUploadingField(blank=True, null = True ,verbose_name='Ghi chú')

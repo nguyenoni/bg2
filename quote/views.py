@@ -5,7 +5,7 @@ from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, resolve_url
 from django.http import HttpResponse, request
 from django.views import View
-from .models import Announced, Category, FeeShipping, ImageMaterial, ImagePackagingLevel1, ImagePackagingLevel2, ImageProduct, Material, PackagingLevel1, PackingWorker, Product, Stamp, Volume, PackagingLevel2, Param
+from .models import Announced, BannerHome, Category, FeeShipping, ImageMaterial, ImagePackagingLevel1, ImagePackagingLevel2, ImageProduct, Material, PackagingLevel1, PackingWorker, Product, Stamp, Volume, PackagingLevel2, Param
 from django.views.generic.detail import DetailView
 from . import libs
 from django.core.mail import EmailMessage
@@ -27,6 +27,25 @@ def homepage(request):
         "active_menu": libs.HOME,
         "error": False,
     }
+    try:
+        obj_banner = BannerHome.objects.get(id=1)
+        obj_product = Product.objects.all().order_by('-id')[:12]
+        obj_material = Material.objects.all().order_by('-id')[:12]
+        obj_packaging_level1 = PackagingLevel1.objects.all().order_by('-id')[:12]
+        obj_packaging_level2 = PackagingLevel2.objects.all().order_by('-id')[:12]
+
+        dt.update({
+            "banner_home": obj_banner,
+            "data_product": obj_product,
+            "data_material": obj_material,
+            "data_packaging_level_1": obj_packaging_level1,
+            "data_packaging_level_2": obj_packaging_level2
+        })
+    except ValueError:
+        dt.update({
+            "error": True,
+            "message": "Lỗi hệ thống!"
+        })
     return render(request,temp, dt)
 
 # Tạo báo giá từ url sản phẩm
@@ -78,11 +97,12 @@ def export_to_pdf(request, quote):
     announced = int(arr[7])
     feeship = int(arr[8])
     quantity = int(arr[9])
+    name_create = str(arr[10])
     tmp = "quote/export_pdf.html"
     dt = {
         "total": 0,
     }
-    if(product and volume and material and quantity):
+    if(product and volume and material and quantity and name_create):
         # Gia de tinh tong tien
         p_pklv1 = 0
         p_pklv2 = 0
@@ -151,7 +171,8 @@ def export_to_pdf(request, quote):
         if(obj_volume.type_volume == 'ml'):       
             obj_material.price = obj_material.price_per_ml * float(quantity*int(obj_volume.number_volume))
         else:
-            obj_material.price =((float(obj_volume.type_volume)*obj_material.price)/1000.0)*float(quantity)
+            # 30g x price /1000 (1kg)
+            obj_material.price =((float(obj_volume.number_volume)*obj_material.price)/1000.0)*float(quantity)
 
         tt_material = obj_material.price*quantity
         
@@ -164,6 +185,7 @@ def export_to_pdf(request, quote):
          "tt_packaging_level_2": tt_packaging_level_2,
          "tt_stamp": tt_stamp,
          "tt_packing_worker": tt_packing_worker,
+         "name_create": name_create,
          })
 
     return render(request, tmp, dt)
@@ -429,14 +451,14 @@ def load_announced(request):
         "message": ""
     }
 
-    if(request.method == "POST" and request.POST.get("valp") and request.POST.get("valv")):
-        valp = request.POST.get("valp","")
-        valv = request.POST.get("valv","")
+    if(request.method == "POST"):
+        # valp = request.POST.get("valp","")
+        # valv = request.POST.get("valv","")
 
         try:
-            obj_product = Product.objects.filter(unique_product=valp)[0]
-            obj_volume = Volume.objects.filter(unique_volume = valv)[0]
-            obj_announced = Announced.objects.filter(product = obj_product, volume = obj_volume)
+            # obj_product = Product.objects.filter(unique_product=valp)[0]
+            # obj_volume = Volume.objects.filter(unique_volume = valv)[0]
+            obj_announced = Announced.objects.all().distinct()
             contex.update({
                 "message": "Load dữ liệu thành công!",
                 "data": libs.serializable(obj_announced),

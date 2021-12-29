@@ -1,6 +1,6 @@
 {% extends "quote/layout/base.html" %}
 {% load static %}
-
+{% load humanize %}
 {% block title %}
 {{data.name}} |Thaihuonggroup
 {% endblock title %}
@@ -116,7 +116,7 @@
                 <hr />
                 <p>{{ data.note|safe|truncatewords:25 }}</p>
                 <hr />
-                <p><strong class="text-success">Giá thành: {{ data.price|floatformat:0 }}<sup>đ</sup> /sp</strong></p>
+                <p><strong class="text-success">Giá thành: {{ data.price|floatformat:0|intcomma }}<sup>đ</sup> /sp</strong></p>
                 <hr />
                 <h3>Thông tin bổ sung:</h3>
                 <table class="table table-striped">

@@ -31,11 +31,11 @@
  }
  
  .page-content {
-     background: #38434e;
+     background: #f0f2f5;
  }
  
  .navbar .logo-box {
-     background: #435360;
+     background: #93cb0b;
  }
  
  .navbar .logo-box a {
@@ -43,7 +43,7 @@
  }
  
  .topmenu-outer {
-     background: #435360;
+     background: #93cb0b;
  }
  
  .top-menu .navbar-nav > li > a {
@@ -51,7 +51,7 @@
  }
  
  .sidebar {
-     background: #38434e;
+     background: #f0f2f5;
  }
  
  .sidebar-profile span small {
@@ -59,15 +59,15 @@
  }
  
  .menu {
-     background: #38434e;
+     background: #f0f2f5;
  }
  
  .menu.accordion-menu a {
-     color: #c6d1e2;
+     color: #38434e;
  }
  
  .menu.accordion-menu li {
-     border-bottom: 1px solid #404c57;
+     border-bottom: 1px solid #9099b66b;
  }
  
  .menu.accordion-menu ul.sub-menu li {
@@ -76,7 +76,8 @@
  
  .menu.accordion-menu > li > a:hover {
      border-radius: 0;
-     background: #323b45;
+     background: #30b19b;
+     color: #fff;
  }
  
  .menu.accordion-menu > li.active > a,

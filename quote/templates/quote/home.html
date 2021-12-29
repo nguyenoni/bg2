@@ -1,6 +1,6 @@
 {% extends "quote/layout/base.html" %}
 {% load static %}
-
+{% load humanize %}
 {% block title %}
 Trang chủ |Thaihuonggroup
 {% endblock title %}
@@ -8,53 +8,324 @@ Trang chủ |Thaihuonggroup
 
 
 {% block breadcrumb %}
+<link href="{% static '/quote/css/layers/lightslider.css' %}" rel="stylesheet" type="text/css" />
+
 <style>
-    .row.row_product {
-        /* max-width: 1020px !important; */
-        margin: 0.5em;
-    }
+   img {
+      width: 100% !important;
+   }
 
-    .col {
-        margin-bottom: 2em;
+   .row {
+      /* max-width: 1020px !important; */
+      margin: 2em 0 2em 0 !important;
+   }
 
-    }
+   .col {
+      margin-bottom: 2em;
+
+   }
+
+   .home-item-product-hot {
+      padding: 1em;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      text-align: center;
+   }
+
+
+      img.card-img-top {
+         max-width: 100%;
+         max-height: auto;
+         position: relative;
+         vertical-align: middle;
+         left: 50%;
+         transform: translate(-50%);
+         height: 150px;
+         width: 150px;
+         object-fit: cover;
+      }
+   
 </style>
 <div class="page-breadcrumb">
-    <ol class="breadcrumb">
-        <li><a href="/">Home</a></li>
-        <li class="active">Sản phẩm</li>
-    </ol>
+   <ol class="breadcrumb">
+      <li><a href="/">Home</a></li>
+      <li class="active">Sản phẩm</li>
+   </ol>
 </div>
 {% endblock breadcrumb %}
 
 {% block content %}
 
 <div class="col-md-12">
-    <div class="panel panel-white">
+   <div class="panel panel-white">
+      <div class="container">
+         <div class="row ">
+            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+               <div class="carousel-inner">
+                  <div class="carousel-item active">
+                     {% if banner_home %}
+                     <img src="{{ banner_home.image.url }}"
+                        class="img-fluid" style="width: 100%;" alt="...">
+                     {% endif %}
+                  </div>
 
-        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="http://127.0.0.1:8000/media/media/upload/bannerhome/2021/12/thai_huong_noel_2.jpg"
-                        class="d-block w-100" alt="...">
-                </div>
-
+               </div>
             </div>
-        </div>
-        <!-- End banner -->
-        <div class="row row-custom">
+         </div>
+
+         <!-- End banner -->
+
+         <div class="row">
+            <div class="alert alert-danger" role="alert">
+               <span class="menu-icon icon-grid"></span> Sản phẩm đang HOT
+            </div>
+
+         </div>
+         <!-- List sản phẩm HOT -->
+         {% if data_product %}
+
+         <div class="row">
+            <ul id="lightSlider">
+               {% for item in data_product %}
+               <li>
+                  <div class="card home-item-product-hot">
+                     <a href="{% url 'detail_product' slug=item.slug %}"><img class="card-img-top"
+                           src="{{ item.cover_image.url }}" alt="Card image cap"></a>
+                     <div class="card-body">
+                        <h4 class="card-title"><a href="{% url 'detail_product' slug=item.slug %}" class="text-success"
+                              title="{{item.name}}">{{ item.name|truncatewords:3 }}</a>
+                        </h4>
+                        <hr />
+                        <p class="card-text"><span class="btn-xs btn-success">Giá thành: {{item.price|floatformat:0|intcomma}}<sup>đ</sup></span></p>
+
+                     </div>
+                  </div>
+               </li>
+               {% endfor %}
+            </ul>
+         </div>
+         
+         <div class="row text-center">
+            <a class="btn btn-danger load-more" href="{% url 'load_product_list' %}">Xem thêm</a>
+         </div>
+         {% endif %}
+         <!-- End san pham -->
+
+         <div class="row">
             <div class="alert alert-success" role="alert">
-                Sản phẩm đang HOT
+               <span class="menu-icon icon-drop"></span> Nguyên liệu nổi bật
             </div>
-            <div class="col-md-3">
 
+         </div>
+         {% if data_material %}
+         <div class="row">
+            <ul id="slide-material">
+               {% for item in data_material %}
+               <li>
+                  <div class="card home-item-product-hot">
+                     <a href="{% url 'detail_material' pk=item.id %}"><img class="card-img-top"
+                           src="{{ item.cover_image.url }}"
+                           alt="Card image cap"></a>
+                     <div class="card-body">
+                        <h4 class="card-title"><a href="{% url 'detail_material' pk=item.id %}" class="text-success" title="{{ item.name }}">{{ item.name|truncatewords:3 }}</a></h4>
+                        <hr />
+                        <p class="card-text"><span class="btn-sm btn-success">Giá thành: {{ item.price|floatformat:0|intcomma }}<sup>đ</sup></span>
+                        </p>
+
+                     </div>
+                  </div>
+               </li>
+               {% endfor %}
+
+            </ul>
+         </div>
+         
+         
+         <div class="row text-center">
+            <a class="btn btn-danger load-more" href="{% url 'load_material_list' %}">Xem thêm</a>
+         </div>
+         {% endif %}
+
+         <!-- Bao bì cấp 1 -->
+         <div class="row">
+            <div class="alert alert-success" role="alert">
+               <span class="menu-icon icon-drawer"></span> Bao bì cấp 1
             </div>
-        </div>
-    </div>
+
+         </div>
+         {% if data_packaging_level_1 %}
+         <div class="row">
+            <ul id="slide-packading-level1">
+               {% for item in data_packaging_level_1 %}
+               <li>
+                  <div class="card home-item-product-hot">
+                     <a href="{% url 'detail_packaging_level1' pk=item.id %}"><img class="card-img-top"
+                           src="{{ item.image.url }}"
+                           alt="Card image cap"></a>
+                     <div class="card-body">
+                        <h4 class="card-title"><a href="{% url 'detail_packaging_level1' pk=item.id %}" class="text-success" title="{{ item.name }}">{{ item.name|truncatewords:3 }}</a></h4>
+                        <hr />
+                        <p class="card-text"><span class="btn-sm btn-success">Giá thành: {{ item.price|floatformat:0|intcomma }}<sup>đ</sup></span>
+                        </p>
+
+                     </div>
+                  </div>
+               </li>
+               {% endfor %}
+
+            </ul>
+         </div>
+         
+
+         <div class="row text-center">
+            <a class="btn btn-danger load-more" href="{% url 'load_packaging_level' %}">Xem thêm</a>
+         </div>
+         {% endif %}
+
+         <!-- Bao bì cấp 2 -->
+         <div class="row">
+            <div class="alert alert-success" role="alert">
+               <span class="menu-icon icon-social-dropbox"></span> Bao bì cấp 2
+            </div>
+
+         </div>
+         {% if data_packaging_level_2 %}
+         <div class="row">
+            <ul id="slide-packading-level2">
+               {% for item in data_packaging_level_2 %}
+               <li>
+                  <div class="card home-item-product-hot">
+                     <a href="{% url 'detail_packaging_level2' pk=item.id %}"><img class="card-img-top"
+                           src="{{ item.image.url }}"
+                           alt="Card image cap"></a>
+                     <div class="card-body">
+                        <h4 class="card-title"><a href="{% url 'detail_packaging_level2' pk=item.id %}" class="text-success" title="{{ item.name }}">{{ item.name|truncatewords:3 }}</a></h4>
+                        <hr />
+                        <p class="card-text"><span class="btn-sm btn-success">Giá thành: {{ item.price|floatformat:0|intcomma }}<sup>đ</sup></span>
+                        </p>
+
+                     </div>
+                  </div>
+               </li>
+               {% endfor %}
+
+            </ul>
+         </div>
+         
+
+         <div class="row text-center">
+            <a class="btn btn-danger load-more" href="{% url 'load_packaging_level' %}">Xem thêm</a>
+         </div>
+         {% endif %}
+      </div>
+   </div>
 
 </div>
 
+
+
 {% endblock content %}
 {% block script %}
+<script type="application/javascript" src="{% static '/quote/js/pages/lightslider.js' %}"></script>
+<script type="text/javascript">
 
+   $("#lightSlider").lightSlider({
+      item: 4,
+      loop: false,
+      slideMove: 2,
+      easing: 'cubic-bezier(0.25, 0, 0.25, 1)',
+      speed: 600,
+      responsive: [
+         {
+            breakpoint: 800,
+            settings: {
+               item: 3,
+               slideMove: 1,
+               slideMargin: 6,
+            }
+         },
+         {
+            breakpoint: 480,
+            settings: {
+               item: 1,
+               slideMove: 1
+            }
+         }
+      ]
+   });
+   $('#slide-material').lightSlider({
+      item: 4,
+      loop: false,
+      slideMove: 2,
+      easing: 'cubic-bezier(0.25, 0, 0.25, 1)',
+      speed: 600,
+      responsive: [
+         {
+            breakpoint: 800,
+            settings: {
+               item: 3,
+               slideMove: 1,
+               slideMargin: 6,
+            }
+         },
+         {
+            breakpoint: 480,
+            settings: {
+               item: 1,
+               slideMove: 1
+            }
+         }
+      ]
+   });
+
+   $("#slide-packading-level1").lightSlider({
+      item: 4,
+      loop: false,
+      slideMove: 2,
+      easing: 'cubic-bezier(0.25, 0, 0.25, 1)',
+      speed: 600,
+      responsive: [
+         {
+            breakpoint: 800,
+            settings: {
+               item: 3,
+               slideMove: 1,
+               slideMargin: 6,
+            }
+         },
+         {
+            breakpoint: 480,
+            settings: {
+               item: 1,
+               slideMove: 1
+            }
+         }
+      ]
+   });
+
+   $("#slide-packading-level2").lightSlider({
+      item: 4,
+      loop: false,
+      slideMove: 2,
+      easing: 'cubic-bezier(0.25, 0, 0.25, 1)',
+      speed: 600,
+      responsive: [
+         {
+            breakpoint: 800,
+            settings: {
+               item: 3,
+               slideMove: 1,
+               slideMargin: 6,
+            }
+         },
+         {
+            breakpoint: 480,
+            settings: {
+               item: 1,
+               slideMove: 1
+            }
+         }
+      ]
+   });
+</script>
 {% endblock script %}

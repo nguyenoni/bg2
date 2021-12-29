@@ -1,6 +1,6 @@
 {% extends "quote/layout/base.html" %}
 {% load static %}
-
+{% load humanize %}
 {% block title %}
 Sản phẩm gia công |Thaihuonggroup
 {% endblock title %}
@@ -95,13 +95,13 @@ Sản phẩm gia công |Thaihuonggroup
             <div class="row row_product list-product">
                 {% if data %}
                 {% for item in data %}
-                <div class="col col-md-3 col-sm-2 product-item">
+                <div class="col col-md-3 col-sm-6 product-item">
                     <div class="card" style="">
                         <a href="{% url 'detail_product' slug=item.slug %}"><img class="card-img-top" style="" src="{{item.cover_image.url}}"
                             alt="Card image cap"></a>
                         <div class="card-body">
                             <h5 class="card-title">{{item.name}}</h5>
-                            <p class="card-text"><strong class="text-success">Giá thành: {{ item.price|floatformat:0 }}<sup>đ</sup> /sp</strong></p>
+                            <p class="card-text"><strong class="text-success">Giá thành: {{ item.price|floatformat:0|intcomma }}<sup>đ</sup> /sp</strong></p>
                             <a href="{% url 'detail_product' slug=item.slug %}" class="btn btn-success">Chi tiết</a>
                         </div>
                     </div>

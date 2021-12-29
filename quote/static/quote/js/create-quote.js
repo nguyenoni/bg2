@@ -244,7 +244,6 @@ function update_total() {
     let feeship = parseInt($(".feeship-price>b").text());
     let result_multi_price_quantity = parseInt($('.result_multi_product_quantity').val());
     let quantity = parseInt($('.quantity').val());
-    // console.log(packaging_level1)
 
     if (!isNaN(result_multi_price_quantity)) {
         total += result_multi_price_quantity
@@ -276,7 +275,6 @@ function update_total() {
 
     $('.total-price').empty();
     $('.total-price').append($.parseHTML(`<b>${total.toLocaleString("fi-FI")}</b> <sup>đ</sup>`));
-
 
     localStorage.removeItem("total");
     localStorage.setItem("total", total);
@@ -486,12 +484,8 @@ $('.packing-worker').click(function (e) {
 // When button click choose Announced
 $('.announced').click(function (e) {
     // e.preventDefault();
-    let valv = $('.change-val').attr("valv");
-    let valp = $('.change-val').attr("valp");
 
     dt = {
-        'valp': valp,
-        'valv': valv,
         'csrfmiddlewaretoken': get_csrfmiddlewaretoken(),
     }
     $.ajax({
@@ -562,7 +556,7 @@ $('.quantity').bind('keyup mouseup', function (e) {
             "quantity": quantity,
             'csrfmiddlewaretoken': get_csrfmiddlewaretoken(),
         }
-        // console.log(dt);
+
         $.ajax({
             type: 'POST',
             url: '/api/load-quantity-product/',

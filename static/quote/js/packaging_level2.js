@@ -43,6 +43,7 @@ function load_dt(e, offset, limit) {
     dt.csrfmiddlewaretoken = get_csrfmiddlewaretoken();
 
     let res = request("POST", 'api/load-more-packaging-level2/', dt)
+    
     if (res.error == false) {
         if (res.no_data == true) {
             $('.list-product').append(res.message);

@@ -63,8 +63,8 @@ class PackingWorkerAdmin(admin.ModelAdmin):
 
 @admin.register(Announced)
 class AnnouncedAdmin(admin.ModelAdmin):
-    list_display = ["name", "price", "product", "volume", "note", "create_at", "update_at", "status",]
-    list_filter = ('product', 'volume', 'create_at', 'status')
+    list_display = ["name", "price", "note", "create_at", "update_at", "status",]
+    list_filter = ('create_at', 'status')
     search_field = ('name', 'product', 'volume',)
     ordering = ('id',)
 
