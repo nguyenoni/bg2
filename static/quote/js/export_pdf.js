@@ -4,7 +4,6 @@ $('.create-quote-pdf').click(function (e) {
     let product = $('.change-val').attr("valp");
     let volume = $('.change-val').attr("valv");
     let quantity = $('.quantity').val();
-    let name_create = $('.name-create').val();
     let material = JSON.parse(localStorage.getItem("material"))
     let packaging_level1 = JSON.parse(localStorage.getItem("packaging-level1"))
     let packaging_level2 = JSON.parse(localStorage.getItem("packaging-level2"))
@@ -58,7 +57,7 @@ $('.create-quote-pdf').click(function (e) {
         announced =(announced ==0)?announced.toString():announced.key.toString();
         packing_worker = (packing_worker ==0)?packing_worker.toString():packing_worker.key.toString();
 
-        const param = `${product}-${volume}-${material.key}-${packaging_level1}-${packaging_level2}-${stamp}-${packing_worker}-${announced}-${feeship}-${quantity}-${name_create}`;
+        const param = `${product}-${volume}-${material.key}-${packaging_level1}-${packaging_level2}-${stamp}-${packing_worker}-${announced}-${feeship}-${quantity}`;
         let dt = {
             "slug": param,
             'csrfmiddlewaretoken': get_csrfmiddlewaretoken(),

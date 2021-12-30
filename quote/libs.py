@@ -13,7 +13,7 @@ CREATE_QUOTE = "CREATE_QUOTE"
 CONTACT = "CONTACT"
 PACKAGING = "PACKAGING"
 EMAIL_ADMIN = 'songmv.oni@gmail.com'
-LIMIT_PAGE = 1
+LIMIT_PAGE = 12
 # Message
 MESSAGE_NO_DATA = "<p>Không có dữ liệu hiển thị!</p>"
 
@@ -44,7 +44,7 @@ def serializer_material(objs, quantity, obj_volume):
         return arr_result
     else:
         for item in objs:
-            item.price = ((float(obj_volume.number_volume)*item.price)/1000)*float(quantity)
+            item.price = ((float(obj_volume.number_volume)*item.price)/1000.0)*float(quantity)
             arr_result.append(item.to_dict())
         return arr_result
 

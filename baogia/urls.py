@@ -18,11 +18,13 @@ from django.urls import path, include, re_path
 from django.views.static import serve
 from django.conf import settings
 from django.conf import urls as conf_urls
+from django.views.generic.base import TemplateView
 from quote import views
 
 urlpatterns = [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+    path("robots.txt", TemplateView.as_view(template_name="quote/robots.txt", content_type="text/plain"),),
     path('', include('quote.urls')),
     path('admin/', admin.site.urls),
     path('ckeditor/', include('ckeditor_uploader.urls')),

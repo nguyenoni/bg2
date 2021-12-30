@@ -100,7 +100,13 @@
       </h1>
       <p class="text-center">{{ product.name }} ({{ volume.name }})</p>
       
-      <p class="text-right">Người lập phiếu: <strong>{{ name_create }}</strong></p>
+    </div>
+    <div class="col-12">
+      <p><strong>Kính gửi:</strong></p> 						
+      <p><strong>Công ty:</strong></p>   				
+      <p><strong>Địa chỉ: </strong></p>   						
+      <p><strong>Số điện thoại:</strong></p>   
+      <p>Công ty TNHH đầu tư và thương mại Thái Hương chân thành cám ơn quý khách hàng đã quan tâm đến dịch vụ, sản phẩm của chúng tôi. Chúng tôi xin gửi báo giá sản phẩm theo nhu cầu của quý khách hàng cụ thể như sau:						</p> 						
     </div>
 
     <table class="table">
@@ -200,6 +206,29 @@
         <td>{{ total|floatformat:0|intcomma }} <sup>đ</sup></td>
       </tr>
     </table>
+    <div class="row">
+        <p class="col-12">Báo giá đã bao gồm phí VAT	</p>				
+        <p class="col-12">Thời gian hiệu lực của báo giá: 15 ngày kể từ ngày gửi phiếu chào giá</p>						
+        <p class="col-12">"Thời gian sản xuất và giao hàng: không quá 7 ngày kể từ khi nhận đủ nguyên liệu sản xuất và đóng gói, giao hàng tại kho bên bán ( Hà Nội)</p>
+        <p class="col-12">Thanh toán 50% hợp đồng ngay sau khi kí hợp đồng.</p>
+        <p class="col-12">Thanh toán 50% hợp đồng còn lại ngay khi nhận đầy đủ hàng hóa. Phương thức thanh toán: Chuyển khoản hoặc tiền mặt."</p>						
+        <p class="col-12"><strong><i>Chúng tôi xin trân trọng cảm ơn và phục vụ quý khách !</i></strong></p>						
+      
+    </div>
+    <div class="rowv align-items-center">
+      <div class="col-4 col-sm-12">
+        
+      </div>
+      <div class="col-4 col-sm-12">
+        
+      </div>
+      <div class="col-4 offset-md-8 text-center">
+        <p>Ngày {{day}} tháng {{month}} năm {{year}}</p>
+        <p><strong>NGƯỜI LẬP</strong></p>
+        <div class="mg-bt" style="margin-bottom: 8em;"></div>
+
+      </div>
+    </div>
     <div class="row" style="border-top:1px solid;text-align: center;">
       <p><i>thaihuonggroup.com.vn</i> | <i> {{ time }}</i></p>
     </div>

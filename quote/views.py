@@ -1,11 +1,11 @@
-from datetime import datetime
+from datetime import datetime, date
 from json.encoder import JSONEncoder
 from django.http import response
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, resolve_url
 from django.http import HttpResponse, request
 from django.views import View
-from .models import Announced, BannerHome, Category, FeeShipping, ImageMaterial, ImagePackagingLevel1, ImagePackagingLevel2, ImageProduct, Material, PackagingLevel1, PackingWorker, Product, Stamp, Volume, PackagingLevel2, Param
+from .models import BannerHome, Announced, Category, FeeShipping, ImageMaterial, ImagePackagingLevel1, ImagePackagingLevel2, ImageProduct, Material, PackagingLevel1, PackingWorker, Product, Stamp, Volume, PackagingLevel2, Param
 from django.views.generic.detail import DetailView
 from . import libs
 from django.core.mail import EmailMessage
@@ -97,12 +97,11 @@ def export_to_pdf(request, quote):
     announced = int(arr[7])
     feeship = int(arr[8])
     quantity = int(arr[9])
-    name_create = str(arr[10])
     tmp = "quote/export_pdf.html"
     dt = {
         "total": 0,
     }
-    if(product and volume and material and quantity and name_create):
+    if(product and volume and material and quantity):
         # Gia de tinh tong tien
         p_pklv1 = 0
         p_pklv2 = 0
@@ -175,17 +174,16 @@ def export_to_pdf(request, quote):
             obj_material.price =((float(obj_volume.number_volume)*obj_material.price)/1000.0)*float(quantity)
 
         tt_material = obj_material.price*quantity
-        
+        time = date.today()
 
         total = (obj_product.price*quantity) + (obj_material.price*quantity) + (p_pklv1*quantity) + (p_pklv2*quantity) + (p_st*quantity) + (p_packw*quantity) + p_ann + p_fs
         dt.update({"product": obj_product, "price_product": price_product,"quantity": quantity, "volume": obj_volume, "material": obj_material, 
-         "total": total, "time": str(datetime.now()),
+         "total": total, "day": str(time.day), "month": str(time.month), "year": str(time.year),
          "tt_material": tt_material,
          "tt_packaging_level_1": tt_packaging_level_1,
          "tt_packaging_level_2": tt_packaging_level_2,
          "tt_stamp": tt_stamp,
          "tt_packing_worker": tt_packing_worker,
-         "name_create": name_create,
          })
 
     return render(request, tmp, dt)

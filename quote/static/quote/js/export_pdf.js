@@ -4,7 +4,6 @@ $('.create-quote-pdf').click(function (e) {
     let product = $('.change-val').attr("valp");
     let volume = $('.change-val').attr("valv");
     let quantity = $('.quantity').val();
-    let name_create = $('.name-create').val();
     let material = JSON.parse(localStorage.getItem("material"))
     let packaging_level1 = JSON.parse(localStorage.getItem("packaging-level1"))
     let packaging_level2 = JSON.parse(localStorage.getItem("packaging-level2"))
@@ -44,9 +43,6 @@ $('.create-quote-pdf').click(function (e) {
     else if(quantity == ""){
         show_mess("Vui lòng nhập số lượng sản phẩm cần gia công!", ERR);
     }
-    else if(name_create == ""){
-        show_mess("Vui lòng nhập tên người lập phiếu!", ERR);
-    }
     else if(material == null){
         show_mess("Vui lòng chọn nguyên liệu!", ERR);
     }
@@ -58,7 +54,7 @@ $('.create-quote-pdf').click(function (e) {
         announced =(announced ==0)?announced.toString():announced.key.toString();
         packing_worker = (packing_worker ==0)?packing_worker.toString():packing_worker.key.toString();
 
-        const param = `${product}-${volume}-${material.key}-${packaging_level1}-${packaging_level2}-${stamp}-${packing_worker}-${announced}-${feeship}-${quantity}-${name_create}`;
+        const param = `${product}-${volume}-${material.key}-${packaging_level1}-${packaging_level2}-${stamp}-${packing_worker}-${announced}-${feeship}-${quantity}`;
         let dt = {
             "slug": param,
             'csrfmiddlewaretoken': get_csrfmiddlewaretoken(),
