@@ -19,12 +19,22 @@ from django.views.static import serve
 from django.conf import settings
 from django.conf import urls as conf_urls
 from django.views.generic.base import TemplateView
+from django.contrib.sitemaps.views import sitemap
 from quote import views
+from quote.sitemaps import MaterialSitemap, PackagingLevel1Sitemap, PackagingLevel2Sitemap, ProductSitemap
+
+sitemaps = {
+    'product':ProductSitemap,
+    'material':MaterialSitemap,
+    'packaginglevel1': PackagingLevel1Sitemap,
+    'packaginglevel2': PackagingLevel2Sitemap,
+}
 
 urlpatterns = [
     re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
     path("robots.txt", TemplateView.as_view(template_name="quote/robots.txt", content_type="text/plain"),),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('', include('quote.urls')),
     path('admin/', admin.site.urls),
     path('ckeditor/', include('ckeditor_uploader.urls')),
