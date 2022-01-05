@@ -105,6 +105,7 @@ Sản phẩm gia công |Thaihuonggroup
                         <div class="card-body">
                             <h5 class="card-title">{{item.name}}</h5>
                             <p class="card-text"><strong class="text-success">Giá thành: {{ item.price|floatformat:0|intcomma }}<sup>đ</sup> /sp</strong></p>
+                            <p class="cart-text"><strong class="text-danger">Số lượng: {{item.quantity_can_order_with_price}}</strong></p>
                             <a href="{% url 'detail_packaging_level1' pk=item.id %}" class="btn btn-success">Chi tiết</a>
                         </div>
                     </div>

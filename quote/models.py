@@ -211,7 +211,7 @@ class PackagingLevel2(models.Model):
     # một bao bì cấp 1 có nhiều sản phẩm
     product                 = models.ManyToManyField(Product, null=False, blank=True, verbose_name='Sản phẩm')
     volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="packaging_volume", verbose_name="Dung tích")
-    # note = models.TextField(default="", verbose_name="Ghi chú")
+    quantity_can_order_with_price = models.IntegerField(default=0, verbose_name="Số lượng đặt hàng tương ứng với giá")
     note = RichTextUploadingField(blank=True, null = True ,verbose_name='Ghi chú')
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
     create_at = models.DateField(auto_now_add=True, verbose_name="Ngày tạo")
