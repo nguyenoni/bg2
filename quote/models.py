@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING
+
 from django.db import models
 from django.db.models.fields.files import ImageField
 from .libs import generate_uid, get_upload_to_folder
@@ -8,7 +8,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=255, default="", verbose_name="Tên danh mục")
-    slug = models.SlugField(unique=True, blank=True, max_length=500,verbose_name="URL")
+    slug = models.SlugField(unique=True, blank=True, max_length=500,verbose_name="URL",editable=False)
     create_at = models.DateField(auto_created=True, verbose_name="Ngày tạo")
     update_at = models.DateField(auto_now=True, verbose_name="Ngày cập nhật")
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
@@ -41,14 +41,14 @@ class Product(models.Model):
     )
     name = models.CharField(max_length=255, default="", verbose_name="Tên sản phẩm")
     type_product = models.CharField(max_length = 20,choices = TYPE_PRO,default = 'ml', verbose_name="Loại sản phẩm", blank=True)
-    unique_product = models.CharField(max_length=20, unique=True, blank=True, verbose_name="UID sản phẩm")
+    unique_product = models.CharField(max_length=20, unique=True, blank=True, verbose_name="UID sản phẩm",editable=False)
     cover_image = models.ImageField(upload_to=get_upload_to_folder("products"), max_length=512, blank=True, verbose_name="Image")
-    slug = models.SlugField(max_length=500, unique=True, blank=True,verbose_name="URL")
+    slug = models.SlugField(max_length=500, unique=True, blank=True,verbose_name="URL", editable=False)
     # des= models.TextField(default="", blank=True, verbose_name="Mô tả")
     des = RichTextUploadingField(blank=True, null = True ,verbose_name='Mô tả')
-    price = models.FloatField(default=0, verbose_name="Giá")
+    # price = models.FloatField(default=0, verbose_name="Giá")
     category = models.ForeignKey(Category,on_delete=models.CASCADE, related_name="category")
-    quantity = models.IntegerField(default=0, verbose_name="Số lượng")
+    # quantity = models.IntegerField(default=0, verbose_name="Số lượng")
     create_at = models.DateTimeField(auto_created=True, verbose_name="Ngày tạo")
     update_at = models.DateTimeField(auto_now=True, verbose_name="Ngày cập nhật")
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
@@ -56,7 +56,7 @@ class Product(models.Model):
     @staticmethod
     def custom_slugs(slug):
         if slug is not None:
-            obj_slug = Category.objects.filter(slug=slug).first()
+            obj_slug = Product.objects.filter(slug=slug).first()
             if obj_slug:
                 return slug + '-' + str(obj_slug.id)
         return slug
@@ -92,7 +92,7 @@ class Volume(models.Model):
     name = models.CharField(max_length= 20, default= "", verbose_name="Tên dung tích")
     number_volume = models.IntegerField(default=0, verbose_name="Dung tích")
     type_volume = models.CharField( max_length = 20,choices = TYPE_VOL,default = 'ml', verbose_name="Loại dung tích", blank=True)
-    unique_volume = models.CharField(max_length=20, unique=True, blank=True, verbose_name="UID Dung tích")
+    unique_volume = models.CharField(max_length=20, unique=True, blank=True, verbose_name="UID Dung tích",editable=False)
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
     # product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="volume_product")
     create_at = models.DateField(auto_now_add=True, verbose_name="Ngày tạo")
@@ -123,22 +123,40 @@ class Volume(models.Model):
 # Nguyên liệu
 class Material(models.Model):
     name = models.CharField(max_length=255, default="", verbose_name="Tên nguyên liệu")
+    slug = models.SlugField(max_length=500, unique=True, null=True, blank=True,verbose_name="URL",editable=False)
     convert_to_ml= models.IntegerField(default=0, verbose_name="Quy đổi 1kg sang ml", blank=True)
     price_per_ml = models.FloatField(default=0, verbose_name="Giá 1ml", blank=True)
     cover_image = models.ImageField(upload_to=get_upload_to_folder("material"), max_length=512, blank=True, verbose_name="Image")
     price = models.FloatField(default=0, verbose_name="Giá nguyên liệu")
     product = models.ForeignKey(Product, on_delete=models.CASCADE,related_name="material_product", verbose_name="Sản phẩm") #nguyên liệu của sản phẩm nào
-    # volume = models.ForeignKey(Volume, on_delete=models.CASCADE,related_name="material_volume", verbose_name="Dung tích")
+
     status = models.BooleanField(default=True, verbose_name="Trạng thái")
-    # note = models.TextField(null=True, blank=True, verbose_name="Ghi chú", default="")
-    note = RichTextUploadingField(blank=True, null = True ,verbose_name='Ghi chú')
+    # This is description
+    note = RichTextUploadingField(blank=True, null = True ,verbose_name='Mô tả')
     create_at = models.DateField(auto_now_add=True, verbose_name="Ngày tạo")
     update_at = models.DateField(auto_now=True, verbose_name="Cập nhật")
-    for_create_quote = models.BooleanField(default=False, blank=True, verbose_name="Dành cho tạo bảng giá")
+    # for_create_quote = models.BooleanField(default=False, blank=True, verbose_name="Dành cho tạo bảng giá")
+    note_material = models.TextField(default="", blank=True, verbose_name="Ghi chú")
+    quantity_less_100kg = models.CharField(max_length=255, verbose_name="Số lượng dưới 100kg", blank=True)
+    quantity_100_500kg = models.CharField(max_length=255, default="", verbose_name="Số lượng 100 - 500kg", blank=True)
+    quantity_other = models.CharField(max_length=255, default="", verbose_name="Số lượng khác", blank=True)
+
+    @staticmethod
+    def custom_slugs(slug):
+        if slug is not None:
+            obj_slug = Material.objects.filter(slug=slug).first()
+            if obj_slug:
+                return slug + '-' + str(obj_slug.id)
+        return slug
+
+    def save(self, *arg, **kwarg):
+        self.slug = self.custom_slugs(slugify(self.name))
+        super(Material, self).save(*arg, **kwarg)
 
     def to_dict(self):
         return {
             "key": self.id,
+            "slug": self.slug,
             "name": self.name,
             "price": self.price,
             "note": self.note,
@@ -157,6 +175,7 @@ class Material(models.Model):
 # Bao bì cấp 1 Chai lọ
 class PackagingLevel1(models.Model):
     name                    = models.CharField(max_length=255, default="", verbose_name="Tên bao bì cấp 1")
+    slug = models.SlugField(max_length=500, unique=True, null=True, blank=True,verbose_name="URL",editable=False)
     type_packaging          = models.CharField(max_length=50, default="", verbose_name="Loại bao bì")
     # một bao bì cấp 1 có nhiều sản phẩm
     product                 = models.ManyToManyField(Product, null=False, blank=True, verbose_name='Sản phẩm')
@@ -175,6 +194,18 @@ class PackagingLevel1(models.Model):
     update_at               = models.DateTimeField(auto_now=True, verbose_name="Ngày cập nhật")
     status                  = models.BooleanField(default=True, verbose_name="Trạng thái")
 
+    @staticmethod
+    def custom_slugs(slug):
+        if slug is not None:
+            obj_slug = PackagingLevel1.objects.filter(slug=slug).first()
+            if obj_slug:
+                return slug + '-' + str(obj_slug.id)
+        return slug
+
+    def save(self, *arg, **kwarg):
+        self.slug = self.custom_slugs(slugify(self.name))
+        super(PackagingLevel1, self).save(*arg, **kwarg)
+
     class Meta:
         verbose_name = "Bao bì cấp 1"
         verbose_name_plural = "Bao bì cấp 1"
@@ -183,6 +214,7 @@ class PackagingLevel1(models.Model):
     def to_dict(self):
         return {
             "key": self.id,
+            "slug": self.slug,
             "name": self.name,
             "type_packaging": self.type_packaging,
             # "image": self.image,
@@ -205,6 +237,7 @@ class PackagingLevel1(models.Model):
 # Bao bì cấp 2 Hộp
 class PackagingLevel2(models.Model):
     name = models.CharField(max_length=255, default="", verbose_name="Tên bao bì cấp 2")
+    slug = models.SlugField(max_length=500, unique=True, null=True, blank=True,verbose_name="URL",editable=False)
     image = models.ImageField(upload_to=get_upload_to_folder("images"), max_length=512, blank=True, verbose_name="Image")
     price = models.FloatField(default=0, verbose_name="Giá bao bì")
     type_packaging = models.CharField(max_length=50, default="", verbose_name="Loại bao bì")
@@ -217,6 +250,17 @@ class PackagingLevel2(models.Model):
     create_at = models.DateField(auto_now_add=True, verbose_name="Ngày tạo")
     update_at = models.DateField(auto_now=True, verbose_name="Cập nhật")
 
+    @staticmethod
+    def custom_slugs(slug):
+        if slug is not None:
+            obj_slug = PackagingLevel2.objects.filter(slug=slug).first()
+            if obj_slug:
+                return slug + '-' + str(obj_slug.id)
+        return slug
+
+    def save(self, *arg, **kwarg):
+        self.slug = self.custom_slugs(slugify(self.name))
+        super(PackagingLevel2, self).save(*arg, **kwarg)
     class Meta:
         verbose_name = "Bao bì cấp 2"
         verbose_name_plural = "Bao bì cấp 2"
@@ -225,6 +269,7 @@ class PackagingLevel2(models.Model):
     def to_dict(self):
         return {
             "key": self.id,
+            "slug": self.slug,
             "name": self.name,
             "price": self.price,
             "note": self.note,

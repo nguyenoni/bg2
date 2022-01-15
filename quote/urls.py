@@ -15,13 +15,13 @@ urlpatterns = [
 
     # Nguyên liệu
     path('nguyen-lieu', views.load_material_list, name='load_material_list'),
-    path('nguyen-lieu/<int:pk>', views.detail_material, name="detail_material"),
+    path('nguyen-lieu/<slug:slug>', views.detail_material, name="detail_material"),
 
     # Bao bì
     path('bao-bi', views.load_packaging_level, name="load_packaging_level"),
-    path('bao-bi/<int:pk>', views.detail_packaging_level1, name="detail_packaging_level1" ),
+    path('bao-bi/<slug:slug>', views.detail_packaging_level1, name="detail_packaging_level1" ),
     path('bao-bi-cap-2', views.list_packaging_level2, name="list_packaging_level2"),
-    path('bao-bi-cap-2/<int:pk>', views.detail_packaging_level2, name="detail_packaging_level2"),
+    path('bao-bi-cap-2/<slug:slug>', views.detail_packaging_level2, name="detail_packaging_level2"),
 
     # API load more data
     path('api/load-more-product/', views.load_more_product, name="load_more_product"),

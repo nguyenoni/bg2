@@ -162,7 +162,7 @@ def export_to_pdf(request, quote):
             pass
 
         obj_product = Product.objects.filter(unique_product = product)[0]
-        price_product = obj_product.price * quantity
+        # price_product = obj_product.price * quantity
         obj_volume = Volume.objects.filter(unique_volume = volume)[0]
         obj_material = Material.objects.get(id=material)
 
@@ -176,8 +176,8 @@ def export_to_pdf(request, quote):
         tt_material = obj_material.price*quantity
         time = date.today()
 
-        total = (obj_product.price*quantity) + (obj_material.price*quantity) + (p_pklv1*quantity) + (p_pklv2*quantity) + (p_st*quantity) + (p_packw*quantity) + p_ann + p_fs
-        dt.update({"product": obj_product, "price_product": price_product,"quantity": quantity, "volume": obj_volume, "material": obj_material, 
+        total = (obj_material.price*quantity) + (p_pklv1*quantity) + (p_pklv2*quantity) + (p_st*quantity) + (p_packw*quantity) + p_ann + p_fs
+        dt.update({"product": obj_product, "quantity": quantity, "volume": obj_volume, "material": obj_material, 
          "total": total, "day": str(time.day), "month": str(time.month), "year": str(time.year),
          "tt_material": tt_material,
          "tt_packaging_level_1": tt_packaging_level_1,
@@ -286,7 +286,7 @@ def load_material(request):
         try:
             obj_product = Product.objects.get(unique_product=valp)
             obj_volume = Volume.objects.get(unique_volume = valv)
-            obj_material = Material.objects.filter(product = obj_product, for_create_quote = True).distinct()
+            obj_material = Material.objects.filter(product = obj_product).distinct()
       
             # volume_multi_quantiy = quantity *int(obj_volume.name)
             # print(volume_multi_quantiy)
@@ -614,9 +614,9 @@ def load_material_list(request):
         slug = request.POST.get("slug", "")
         obj_category = Category.objects.get(slug = slug)
         obj_product = Product.objects.filter(category = obj_category)
-        obj_material = Material.objects.filter(product__in = obj_product, for_create_quote = False).order_by('-id')[:libs.LIMIT_PAGE]
+        obj_material = Material.objects.filter(product__in = obj_product).order_by('-id')[:libs.LIMIT_PAGE]
         # obj_material = get_data_from_product(obj_product)
-        total_data = Material.objects.filter(product__in = obj_product, for_create_quote = False).count()
+        total_data = Material.objects.filter(product__in = obj_product).count()
         # obj_material = Material.objects.filter(volume = obj_volume).order_by('-id')[:libs.LIMIT_PAGE]
         
         tmp = "quote/includes/material_list.html"
@@ -643,8 +643,8 @@ def load_material_list(request):
 
     else:
         try:
-            total_data = Material.objects.filter(for_create_quote = False).count()
-            obj_material = Material.objects.filter(for_create_quote = False).order_by('-id')[:libs.LIMIT_PAGE]
+            total_data = Material.objects.all().count()
+            obj_material = Material.objects.all().order_by('-id')[:libs.LIMIT_PAGE]
             if total_data > obj_material.count():
                 dt.update({
                     "has_page": True,
@@ -736,8 +736,8 @@ def load_more_material(request):
                 tmp = "quote/includes/material_list.html"
                 offset = int(request.GET.get("offset", 0))
                 limit = int(request.GET.get("limit", 0))
-                data = Material.objects.filter(for_create_quote=False).order_by('-id')[offset:offset+limit]
-                total_data = Material.objects.filter(for_create_quote=False).count()
+                data = Material.objects.all().order_by('-id')[offset:offset+limit]
+                total_data = Material.objects.filter().count()
                 temp = render_to_string(tmp,{"data":data, "offset": int(offset), "has_page": True,} )
                 dt.update({
                     "data": temp,
@@ -768,9 +768,9 @@ def load_more_material(request):
                 obj_category = Category.objects.get(slug = slug)
                 obj_product = Product.objects.filter(category = obj_category)
 
-                data = Material.objects.filter(product__in = obj_product, for_create_quote=False).order_by('-id')[offset:offset+limit]
+                data = Material.objects.filter(product__in = obj_product).order_by('-id')[offset:offset+limit]
                 # print(data)
-                total_data = Material.objects.filter(product__in = obj_product, for_create_quote = False).count()
+                total_data = Material.objects.filter(product__in = obj_product).count()
 
                 temp = render_to_string(tmp,{"data":data, "offset": int(offset), "has_page": True,} )
                 dt.update({
@@ -817,7 +817,7 @@ def get_detail_product(request, slug):
     return render(request, tmp, dt)
 
 # Detail material
-def detail_material(request, pk):
+def detail_material(request, slug):
     dt = {
         "error": False,
         "message": "",
@@ -826,7 +826,7 @@ def detail_material(request, pk):
     tmp = "quote/detail_material.html"
 
     try:
-        obj_material = Material.objects.get(id = pk)
+        obj_material = Material.objects.get(slug = slug)
         obj_images = ImageMaterial.objects.filter(material = obj_material)
         # temp = render_to_string(tmp, {"data": obj_product})
         dt.update({
@@ -842,7 +842,7 @@ def detail_material(request, pk):
     # return JsonResponse(dt)
     return render(request, tmp, dt)
 # get detail packaging level
-def detail_packaging_level1(request, pk):
+def detail_packaging_level1(request, slug):
     tmp = "quote/detail_packaging_level1.html"
     dt = {
         "error": False,
@@ -850,7 +850,7 @@ def detail_packaging_level1(request, pk):
         "active_menu": libs.PACKAGING_LEVEL1
     }
     try:
-        obj_packaging_level1 = PackagingLevel1.objects.get(id = pk)
+        obj_packaging_level1 = PackagingLevel1.objects.get(slug = slug)
         obj_image = ImagePackagingLevel1.objects.filter(packaginglevel1 = obj_packaging_level1)
         dt.update({
             "data": obj_packaging_level1,
@@ -950,7 +950,7 @@ def list_packaging_level2(request):
     return render(request, tmp, dt)
 
 # Detail packaging level 2
-def detail_packaging_level2(request, pk):
+def detail_packaging_level2(request, slug):
     tmp = "quote/detail_packaging_level2.html"
     dt = {
         "error": False,
@@ -958,7 +958,7 @@ def detail_packaging_level2(request, pk):
         "active_menu": libs.PACKAGING_LEVEL2
     }
     try:
-        obj_packaging_level2 = PackagingLevel2.objects.get(id = pk)
+        obj_packaging_level2 = PackagingLevel2.objects.get(slug = slug)
         obj_image = ImagePackagingLevel2.objects.filter(packaginglevel2 = obj_packaging_level2)
         dt.update({
             "data": obj_packaging_level2,

@@ -10,9 +10,8 @@ function show_mess(mess, tp = "") {
         toastr.success(mess);
     }
 }
-// Reset all()
-function reset() {
-    // $('.change-val').removeClass('hide');
+// reset change quantity
+function reset_change_quantity(){
     remove_item_choose("material", false);
     remove_item_choose("packaging-level1", false);
     remove_item_choose("packaging-level2", false);
@@ -24,6 +23,10 @@ function reset() {
     $('.total-title').addClass("hide");
     $('.total-price').addClass("hide");
     $('.result_multi_product_quantity').val("")
+}
+// Reset all()
+function reset() {
+    reset_change_quantity();
     $('.quantity').val("");
 }
 // when icon reload click
@@ -94,15 +97,30 @@ function show_data_to_table(data, act) {
 
         let data_show = $('.data-show');
         data_show.empty();
+        // console.log(act);
         arr_dt.map((item, index) => {
-            let tr = `<tr>
-                    <th scope="row">${index + 1}</th> 
-                    <!-- <th><img src="assets/images/avatar1.png" style="width: 60px;" /></th> -->
-                    <th>${item.name}</th>
-                    <td class="text-success"><b>${item.price}</b> <sup>đ</sup></td>
-                    <th>${truncate(item.note, 20)}</th>
-                    <th><span class="btn btn-success btn-xs add-to-quote" onclick="add_to_qoute(${item.key},'${act}')">Thêm vào báo giá</span></th>
-                </tr>`
+            let tr = ``
+            if(act === MATERIAL){
+                tr = `<tr>
+                <th scope="row">${index + 1}</th> 
+                <!-- <th><img src="assets/images/avatar1.png" style="width: 60px;" /></th> -->
+                <th>${item.name}</th>
+                <td class="text-success"><b>${item.price}</b> <sup>đ</sup></td>
+                <th>${truncate(item.note, 20)} <a href="/nguyen-lieu/${item.slug}" class="text-success">Chi tiết</a></th>
+                <th><span class="btn btn-success btn-xs add-to-quote" onclick="add_to_qoute(${item.key},'${act}')">Thêm vào báo giá</span></th>
+            </tr>`
+
+            }else{
+                tr = `<tr>
+                <th scope="row">${index + 1}</th> 
+                <!-- <th><img src="assets/images/avatar1.png" style="width: 60px;" /></th> -->
+                <th>${item.name}</th>
+                <td class="text-success"><b>${item.price}</b> <sup>đ</sup></td>
+                <th>${truncate(item.note, 20)}</th>
+                <th><span class="btn btn-success btn-xs add-to-quote" onclick="add_to_qoute(${item.key},'${act}')">Thêm vào báo giá</span></th>
+            </tr>`
+            }
+            
             data_show.append(tr);
         })
     } else {
@@ -556,26 +574,7 @@ $('.quantity').bind('keyup mouseup', function (e) {
             "quantity": quantity,
             'csrfmiddlewaretoken': get_csrfmiddlewaretoken(),
         }
-
-        $.ajax({
-            type: 'POST',
-            url: '/api/load-quantity-product/',
-            dataType: 'json',
-            data: dt,
-            success: function (res) {
-                if (res.error == false) {
-
-                    //    show_mess(data.data.message)
-                    $('.result_multi_product_quantity').val("")
-                    $('.result_multi_product_quantity').val(res.data)
-                    update_total();
-                }
-                else {
-                    show_mess(data.data.message);
-                }
-            }
-
-        })
+        reset_change_quantity();
     } else {
         $('.result_multi_product_quantity').val("");
         $('.quantity').val("");

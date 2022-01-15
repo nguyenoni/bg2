@@ -12,7 +12,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ["name","price","category","create_at","update_at","status",]
+    list_display = ["name","category","create_at","update_at","status",]
     search_fields = ('name','category')
     ordering = ('id',)
 
@@ -26,7 +26,7 @@ class VolumeAdmin(admin.ModelAdmin):
 @admin.register(Material)
 class MaterialAdmin(admin.ModelAdmin):
     
-    list_display = ["name", "price","product","create_at", "update_at","for_create_quote", "status",]
+    list_display = ["name", "price","product","create_at", "update_at", "status",]
     list_filter = ('product', 'create_at', 'status')
     search_fields = ('name', 'product', 'volume',)
     ordering = ('id',)

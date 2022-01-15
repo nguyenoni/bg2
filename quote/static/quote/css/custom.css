@@ -2,14 +2,22 @@ body{
 	font-family: Helvetica Neue,Helvetica,Arial,\\6587\6CC9\9A5B\6B63\9ED1,WenQuanYi Zen Hei,Hiragino Sans GB,\\5137\9ED1 Pro,LiHei Pro,Heiti TC,\\5FAE\8EDF\6B63\9ED1\9AD4,Microsoft JhengHei UI,Microsoft JhengHei,sans-serif;
     color: rgba(0,0,0,.8);
     line-height: 1.2;
+    max-width: 2048px;
+    margin: 0 auto;
 }
 /* logo */
 .img-logo{
   max-width: 100% !important;
 }
+.wrap {
+  margin: 1em;
+}
 @media (max-width: 768px) {
   .img-logo{
     max-width: 30% !important;
+  }
+  #main-wrapper {
+    margin: 20px 0px 0px 0px !important;
   }
 
 }

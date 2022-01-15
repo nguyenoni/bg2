@@ -34,8 +34,9 @@
     }
 
     img.img-child {
-        max-width: 100%;
-        width: 100px; height: 100px;
+        width: 100%;
+        object-fit: fill;
+        height: auto;
     }
 
     @media (max-width: 768px){ .panel>.row>div:first-child {
@@ -44,7 +45,9 @@
     }
     img.img-child {
        
-        width: 4em; height: 4em;
+        width: 100%;
+        object-fit: fill;
+        height: auto;
     }
 }
 </style>
@@ -118,7 +121,21 @@
                 <hr />
                 <p><strong class="text-success">Giá bán: {{ data.price|floatformat:0|intcomma }}<sup>đ</sup> /kg</strong></p>
                 <hr />
-            
+                <h3>Tình Trạng Hàng:</h3>
+                <table class="table table-striped">
+                    <thead>
+                        <th>Số lượng dưới 100kg</th>
+                        <th>Số lượng 100 - 500kg</th>
+                        <th>Số lượng khác</th>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ data.quantity_less_100kg }}</td>
+                            <td>{{ data.quantity_100_500kg }}</td>
+                            <td>{{ data.quantity_other }}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="row row_product list-product">
                 <div class="col-md-12">

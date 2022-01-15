@@ -34,8 +34,9 @@
     }
 
     img.img-child {
-        max-width: 100%;
-        width: 100px; height: 100px;
+        width: 100%;
+        object-fit: fill;
+        height: auto;
     }
 
     @media (max-width: 768px){ .panel>.row>div:first-child {
@@ -122,16 +123,14 @@
                 <table class="table table-striped">
                     <thead>
                         <th>Loại bao bì</th>
-                        <th>Chất liệu</th>
-                        <th>Nhà cung cấp</th>
                         <th>Số lượng có thể order</th>
+                        <th>Cập nhật</th>      
                     </thead>
                     <tbody>
                         <tr>
                             <td>{{ data.type_packaging }}</td>
-                            <td>{{ data.type_material }}</td>
-                            <td>{{ data.provider }}</td>
                             <td>{{ data.quantity_can_order_with_price }}</td>
+                            <td>{{ data.update_at }}</td>                         
                         </tr>
                     </tbody>
                 </table>
